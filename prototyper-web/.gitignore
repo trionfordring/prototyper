@@ -1,0 +1,12 @@
+node_modules
+.cache
+*-cache
+out
+dist
+lib
+*.log
+.now
+.idea
+
+.DS_Store
+tsconfig.tsbuildinfo

@@ -1,0 +1,30 @@
+{
+  "name": "@prototyper/core",
+  "version": "0.1.1",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "gulp -f gulpfile.ts"
+  },
+  "main": "src/index.ts",
+  "publishConfig": {
+    "main": "./dist/cjs/index.js",
+    "module": "./dist/esm/index.js",
+    "types": "./dist/types/index.d.ts"
+  },
+  "sideEffects": true,
+  "dependencies": {
+    "@craftjs/core": "0.2.0-beta.8",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.190",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.11.0",
+    "react-dom": ">=16.11.0"
+  }
+}

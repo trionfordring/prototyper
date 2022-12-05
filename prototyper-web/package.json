@@ -1,0 +1,83 @@
+{
+  "private": true,
+  "packageManager": "pnpm@6.22.2",
+  "workspaces": [
+    "web",
+    "editor/*/*"
+  ],
+  "engines": {
+    "node": ">= 16"
+  },
+  "author": "fordring <i@fordring.icu>",
+  "license": "MIT",
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .js,.ts,.jsx,.tsx --max-warnings 0 && pretty-quick --check --branch dev",
+    "lint:fix": "eslint --fix . --ext .vue,.js,.ts,.jsx,.tsx && pretty-quick --branch dev",
+    "release:core": "pnpm run build release && pnpm publish -F core --registry http://registry.npmjs.org",
+    "changelog": "pnpm run build changelog",
+    "build": "gulp -f gulpfile.ts",
+    "build:prod": "cross-env NODE_ENV=production pnpm run build",
+    "preinstall": "npx only-allow pnpm"
+  },
+  "peerDependencies": {
+    "react": ">=16.11.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-proposal-object-rest-spread": "^7.20.2",
+    "@babel/plugin-syntax-flow": "^7.18.6",
+    "@babel/plugin-transform-react-jsx": "^7.19.0",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-typescript": "^7.18.6",
+    "@changesets/cli": "^2.25.2",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^23.0.2",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@types/gulp": "^4.0.10",
+    "@types/node": "^18.11.10",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.44.0",
+    "babel-plugin-styled-components": "^2.0.7",
+    "chalk": "4.1.2",
+    "cross-env": "^7.0.3",
+    "esbuild": "^0.15.13",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-import-resolver-typescript": "^3.5.2",
+    "eslint-plugin-flowtype": "^8.0.3",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.10",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "esm": "^3.2.25",
+    "gulp": "^4.0.2",
+    "micromatch": "^4.0.5",
+    "prettier": "^2.7.1",
+    "pretty-quick": "^3.1.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-is": "^18.2.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^3.2.5",
+    "rollup-plugin-dts": "^5.0.0",
+    "rollup-plugin-esbuild": "^4.10.3",
+    "styled-components": "^5.3.6",
+    "sucrase": "^3.29.0",
+    "ts-morph": "^17.0.1",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.4.1",
+    "typescript": "^4.8.4"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": "eslint --fix"
+  },
+  "browserslist": [
+    "> 1%",
+    "not ie 11",
+    "not op_mini all"
+  ]
+}
