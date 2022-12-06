@@ -5,7 +5,8 @@
   "license": "MIT",
   "files": [
     "/dist",
-    "/src"
+    "/src",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "clean": "rimraf dist",
