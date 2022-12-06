@@ -14,7 +14,7 @@
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.ts,.jsx,.tsx --max-warnings 0 && pretty-quick --check --branch dev",
     "lint:fix": "eslint --fix . --ext .vue,.js,.ts,.jsx,.tsx && pretty-quick --branch dev",
-    "release:core": "pnpm run build release && pnpm publish -F core --registry http://registry.npmjs.org",
+    "release": "pnpm run build release",
     "changelog": "pnpm run build changelog",
     "build": "gulp -f gulpfile.ts",
     "build:prod": "cross-env NODE_ENV=production pnpm run build",

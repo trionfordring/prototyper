@@ -1,3 +1,4 @@
+import { CreateProtoComponentType } from '../component';
 import { ProtoComponent } from '../component/ProtoComponent';
 import { ProtoDragger } from '../dragger';
 
@@ -6,6 +7,6 @@ export interface ComponentPackage {
   components: Record<string, ProtoComponent>;
   draggers: ProtoDragger[];
 
-  createComponent(component: ProtoComponent & { name: string }): void;
+  createComponent(component: CreateProtoComponentType & { name: string }): void;
   addDragger(dragger: ProtoDragger): void;
 }
