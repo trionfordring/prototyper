@@ -105,19 +105,15 @@ importers:
       '@craftjs/core': 0.2.0-beta.8
       '@types/lodash': ^4.14.190
       '@types/react': ^18.0.25
-      '@types/react-dom': ^18.0.8
       lodash: ^4.17.21
       react: ^18.2.0
-      react-dom: ^18.2.0
     dependencies:
       '@craftjs/core': registry.npmmirror.com/@craftjs/core/0.2.0-beta.8_react@18.2.0
       lodash: registry.npmmirror.com/lodash/4.17.21
     devDependencies:
       '@types/lodash': registry.npmmirror.com/@types/lodash/4.14.190
       '@types/react': registry.npmmirror.com/@types/react/18.0.25
-      '@types/react-dom': registry.npmmirror.com/@types/react-dom/18.0.9
       react: registry.npmmirror.com/react/18.2.0
-      react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
 
   editor/examples/hello-core:
     specifiers:
