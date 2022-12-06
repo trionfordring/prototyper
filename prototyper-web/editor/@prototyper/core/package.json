@@ -1,9 +1,12 @@
 {
   "name": "@prototyper/core",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": "fordring <i@fordring.icu>",
   "license": "MIT",
-  "files": ["/dist","/src"],
+  "files": [
+    "/dist",
+    "/src"
+  ],
   "scripts": {
     "clean": "rimraf dist",
     "build": "gulp -f gulpfile.ts"

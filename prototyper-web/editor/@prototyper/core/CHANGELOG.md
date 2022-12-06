@@ -1,5 +1,11 @@
 # @prototyper/core
 
+## 0.1.3
+
+### Patch Changes
+
+- 优化发包流程
+
 ## 0.1.2
 
 ### Patch Changes
