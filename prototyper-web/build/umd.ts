@@ -11,6 +11,8 @@ export const UMD_GLOBALS: Record<string, string> = {
   '@prototyper/core': 'ProrotyperCore',
   '@prototyper/editor': 'ProrotyperEditor',
   lodash: 'lodash',
+  antd: 'antd',
+  'styled-components': 'styled',
 };
 
 export const buildUmd = (

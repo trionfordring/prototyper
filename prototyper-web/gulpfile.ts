@@ -5,6 +5,8 @@ import { withTaskName } from './build/utils/withTaskName';
 
 export const core = () => run('pnpm run -F @prototyper/core build');
 
+export const editor = () => run('pnpm run -F @prototyper/editor build');
+
 export const changelog = () => run('changeset add');
 
 export const release = () => run('changeset version');

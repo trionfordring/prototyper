@@ -3,7 +3,7 @@ import { SerializedNode, SerializedNodes } from '@craftjs/core';
 import { ProtoComponent } from './ProtoComponent';
 
 export type CreateProtoComponentType = Omit<ProtoComponent, 'virtualDom'> & {
-  virtualDom:
+  virtualDom?:
     | string
     | Record<
         string,

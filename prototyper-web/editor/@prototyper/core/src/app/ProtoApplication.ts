@@ -14,6 +14,7 @@ export type GetComponentFunc = (
 
 export interface ProtoApplication<S = DefaultStatesType> {
   index: ProtoComponent;
+  indexDescriptor?: ComponentDescriptor;
   initProps?: DefaultPropsType;
 
   useSetupAppStates?: UseSetupAppStates<S>;

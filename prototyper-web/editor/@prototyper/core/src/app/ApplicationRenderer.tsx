@@ -12,7 +12,8 @@ export const ApplicationRenderer: FC<
 > = ({ app, children }) => {
   return (
     <ApplicationProvider app={app}>
-      <RootComponentRenderer>{children}</RootComponentRenderer>
+      {children}
+      <RootComponentRenderer />
     </ApplicationProvider>
   );
 };

@@ -38,7 +38,7 @@ helloPackage.createComponent({
     },
     t1: {
       props: {
-        textExpr: '组件渲染器',
+        textExpr: '组件渲染器(num:#{state.num})',
       },
       isCanvas: false,
       displayName: 't1',
@@ -52,8 +52,9 @@ helloPackage.createComponent({
     },
     b1: {
       props: {
-        textExpr: '父组件num=#{props.numExpr}',
-        onClick: 'props.onClick',
+        textExpr: '父组件传入参数num=#{props.numExpr}',
+        onClick:
+          'props.onClick || (()=>{ console.log("子组件的onclick被触发了，但父组件未传入处理函数~") })',
       },
       isCanvas: false,
       displayName: 'b1',
@@ -67,7 +68,7 @@ helloPackage.createComponent({
     },
     b2: {
       props: {
-        textExpr: '子组件num=#{state.num}',
+        textExpr: '子组件的数据num=#{state.num}',
         onClick: 'state.add',
       },
       isCanvas: false,
