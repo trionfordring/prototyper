@@ -13,8 +13,7 @@ export type GetComponentFunc = (
 ) => (ProtoComponent & WithDescriptor) | undefined;
 
 export interface ProtoApplication<S = DefaultStatesType> {
-  index: ProtoComponent;
-  indexDescriptor?: ComponentDescriptor;
+  index: ProtoComponent & Partial<WithDescriptor>;
   initProps?: DefaultPropsType;
 
   useSetupAppStates?: UseSetupAppStates<S>;

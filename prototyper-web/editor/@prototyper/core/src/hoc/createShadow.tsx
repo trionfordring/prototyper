@@ -16,6 +16,7 @@ type CreateProtalType = (
 const fallbackCreatePortal: CreateProtalType = (children, _) => children;
 const doCreatePortal: CreateProtalType = createPortal || fallbackCreatePortal;
 
+const supportShadowDom = document?.body?.attachShadow && createPortal;
 export function createShadow<T extends HTMLElement, P = {}>(
   Root: ForwardRefExoticComponent<P>,
   Component: React.ComponentType<P>
@@ -28,7 +29,7 @@ export function createShadow<T extends HTMLElement, P = {}>(
     const [root, setRoot] = useState<ShadowRoot>(null);
     useEffect(() => {
       const ele = ref.current;
-      if (ele?.attachShadow && !ele.shadowRoot) {
+      if (supportShadowDom && !ele.shadowRoot) {
         setRoot(
           ele.attachShadow({
             mode: 'open',
@@ -41,7 +42,7 @@ export function createShadow<T extends HTMLElement, P = {}>(
     let content: React.ReactNode = (
       <Component {...(props as P)}>{children}</Component>
     );
-    if (document?.body?.attachShadow) {
+    if (supportShadowDom) {
       content = root && doCreatePortal(content, root);
     }
     return (

@@ -23,5 +23,7 @@ export function defaultMapProps(props: Object, context: any) {
   if (ans['props']) {
     ans['props'] = doMap(ans['props'], context);
   }
+  console.log('mapProps:', props, ans);
+
   return ans;
 }

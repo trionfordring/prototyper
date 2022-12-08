@@ -3,7 +3,11 @@ import React, { forwardRef, PropsWithChildren, useMemo } from 'react';
 
 import { ComponentProvider } from './ComponentProvider';
 import { DefaultComponentWarpper } from './DefaultComponentWarpper';
-import { ComponentDescriptor, ProtoComponent } from './ProtoComponent';
+import {
+  ComponentDescriptor,
+  ProtoComponent,
+  WithDescriptor,
+} from './ProtoComponent';
 import { defaultCompGetter, getResolver } from './getResolver';
 
 import { useApplicationContext } from '../context';
@@ -11,21 +15,25 @@ import { NodeRenderer } from '../renderer/NodeRenderer';
 
 export const ComponentRenderer: React.FC<
   PropsWithChildren<{
-    props: Record<string, any>;
-    descriptor: ComponentDescriptor;
+    props?: Record<string, any>;
+    descriptor?: ComponentDescriptor;
   }>
 > = ({ props, descriptor, children }) => {
   const { getComponent } = useApplicationContext();
-  const component = (getComponent || defaultCompGetter)(descriptor);
   const {
     connectors: { drag, connect },
   } = useNode();
+  console.log('render:', props, descriptor);
+
+  if (!descriptor) {
+    return null;
+  }
+  const component = (getComponent || defaultCompGetter)(descriptor);
   return (
     <JustComponentRenderer
       ref={(ref) => connect(drag(ref))}
       props={props}
       component={component}
-      descriptor={descriptor}
     >
       {children}
     </JustComponentRenderer>
@@ -47,13 +55,12 @@ export const RootComponentRenderer: React.FC<PropsWithChildren> = ({
 const JustComponentRenderer = forwardRef<
   any,
   PropsWithChildren<{
-    props: Record<string, any>;
-    component: ProtoComponent;
+    props?: Record<string, any>;
+    component: ProtoComponent & Partial<WithDescriptor>;
     editing?: boolean;
-    descriptor?: ComponentDescriptor;
     root?: boolean;
   }>
->(({ props, component, children, editing, descriptor, root }, ref) => {
+>(({ props, component, children, editing, root }, ref) => {
   const NativeComponent = component.component;
   const applicationContext = useApplicationContext();
   const resolver = useMemo(
@@ -61,31 +68,41 @@ const JustComponentRenderer = forwardRef<
     [component.dependencies, applicationContext.getComponent]
   );
   const Warpper = (component.warpper || DefaultComponentWarpper) as any;
-  return (
-    <ComponentProvider component={component} props={props} editing={editing}>
-      <Warpper
-        ref={ref}
-        props={props}
-        className={component.className}
-        editing={editing}
-        root={root}
-        descriptor={descriptor}
+  const Content =
+    component.type === 'virtual' ? (
+      <Editor
+        resolver={{
+          ...resolver,
+          ComponentRenderer,
+        }}
+        onRender={NodeRenderer}
+        enabled={!!editing}
       >
-        {component.type === 'virtual' ? (
-          <Editor
-            resolver={{
-              ...resolver,
-              ComponentRenderer,
-            }}
-            onRender={NodeRenderer}
-            enabled={!!editing}
-          >
-            <Frame data={component?.virtualDom as string}></Frame>
-          </Editor>
-        ) : (
-          <NativeComponent {...props}>{children}</NativeComponent>
-        )}
-      </Warpper>
+        <Frame data={component?.virtualDom as string}></Frame>
+      </Editor>
+    ) : (
+      <NativeComponent {...props}>{children}</NativeComponent>
+    );
+  return (
+    <ComponentProvider
+      component={component}
+      props={props}
+      editing={editing}
+      root={root}
+    >
+      {root ? (
+        Content
+      ) : (
+        <Warpper
+          ref={ref}
+          props={props}
+          className={component.className}
+          editing={editing}
+          descriptor={component.descriptor}
+        >
+          {Content}
+        </Warpper>
+      )}
     </ComponentProvider>
   );
 });

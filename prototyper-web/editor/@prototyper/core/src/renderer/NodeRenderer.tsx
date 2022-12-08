@@ -1,12 +1,20 @@
 import { NodeElement, NodeId, useNode } from '@craftjs/core';
 import React, { FC, useMemo } from 'react';
 
+import { DefaultComponentWarpper } from '../component/DefaultComponentWarpper';
 import { defaultMapProps } from '../component/mapProps';
 import { useComponentContext } from '../context';
 import { useProtoExprContext } from '../hook/useProtoExprContext';
 
 export const NodeRenderer: FC = () => {
-  const { type, props, nodes, hydrationTimestamp, id } = useNode((node) => ({
+  const {
+    type,
+    props,
+    nodes,
+    hydrationTimestamp,
+    id,
+    connectors: { connect },
+  } = useNode((node) => ({
     type: node.data.type,
     props: node.data.props,
     nodes: node.data.nodes,
@@ -15,14 +23,17 @@ export const NodeRenderer: FC = () => {
   }));
   const componentContext = useComponentContext();
   const exprContext = useProtoExprContext();
-  const realProps = (componentContext.component.mapProps || defaultMapProps)(
-    props,
-    exprContext
-  );
-
+  const protoComponent = componentContext.component;
+  const isRoot = id === 'ROOT';
+  const isAppRoot = isRoot && componentContext.root;
+  const realProps = useMemo(() => {
+    return (protoComponent.mapProps || defaultMapProps)(
+      props || {},
+      exprContext
+    );
+  }, [exprContext, protoComponent.mapProps, props]);
   return useMemo(() => {
     let children = props.children;
-
     if (nodes && nodes.length > 0) {
       children = (
         <React.Fragment>
@@ -33,8 +44,24 @@ export const NodeRenderer: FC = () => {
       );
     }
 
-    if (id === 'ROOT') return children;
-
+    if (isAppRoot) {
+      const Warpper = (protoComponent.warpper ||
+        DefaultComponentWarpper) as any;
+      return (
+        <Warpper
+          ref={(ref) => connect(ref)}
+          props={realProps}
+          className={protoComponent.className}
+          editing={componentContext.editing}
+          descriptor={protoComponent.descriptor}
+          root
+        >
+          {children}
+        </Warpper>
+      );
+    } else if (isRoot) {
+      return children;
+    }
     const render = React.createElement(type, realProps, children);
 
     if (typeof type == 'string') {
@@ -43,7 +70,7 @@ export const NodeRenderer: FC = () => {
 
     return render;
     // eslint-disable-next-line  react-hooks/exhaustive-deps
-  }, [type, realProps, hydrationTimestamp, nodes]);
+  }, [type, realProps, hydrationTimestamp, nodes, id]);
 };
 
 export const SimpleElement = ({ render }: any) => {

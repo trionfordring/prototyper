@@ -1,18 +1,25 @@
 import React from 'react';
 
 import { GetComponentFunc } from '../../app';
-import { DefaultPropsType, ProtoComponent } from '../../component';
+import {
+  DefaultPropsType,
+  ProtoComponent,
+  WithDescriptor,
+} from '../../component';
 
 export interface ApplicationContextType<S = DefaultPropsType> {
   appStates: S;
 
-  currentComponent: ProtoComponent;
-  setCurrentComponent: (c: ProtoComponent, props: DefaultPropsType) => void;
+  currentComponent: ProtoComponent & Partial<WithDescriptor>;
+  setCurrentComponent: (
+    c: ProtoComponent & Partial<WithDescriptor>,
+    props: DefaultPropsType
+  ) => void;
 
-  getComponent?: GetComponentFunc;
+  getComponent: GetComponentFunc;
 
   editing?: boolean;
-  rootProps: DefaultPropsType;
+  rootProps?: DefaultPropsType;
 }
 
 export const ApplicationContext = React.createContext<

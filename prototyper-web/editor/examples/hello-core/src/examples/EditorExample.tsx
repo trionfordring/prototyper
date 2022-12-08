@@ -13,16 +13,18 @@ const editorStyle = styled`
     border: 1px solid #000;
     padding: 5px;
   }
+  div {
+    border: 1px solid blue;
+  }
 `;
 function EditorExample() {
+  const pkg = globalPackagesRegistry.getPackage('hello');
   return (
     <Editor
       app={{
-        index:
-          globalPackagesRegistry.getPackage('hello').components[
-            'TestVirtualComp'
-          ],
+        index: pkg.components['TestVirtualComp'],
       }}
+      draggers={pkg.draggers}
     >
       <style>{editorStyle}</style>
     </Editor>

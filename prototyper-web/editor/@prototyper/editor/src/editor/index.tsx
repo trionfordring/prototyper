@@ -1,4 +1,4 @@
-import { ApplicationEditor } from '@prototyper/core';
+import { ApplicationEditor, ProtoDragger } from '@prototyper/core';
 import React, { ComponentProps, forwardRef, PropsWithChildren } from 'react';
 import styled from 'styled-components';
 
@@ -7,14 +7,7 @@ import EditorLeft from './leftarea';
 import EditorMainContent from './main';
 import EditorRight from './rightarea';
 
-const EditorBox = styled.div.attrs({
-  height: '100vh' as string | number,
-})`
-  position: fixed;
-  display: flex;
-  height: ${(props) => props.height};
-  width: 100%;
-  overflow: hidden;
+const EditorBox = styled.section`
   flex-direction: column;
   flex-wrap: nowrap;
 `;
@@ -40,19 +33,16 @@ export const Editor = forwardRef<
   HTMLDivElement,
   PropsWithChildren<
     ComponentProps<typeof ApplicationEditor> & {
-      height?: string | number;
+      draggers: ProtoDragger[];
     }
   >
->(({ children, height, ...props }, ref) => {
+>(({ children, draggers, ...props }, ref) => {
   return (
-    <EditorBox ref={ref} height={height}>
+    <EditorBox ref={ref}>
       <ApplicationEditor {...props}>
-        <EditorHeader
-          descriptor={props.app.indexDescriptor}
-          component={props.app.index}
-        ></EditorHeader>
+        <EditorHeader component={props.app.index}></EditorHeader>
         <EditorBody>
-          <EditorLeft />
+          <EditorLeft draggers={draggers} />
           <EditorMain>
             <EditorMainContent>{children}</EditorMainContent>
           </EditorMain>

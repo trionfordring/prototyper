@@ -1,27 +1,29 @@
 import React, { FC, PropsWithChildren } from 'react';
 
-import { ProtoComponent } from './ProtoComponent';
+import { ProtoComponent, WithDescriptor } from './ProtoComponent';
 
 import { ComponentContext } from '../context/component/ComponentContext';
 
 export const ComponentProvider: FC<
   PropsWithChildren<{
-    props: Record<string, any>;
-    component: ProtoComponent;
+    props?: Record<string, any>;
+    component: ProtoComponent & Partial<WithDescriptor>;
     editing?: boolean;
+    root?: boolean;
   }>
-> = ({ props, component, children, editing }) => {
+> = ({ props, component, children, editing, root }) => {
   const meta = component.meta || {};
   const states =
     (component.useSetupStates && component.useSetupStates(props, meta)) || {};
   return (
     <ComponentContext.Provider
       value={{
-        props,
+        props: props || {},
         state: states,
         meta,
         component,
         editing,
+        root,
       }}
     >
       {children}

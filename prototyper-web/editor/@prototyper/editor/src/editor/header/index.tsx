@@ -1,4 +1,4 @@
-import { ComponentDescriptor, ProtoComponent } from '@prototyper/core';
+import { ProtoComponent, useEditor, WithDescriptor } from '@prototyper/core';
 import { Button, Typography } from 'antd';
 import React, { FC } from 'react';
 import styled from 'styled-components';
@@ -32,21 +32,26 @@ const Right = styled.div`
 `;
 
 const EditorHeader: FC<{
-  component: ProtoComponent;
-  descriptor?: ComponentDescriptor;
-}> = ({ descriptor }) => {
+  component: ProtoComponent & Partial<WithDescriptor>;
+}> = ({ component }) => {
+  const { query } = useEditor();
+  function save() {
+    console.log(query.getSerializedNodes());
+  }
   return (
     <Header>
       <Title>Editor</Title>
       <Center>
         <Item>
           <Typography.Text>
-            当前组件: {descriptor?.name || '临时组件'}
+            当前组件: {component.descriptor?.name || '临时组件'}
           </Typography.Text>
         </Item>
       </Center>
       <Right>
-        <Button type="primary">保存</Button>
+        <Button type="primary" onClick={save}>
+          保存
+        </Button>
       </Right>
     </Header>
   );

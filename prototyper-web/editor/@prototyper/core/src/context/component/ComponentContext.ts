@@ -21,6 +21,7 @@ export interface ComponentContextType<
 
   component: ProtoComponent;
   editing?: boolean;
+  root?: boolean;
 }
 
 export const ComponentContext = React.createContext<

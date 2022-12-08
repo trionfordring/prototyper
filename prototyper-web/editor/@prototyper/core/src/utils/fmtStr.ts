@@ -11,7 +11,7 @@ function execComiledFmtStr(compiledFmtStr: Array<string | Function>): string {
   );
 }
 
-const REG_FMT_VAR = /#\{([0-9a-zA-Z_.()]+)\}/g;
+const REG_FMT_VAR = /#\{(.+)\}/g;
 function compileFmtStr(fmtStr: string, context: any): Array<string | Function> {
   const ans = [];
   const iter = fmtStr.matchAll(REG_FMT_VAR);

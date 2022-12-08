@@ -1,12 +1,10 @@
-import React, { FC } from 'react';
-import styled from 'styled-components';
+import { ProtoDragger } from '@prototyper/core';
+import React from 'react';
 
-const Panel = styled.div`
-  height: 100%;
-`;
+import { ComponentPane } from '../../components/component-pane';
 
-const EditorLeft: FC = () => {
-  return <Panel></Panel>;
+const EditorLeft = ({ draggers }: { draggers: ProtoDragger[] }) => {
+  return <ComponentPane draggers={draggers}></ComponentPane>;
 };
 
 export default EditorLeft;

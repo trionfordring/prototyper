@@ -2,10 +2,14 @@ import { Editor } from '@craftjs/core';
 import React, { FC, PropsWithChildren, useMemo } from 'react';
 
 import { ApplicationProvider } from './ApplicationProvider';
-import { ProtoApplication } from './ProtoApplication';
+import { GetComponentFunc, ProtoApplication } from './ProtoApplication';
 
 import { ComponentDescriptor, ComponentRenderer } from '../component';
-import { getResolver, getResolverFromPkgs } from '../component/getResolver';
+import {
+  defaultCompGetter,
+  getResolver,
+  getResolverFromPkgs,
+} from '../component/getResolver';
 import { globalPackagesRegistry } from '../context';
 import { NodeRenderer } from '../renderer/NodeRenderer';
 
@@ -17,8 +21,9 @@ export const ApplicationEditor: FC<
       render: React.ReactElement;
     }>;
     devDependencies?: ComponentDescriptor[];
+    getComponent?: GetComponentFunc;
   }>
-> = ({ app, children, disabled, onRender, devDependencies }) => {
+> = ({ app, children, disabled, onRender, devDependencies, getComponent }) => {
   const resolver = useMemo(
     () =>
       devDependencies === undefined
@@ -27,7 +32,11 @@ export const ApplicationEditor: FC<
     [devDependencies, app.getComponent]
   );
   return (
-    <ApplicationProvider app={app} editing={!disabled}>
+    <ApplicationProvider
+      app={app}
+      editing={!disabled}
+      getComponent={getComponent || defaultCompGetter}
+    >
       <Editor
         enabled={!disabled}
         onRender={onRender || NodeRenderer}
