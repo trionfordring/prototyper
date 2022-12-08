@@ -5,6 +5,7 @@ import {
   DefaultPropsType,
   DefaultStatesType,
   ProtoComponent,
+  WithDescriptor,
 } from '../../component/ProtoComponent';
 
 export interface ComponentContextType<
@@ -19,7 +20,7 @@ export interface ComponentContextType<
   // 由组件的useState(props)在运行时产生
   state: S;
 
-  component: ProtoComponent;
+  component: ProtoComponent & Partial<WithDescriptor>;
   editing?: boolean;
   root?: boolean;
 }

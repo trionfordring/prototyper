@@ -16,7 +16,7 @@
     "lint:fix": "eslint --fix . --ext .vue,.js,.ts,.jsx,.tsx && pretty-quick --branch dev",
     "release": "pnpm run build release",
     "changelog": "pnpm run build changelog",
-    "build": "gulp -f gulpfile.ts",
+    "build": "pnpm run lint:fix && gulp -f gulpfile.ts",
     "build:prod": "cross-env NODE_ENV=production pnpm run build",
     "preinstall": "npx only-allow pnpm"
   },

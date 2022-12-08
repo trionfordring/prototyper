@@ -23,4 +23,4 @@ export const publishCore = withTaskName(
   )
 );
 
-export default parallel(core);
+export default parallel(core, editor);

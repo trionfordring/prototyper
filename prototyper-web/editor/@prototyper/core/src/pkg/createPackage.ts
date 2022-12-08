@@ -19,6 +19,17 @@ export function createPackage(
       const protoComponent = createProtoComponent(component);
       componentsStore[name] = protoComponent;
     },
+    getComponent(name) {
+      const ans = componentsStore[name];
+      if (!ans) return undefined;
+      return {
+        ...ans,
+        descriptor: {
+          namespace,
+          name,
+        },
+      };
+    },
     addDragger: (dragger) => draggers.push(dragger),
   };
 }
