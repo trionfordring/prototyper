@@ -21,12 +21,15 @@ export const ApplicationProvider: FC<
   const states = (app.useSetupAppStates && app.useSetupAppStates()) || {};
   const [currentComponent, setCurrentComponent] = useState(app.index);
   const [rootProps, setRootProps] = useState(app.initProps || {});
+  const [version, setVersion] = useState(0);
   function setComponent(component: ProtoComponent, props: DefaultPropsType) {
     setCurrentComponent(component);
     setRootProps(props);
+    setVersion((v) => v + 1);
   }
   return (
     <ApplicationContext.Provider
+      key={version}
       value={{
         ...options,
         appStates: states,
