@@ -40,7 +40,7 @@ export const Editor = forwardRef<
   return (
     <EditorBox ref={ref}>
       <ApplicationEditor {...props}>
-        <EditorHeader component={props.app.index}></EditorHeader>
+        <EditorHeader />
         <EditorBody>
           <EditorLeft draggers={draggers} />
           <EditorMain>

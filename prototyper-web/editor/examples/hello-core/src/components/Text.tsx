@@ -1,4 +1,5 @@
 import { useEditor, useNode } from '@prototyper/core';
+import { SetterForm, TextSetter } from '@prototyper/editor';
 import { FC, useEffect, useState } from 'react';
 import ContentEditable from 'react-contenteditable';
 export const Text: FC<{
@@ -28,9 +29,12 @@ export const Text: FC<{
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasSelectedNode]);
+  useEffect(() => {
+    setEditContent(props.textExpr);
+  }, [props.textExpr]);
   return (
     <h3
-      onClick={() => {
+      onDoubleClick={() => {
         if (enabled && !editable) {
           setEditContent(props.textExpr);
           setEditable(true);
@@ -39,18 +43,25 @@ export const Text: FC<{
       ref={(ref) => connect(drag(ref as HTMLElement))}
     >
       {editable ? (
-        <div style={{ padding: '5px', border: '1px solid blue' }}>
-          <ContentEditable
-            disabled={!editable}
-            html={editContent || ''}
-            onChange={(e) => {
-              setEditContent(e.target.value.replace(/<\/?[^>]+(>|$)/g, ''));
-            }}
-          ></ContentEditable>
-        </div>
+        <ContentEditable
+          style={{ padding: '5px', border: '1px solid blue' }}
+          disabled={!editable}
+          html={editContent || ''}
+          onChange={(e) => {
+            setEditContent(e.target.value.replace(/<\/?[^>]+(>|$)/g, ''));
+          }}
+        ></ContentEditable>
       ) : (
         textExpr
       )}
     </h3>
+  );
+};
+
+export const TextSettings = () => {
+  return (
+    <SetterForm>
+      <TextSetter propName="textExpr" label="文字"></TextSetter>
+    </SetterForm>
   );
 };

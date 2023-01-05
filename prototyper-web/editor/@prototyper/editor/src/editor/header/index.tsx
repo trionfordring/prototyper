@@ -1,11 +1,9 @@
-import { ProtoComponent, useEditor, WithDescriptor } from '@prototyper/core';
+import { useComponentContext, useEditor } from '@prototyper/core';
 import { Button, Typography } from 'antd';
-import React, { FC } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const Header = styled.div`
-  width: 100%;
-  background: none;
   min-width: 600px;
   padding: 0 24px;
   margin: 0 auto;
@@ -31,10 +29,9 @@ const Right = styled.div`
   justify-self: flex-end;
 `;
 
-const EditorHeader: FC<{
-  component: ProtoComponent & Partial<WithDescriptor>;
-}> = ({ component }) => {
+const EditorHeader = () => {
   const { query } = useEditor();
+  const { component } = useComponentContext();
   function save() {
     console.log(query.getSerializedNodes());
   }

@@ -3,8 +3,8 @@ import EditorExample from './examples/EditorExample';
 import RendererExample from './examples/RendererExample';
 
 function App() {
-  // return <EditorExample />;
-  return <RendererExample></RendererExample>;
+  return <EditorExample />;
+  // return <RendererExample></RendererExample>;
 }
 
 export default App;

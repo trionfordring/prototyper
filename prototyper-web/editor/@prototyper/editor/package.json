@@ -20,7 +20,7 @@
   },
   "sideEffects": true,
   "dependencies": {
-    "antd": "^5.0.4",
+    "antd": "^5.1.2",
     "lodash": "^4.17.21",
     "styled-components": "^5.3.6",
     "react-is": "^18.2.0"

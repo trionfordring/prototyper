@@ -23,7 +23,6 @@ export const ComponentRenderer: React.FC<
   const {
     connectors: { drag, connect },
   } = useNode();
-  console.log('render:', props, descriptor);
 
   if (!descriptor) {
     return null;
@@ -38,6 +37,22 @@ export const ComponentRenderer: React.FC<
       {children}
     </JustComponentRenderer>
   );
+};
+
+const ComponentRendererSettings = () => {
+  const { getComponent } = useApplicationContext();
+  const { descriptor } = useNode((state) => ({
+    descriptor: state.data.props.descriptor,
+  }));
+  if (!descriptor) return null;
+  const component = getComponent(descriptor);
+  return component?.settings && React.createElement(component?.settings);
+};
+
+ComponentRenderer['craft'] = {
+  related: {
+    settings: ComponentRendererSettings,
+  },
 };
 
 export const RootComponentRenderer: React.FC<PropsWithChildren> = ({

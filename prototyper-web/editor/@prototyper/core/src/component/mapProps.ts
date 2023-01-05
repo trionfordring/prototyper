@@ -8,7 +8,7 @@ function doMap(props: Object, context: any) {
     if (typeof k !== 'string' || typeof v !== 'string') {
       return v;
     }
-    if (k.startsWith('on')) {
+    if (k.startsWith('on') || k.endsWith('val') || k.endsWith('Val')) {
       return buildExpr(v, context)();
     } else if (k.endsWith('Expr') || k.endsWith('expr')) {
       return buildFmtStr(v, context)();
@@ -23,7 +23,6 @@ export function defaultMapProps(props: Object, context: any) {
   if (ans['props']) {
     ans['props'] = doMap(ans['props'], context);
   }
-  console.log('mapProps:', props, ans);
 
   return ans;
 }

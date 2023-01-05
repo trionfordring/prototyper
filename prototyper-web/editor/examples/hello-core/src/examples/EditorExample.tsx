@@ -13,7 +13,7 @@ const editorStyle = styled`
     border: 1px solid #000;
     padding: 5px;
   }
-  div {
+  .component:not(.root) {
     border: 1px solid blue;
   }
 `;

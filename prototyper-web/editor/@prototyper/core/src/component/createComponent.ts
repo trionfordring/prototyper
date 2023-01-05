@@ -24,6 +24,12 @@ export function createProtoComponent(
   protoComponent: CreateProtoComponentType
 ): ProtoComponent {
   if (protoComponent.type !== 'virtual') {
+    if (protoComponent.settings && protoComponent.component)
+      protoComponent.component['craft'] = {
+        related: {
+          settings: protoComponent.settings,
+        },
+      };
     return protoComponent as ProtoComponent;
   }
   let vdom = protoComponent.virtualDom as SerializedNodes;

@@ -5,6 +5,7 @@ import { ApplicationProvider } from './ApplicationProvider';
 import { GetComponentFunc, ProtoApplication } from './ProtoApplication';
 
 import { ComponentDescriptor, ComponentRenderer } from '../component';
+import { EditorComponentProvider } from '../component/EditorComponentProvider';
 import {
   defaultCompGetter,
   getResolver,
@@ -37,16 +38,18 @@ export const ApplicationEditor: FC<
       editing={!disabled}
       getComponent={getComponent || defaultCompGetter}
     >
-      <Editor
-        enabled={!disabled}
-        onRender={onRender || NodeRenderer}
-        resolver={{
-          ...resolver,
-          ComponentRenderer,
-        }}
-      >
-        {children}
-      </Editor>
+      <EditorComponentProvider>
+        <Editor
+          enabled={!disabled}
+          onRender={onRender || NodeRenderer}
+          resolver={{
+            ...resolver,
+            ComponentRenderer,
+          }}
+        >
+          {children}
+        </Editor>
+      </EditorComponentProvider>
     </ApplicationProvider>
   );
 };
