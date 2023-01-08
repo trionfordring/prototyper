@@ -95,7 +95,8 @@ export function setupComponents(pkg: ComponentPackage) {
       const [num, setNum] = useState(1);
       return {
         num,
-        add: () => setNum((n) => n + 1),
+        add: (offset = 1) =>
+          setNum((n) => n + (typeof offset === 'number' ? offset : 1)),
       };
     },
   });

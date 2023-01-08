@@ -18,6 +18,7 @@ export const NodeRenderer: FC = () => {
     id,
     connectors: { connect },
     name,
+    custom,
   } = useNode((node) => ({
     type: node.data.type,
     props: node.data.props,
@@ -25,25 +26,31 @@ export const NodeRenderer: FC = () => {
     hydrationTimestamp: node._hydrationTimestamp,
     id: node.id,
     name: node.data.displayName,
+    custom: node.data.custom,
   }));
   const componentContext = useComponentContext();
   const exprContext = useProtoExprContext();
   const protoComponent = componentContext.component;
   const isRoot = id === 'ROOT';
   const isAppRoot = isRoot && componentContext.root;
-  const [realProps, propsMapError] = useMemo(() => {
+  const [realProps, realCustom, propsMapError] = useMemo(() => {
     try {
       return [
         (protoComponent.mapProps || defaultMapProps)(props || {}, exprContext),
+        (protoComponent.mapProps || defaultMapProps)(custom || {}, exprContext),
         null,
       ];
     } catch (e) {
-      return [null, `节点[${name}]的属性计算失败: ${e.message || e}`];
+      return [null, null, `节点[${name}]的属性计算失败: ${e.message || e}`];
     }
-  }, [exprContext, protoComponent.mapProps, props]);
+  }, [exprContext, protoComponent.mapProps, props, name, custom]);
+
   const node = useMemo(() => {
     if (propsMapError) {
       return <RenderError msg={propsMapError}></RenderError>;
+    }
+    if (realCustom.hiddenVal) {
+      return null;
     }
     let children = props.children;
     if (nodes && nodes.length > 0) {
@@ -81,8 +88,8 @@ export const NodeRenderer: FC = () => {
     }
 
     return render;
-    // eslint-disable-next-line  react-hooks/exhaustive-deps
-  }, [type, realProps, hydrationTimestamp, nodes, id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type, realProps, hydrationTimestamp, nodes, id, realCustom]);
   return <RenderFailback nodeName={name}>{node}</RenderFailback>;
 };
 

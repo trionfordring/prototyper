@@ -1,53 +1,44 @@
-import { useNode } from '@prototyper/core';
-import { Button, Form } from 'antd';
-import React, { FC, PropsWithChildren } from 'react';
+import { useSetterContext } from '@prototyper/core';
+import { Button, Form, Typography } from 'antd';
+import React, { FC, PropsWithChildren, useState } from 'react';
 
-export interface SetterContextType {
-  virtualMode: boolean;
-}
-
-export const SetterContext = React.createContext<SetterContextType>({
-  virtualMode: false,
-});
+import { NodeSetter } from '../node';
 
 export const SetterForm: FC<
   PropsWithChildren<{
     initialValues?: Record<string, any>;
-    virtualMode?: boolean;
   }>
-> = ({ children, initialValues, virtualMode }) => {
-  const {
-    actions: { setProp },
-  } = useNode();
+> = ({ children, initialValues }) => {
+  const { setProps, isRoot } = useSetterContext();
+  const [changed, setChanged] = useState(false);
   const onFinish = (values: any) => {
-    setProp((props) => {
-      if (virtualMode)
-        Object.assign(props, {
-          props: values,
-        });
-      else Object.assign(props, values);
-      console.log('set props:', values);
-    });
+    setProps(values);
+    setChanged(false);
   };
   return (
-    <SetterContext.Provider
-      value={{
-        virtualMode: virtualMode,
-      }}
-    >
+    <React.Fragment>
       <Form
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 18 }}
         initialValues={initialValues}
         onFinish={onFinish}
+        onValuesChange={() => setChanged(true)}
       >
+        {isRoot ? null : (
+          <Form.Item>
+            <Typography>
+              <Typography.Text>Props配置</Typography.Text>
+            </Typography>
+          </Form.Item>
+        )}
         {children}
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit">
-            确定
+          <Button type={changed ? 'primary' : 'dashed'} htmlType="submit">
+            {changed ? '提交修改' : '确定'}
           </Button>
         </Form.Item>
       </Form>
-    </SetterContext.Provider>
+      {isRoot ? null : <NodeSetter></NodeSetter>}
+    </React.Fragment>
   );
 };

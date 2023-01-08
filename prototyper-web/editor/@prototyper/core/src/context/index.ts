@@ -5,3 +5,5 @@ export * from './application/useApplicationContext';
 
 export * from './component/ComponentContext';
 export * from './component/useComponentContext';
+
+export * from './setter';

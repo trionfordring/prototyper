@@ -1,6 +1,13 @@
 import { SerializedNode, SerializedNodes } from '@craftjs/core';
+import React from 'react';
 
-import { ProtoComponent } from './ProtoComponent';
+import {
+  ProtoComponent,
+  ProtoElementType,
+  WithDescriptor,
+} from './ProtoComponent';
+
+import { SetterContextProvider } from '../context';
 
 export type CreateProtoComponentType = Omit<ProtoComponent, 'virtualDom'> & {
   virtualDom?:
@@ -20,14 +27,30 @@ export type CreateProtoComponentType = Omit<ProtoComponent, 'virtualDom'> & {
       >;
 };
 
+function buildNativeSettings(settings: ProtoElementType) {
+  return (props) => {
+    return (
+      <SetterContextProvider>
+        {React.createElement(
+          settings,
+          {
+            ...props,
+          },
+          null
+        )}
+      </SetterContextProvider>
+    );
+  };
+}
+
 export function createProtoComponent(
-  protoComponent: CreateProtoComponentType
+  protoComponent: CreateProtoComponentType & Partial<WithDescriptor>
 ): ProtoComponent {
   if (protoComponent.type !== 'virtual') {
     if (protoComponent.settings && protoComponent.component)
       protoComponent.component['craft'] = {
         related: {
-          settings: protoComponent.settings,
+          settings: buildNativeSettings(protoComponent.settings),
         },
       };
     return protoComponent as ProtoComponent;

@@ -10,7 +10,7 @@ import {
 } from './ProtoComponent';
 import { defaultCompGetter, getResolver } from './getResolver';
 
-import { useApplicationContext } from '../context';
+import { SetterContextProvider, useApplicationContext } from '../context';
 import { NodeRenderer } from '../renderer/NodeRenderer';
 
 export const ComponentRenderer: React.FC<
@@ -46,7 +46,13 @@ const ComponentRendererSettings = () => {
   }));
   if (!descriptor) return null;
   const component = getComponent(descriptor);
-  return component?.settings && React.createElement(component?.settings);
+  return (
+    component?.settings && (
+      <SetterContextProvider virtual>
+        {React.createElement(component?.settings)}
+      </SetterContextProvider>
+    )
+  );
 };
 
 ComponentRenderer['craft'] = {

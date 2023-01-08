@@ -5,18 +5,16 @@ export interface ProtoExprContext {
   meta: any;
   state: any;
   appStates: any;
-  rootProps: any;
 }
 
 export function useProtoExprContext() {
   const { props, meta, state } = useComponentContext();
-  const { appStates, rootProps } = useApplicationContext();
+  const { appStates } = useApplicationContext();
   const exprContext = {
     props,
     meta,
     state,
     appStates,
-    rootProps,
   };
   return exprContext;
 }

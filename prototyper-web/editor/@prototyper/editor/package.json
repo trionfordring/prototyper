@@ -22,20 +22,21 @@
   "dependencies": {
     "antd": "^5.1.2",
     "lodash": "^4.17.21",
-    "styled-components": "^5.3.6",
-    "react-is": "^18.2.0"
+    "react-is": "^18.2.0",
+    "react-json-view": "^1.21.3",
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
-    "@types/styled-components": "^5.1.26",
+    "@prototyper/core": "workspace:*",
     "@types/lodash": "^4.14.190",
     "@types/react": "^18.0.25",
+    "@types/styled-components": "^5.1.26",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "@prototyper/core": "workspace:*"
+    "react-dom": "^18.2.0"
   },
   "peerDependencies": {
+    "@prototyper/core": "*",
     "react": ">=16.11.0",
-    "react-dom": ">=16.11.0",
-    "@prototyper/core": "*"
+    "react-dom": ">=16.11.0"
   }
 }

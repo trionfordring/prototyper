@@ -20,6 +20,7 @@ export interface ApplicationContextType<S = DefaultPropsType> {
 
   editing?: boolean;
   rootProps?: DefaultPropsType;
+  setRootProps: (props: any) => void;
 }
 
 export const ApplicationContext = React.createContext<

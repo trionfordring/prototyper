@@ -16,7 +16,13 @@ export function createPackage(
     components: componentsStore,
     draggers,
     createComponent: ({ name, ...component }) => {
-      const protoComponent = createProtoComponent(component);
+      const protoComponent = createProtoComponent({
+        ...component,
+        descriptor: {
+          namespace,
+          name,
+        },
+      });
       componentsStore[name] = protoComponent;
     },
     getComponent(name) {
