@@ -40,4 +40,13 @@ export function setupDraggers(pkg: ComponentPackage) {
     },
     label: '自定义组件',
   });
+  pkg.addDragger({
+    type: 'native',
+    descriptor: {
+      namespace: 'hello',
+      name: 'Card',
+    },
+    label: '卡片',
+    canvas: true,
+  });
 }

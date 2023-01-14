@@ -1,6 +1,3 @@
-import fs from 'fs/promises';
-import path from 'path';
-
 import { Project } from 'ts-morph';
 
 import { distPath, srcTsGlob, tsGlobForDir } from './utils/cwd';
@@ -18,9 +15,6 @@ export const buildDts = (...fileGlobs: string[]) => {
         emitDeclarationOnly: true,
         skipLibCheck: true,
         baseUrl: PROJ_ROOT,
-        paths: {
-          '@prototyper/*-src': ['editor/packages/*'],
-        },
       },
       tsConfigFilePath: TSCONFIG_PATH,
       skipAddingFilesFromTsConfig: true,
@@ -42,19 +36,5 @@ export const buildDts = (...fileGlobs: string[]) => {
     await project.emit({
       emitOnlyDtsFiles: true,
     });
-
-    const tasks = src.map(async (sourceFile) => {
-      const emitOutput = sourceFile.getEmitOutput();
-      const emitFiles = emitOutput.getOutputFiles();
-      const writeFileTasks = emitFiles.map(async (outputFile) => {
-        const filepath = outputFile.getFilePath();
-        await fs.mkdir(path.dirname(filepath), {
-          recursive: true,
-        });
-        await fs.writeFile(filepath, outputFile.getText(), 'utf-8');
-      });
-      return Promise.all(writeFileTasks);
-    });
-    await Promise.all(tasks);
   });
 };

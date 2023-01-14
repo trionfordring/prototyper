@@ -1,4 +1,5 @@
 import { useNode } from '@prototyper/core';
+import { SetterForm, TextSetter } from '@prototyper/editor';
 import { FC, PropsWithChildren } from 'react';
 
 export const Container: FC<
@@ -19,5 +20,13 @@ export const Container: FC<
     >
       {children}
     </div>
+  );
+};
+
+export const ContainerSettings = () => {
+  return (
+    <SetterForm>
+      <TextSetter label="颜色" propName="color"></TextSetter>
+    </SetterForm>
   );
 };

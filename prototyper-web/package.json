@@ -12,8 +12,8 @@
   "license": "MIT",
   "scripts": {
     "format": "prettier --write .",
-    "lint": "eslint . --ext .js,.ts,.jsx,.tsx --max-warnings 0 && pretty-quick --check --branch dev",
-    "lint:fix": "eslint --fix . --ext .vue,.js,.ts,.jsx,.tsx && pretty-quick --branch dev",
+    "lint": "eslint . --ext .js,.ts,.jsx,.tsx --max-warnings 0 && pretty-quick --check",
+    "lint:fix": "eslint --fix . --ext .vue,.js,.ts,.jsx,.tsx && pretty-quick",
     "gulp": "gulp -f gulpfile.ts",
     "test:core": "pnpm run gulp test:core",
     "release": "pnpm run gulp release",

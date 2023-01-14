@@ -106,29 +106,43 @@ importers:
       tslib: registry.npmmirror.com/tslib/2.4.1
       typescript: registry.npmmirror.com/typescript/4.9.3
 
-  editor/@prototyper/core:
+  editor/@craftjs/core:
     specifiers:
-      '@craftjs/core': 0.2.0-beta.8
-      '@types/lodash': ^4.14.190
+      '@craftjs/utils': workspace:*
       '@types/react': ^18.0.25
-      '@types/react-dom': ^18.0.8
+      debounce: ^1.2.0
       lodash: ^4.17.21
       react: ^18.2.0
-      react-dom: '*'
+      tiny-invariant: ^1.0.6
     dependencies:
-      '@craftjs/core': registry.npmmirror.com/@craftjs/core/0.2.0-beta.8_react@18.2.0
+      '@craftjs/utils': link:../utils
+      debounce: registry.npmmirror.com/debounce/1.2.1
       lodash: registry.npmmirror.com/lodash/4.17.21
-    optionalDependencies:
-      react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
+      tiny-invariant: registry.npmmirror.com/tiny-invariant/1.3.1
     devDependencies:
-      '@types/lodash': registry.npmmirror.com/@types/lodash/4.14.190
       '@types/react': registry.npmmirror.com/@types/react/18.0.25
-      '@types/react-dom': registry.npmmirror.com/@types/react-dom/18.0.9
       react: registry.npmmirror.com/react/18.2.0
 
-  editor/@prototyper/corev2:
+  editor/@craftjs/utils:
     specifiers:
-      '@craftjs/core': 0.2.0-beta.8
+      '@types/react': ^18.0.25
+      immer: ^9.0.6
+      lodash: ^4.17.21
+      nanoid: ^3.1.23
+      shallowequal: ^1.1.0
+      tiny-invariant: ^1.0.6
+    dependencies:
+      immer: registry.npmmirror.com/immer/9.0.16
+      lodash: registry.npmmirror.com/lodash/4.17.21
+      nanoid: registry.npmmirror.com/nanoid/3.3.4
+      shallowequal: registry.npmmirror.com/shallowequal/1.1.0
+      tiny-invariant: registry.npmmirror.com/tiny-invariant/1.3.1
+    devDependencies:
+      '@types/react': registry.npmmirror.com/@types/react/18.0.25
+
+  editor/@prototyper/core:
+    specifiers:
+      '@craftjs/core': workspace:*
       '@types/lodash': ^4.14.190
       '@types/react': ^18.0.25
       '@types/react-dom': ^18.0.8
@@ -136,11 +150,11 @@ importers:
       react: ^18.2.0
       react-dom: '*'
     dependencies:
-      '@craftjs/core': registry.npmmirror.com/@craftjs/core/0.2.0-beta.8_react@18.2.0
       lodash: registry.npmmirror.com/lodash/4.17.21
     optionalDependencies:
       react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
     devDependencies:
+      '@craftjs/core': link:../../@craftjs/core
       '@types/lodash': registry.npmmirror.com/@types/lodash/4.14.190
       '@types/react': registry.npmmirror.com/@types/react/18.0.25
       '@types/react-dom': registry.npmmirror.com/@types/react-dom/18.0.9
@@ -175,6 +189,7 @@ importers:
 
   editor/examples/hello-core:
     specifiers:
+      '@craftjs/core': workspace:*
       '@prototyper/core': workspace:*
       '@prototyper/editor': workspace:*
       '@types/lodash': ^4.14.190
@@ -185,9 +200,9 @@ importers:
       react: ^18.2.0
       react-contenteditable: ^3.3.6
       react-dom: ^18.2.0
-      typescript: ^4.6.4
       vite: ^3.2.3
     dependencies:
+      '@craftjs/core': link:../../@craftjs/core
       '@prototyper/core': link:../../@prototyper/core
       '@prototyper/editor': link:../../@prototyper/editor
       lodash: registry.npmmirror.com/lodash/4.17.21
@@ -199,7 +214,6 @@ importers:
       '@types/react': registry.npmmirror.com/@types/react/18.0.25
       '@types/react-dom': registry.npmmirror.com/@types/react-dom/18.0.9
       '@vitejs/plugin-react': registry.npmmirror.com/@vitejs/plugin-react/2.2.0_vite@3.2.4
-      typescript: registry.npmmirror.com/typescript/4.9.3
       vite: registry.npmmirror.com/vite/3.2.4
 
 packages:
@@ -2211,37 +2225,6 @@ packages:
       human-id: registry.npmmirror.com/human-id/1.0.2
       prettier: registry.npmmirror.com/prettier/2.8.0
     dev: true
-
-  registry.npmmirror.com/@craftjs/core/0.2.0-beta.8_react@18.2.0:
-    resolution: {integrity: sha512-kAKOky6QT0tl4w9BLKaD0+4/o+ITuX3TNqLO7mnPbmb9JBZ5Ha6XvTPbJf9ko9UYMC3lRm+M5KuqJGaOptL3NA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@craftjs/core/-/core-0.2.0-beta.8.tgz}
-    id: registry.npmmirror.com/@craftjs/core/0.2.0-beta.8
-    name: '@craftjs/core'
-    version: 0.2.0-beta.8
-    peerDependencies:
-      react: ^16.8.0 || ^17 || ^18
-    dependencies:
-      '@craftjs/utils': registry.npmmirror.com/@craftjs/utils/0.2.0-beta.8_react@18.2.0
-      debounce: registry.npmmirror.com/debounce/1.2.1
-      lodash: registry.npmmirror.com/lodash/4.17.21
-      react: registry.npmmirror.com/react/18.2.0
-      tiny-invariant: registry.npmmirror.com/tiny-invariant/1.3.1
-    dev: false
-
-  registry.npmmirror.com/@craftjs/utils/0.2.0-beta.8_react@18.2.0:
-    resolution: {integrity: sha512-K45KwdevWTghYHJuUsvXNAXni7DCcI+Ts+lw7mchnVJzr8vvxHKeL+tldHDokxWZbDmQYNfsf3u22t+oViu9pA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@craftjs/utils/-/utils-0.2.0-beta.8.tgz}
-    id: registry.npmmirror.com/@craftjs/utils/0.2.0-beta.8
-    name: '@craftjs/utils'
-    version: 0.2.0-beta.8
-    peerDependencies:
-      react: ^16.8.0 || ^17 || ^18
-    dependencies:
-      immer: registry.npmmirror.com/immer/9.0.16
-      lodash: registry.npmmirror.com/lodash/4.17.21
-      nanoid: registry.npmmirror.com/nanoid/3.3.4
-      react: registry.npmmirror.com/react/18.2.0
-      shallowequal: registry.npmmirror.com/shallowequal/1.1.0
-      tiny-invariant: registry.npmmirror.com/tiny-invariant/1.3.1
-    dev: false
 
   registry.npmmirror.com/@cspotcode/source-map-support/0.8.1:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz}

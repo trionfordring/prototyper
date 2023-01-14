@@ -11,6 +11,7 @@
   "dependencies": {
     "@prototyper/core": "workspace:*",
     "@prototyper/editor": "workspace:*",
+    "@craftjs/core": "workspace:*",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-contenteditable": "^3.3.6",
@@ -21,7 +22,6 @@
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
     "@vitejs/plugin-react": "^2.2.0",
-    "typescript": "^4.6.4",
     "vite": "^3.2.3"
   }
 }

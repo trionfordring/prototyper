@@ -46,6 +46,7 @@ export const NodeRenderer: FC = () => {
   }, [exprContext, protoComponent.mapProps, props, name, custom]);
 
   const node = useMemo(() => {
+    if (!type) return null;
     if (propsMapError) {
       return <RenderError msg={propsMapError}></RenderError>;
     }

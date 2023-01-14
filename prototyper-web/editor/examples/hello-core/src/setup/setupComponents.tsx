@@ -3,13 +3,16 @@ import { SetterForm, TextSetter } from '@prototyper/editor';
 import { useState } from 'react';
 
 import { Button, ButtonSettings } from '../components/Button';
-import { Container } from '../components/Container';
+import { Card } from '../components/Card';
+import { Container, ContainerSettings } from '../components/Container';
+import { DropArea } from '../components/DropArea';
 import { Text, TextSettings } from '../components/Text';
 
 export function setupComponents(pkg: ComponentPackage) {
   pkg.createComponent({
     name: 'Container',
     component: Container,
+    settings: ContainerSettings,
     type: 'native',
   });
   pkg.createComponent({
@@ -25,11 +28,22 @@ export function setupComponents(pkg: ComponentPackage) {
     type: 'native',
   });
   pkg.createComponent({
+    name: 'Card',
+    component: Card,
+    settings: ContainerSettings,
+    type: 'native',
+  });
+  pkg.createComponent({
+    name: 'DropArea',
+    component: DropArea,
+    type: 'native',
+  });
+  pkg.createComponent({
     name: 'TestVirtualComp',
     type: 'virtual',
     settings: () => {
       return (
-        <SetterForm virtualMode>
+        <SetterForm>
           <TextSetter propName="numVal" label="数字"></TextSetter>
           <TextSetter propName="onClick" label="当点击"></TextSetter>
         </SetterForm>
