@@ -2,6 +2,7 @@ import React, { FC, PropsWithChildren } from 'react';
 
 import { ProtoComponent, WithDescriptor } from './ProtoComponent';
 
+import { SaveComponentContext } from '../context';
 import { ComponentContext } from '../context/component/ComponentContext';
 
 export const ComponentProvider: FC<
@@ -16,17 +17,19 @@ export const ComponentProvider: FC<
   const states =
     (component.useSetupStates && component.useSetupStates(props, meta)) || {};
   return (
-    <ComponentContext.Provider
-      value={{
-        props: props || {},
-        state: states,
-        meta,
-        component,
-        editing,
-        root,
-      }}
-    >
-      {children}
-    </ComponentContext.Provider>
+    <SaveComponentContext>
+      <ComponentContext.Provider
+        value={{
+          props: props || {},
+          state: states,
+          meta,
+          component,
+          editing,
+          root,
+        }}
+      >
+        {children}
+      </ComponentContext.Provider>
+    </SaveComponentContext>
   );
 };

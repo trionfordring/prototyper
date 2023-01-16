@@ -23,7 +23,7 @@ export const TextSetter: FC<
   }, [propName]);
   return (
     <Form.Item name={propName} label={label} initialValue={propValue}>
-      <Input.TextArea {...props} placeholder={placeholder}></Input.TextArea>
+      <Input.TextArea placeholder={placeholder} {...props}></Input.TextArea>
     </Form.Item>
   );
 };

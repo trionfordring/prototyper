@@ -26,9 +26,7 @@ export const SetterRootContextProvider = ({ children }: PropsWithChildren) => {
         setProps,
         setHidden: unsupport,
         setFor: unsupport,
-        setSlot: unsupport,
         deleteNode: unsupport,
-        slot: false,
       }}
     >
       {children}

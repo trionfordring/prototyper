@@ -49,4 +49,12 @@ export function setupDraggers(pkg: ComponentPackage) {
     label: '卡片',
     canvas: true,
   });
+  pkg.addDragger({
+    type: 'native',
+    descriptor: {
+      namespace: 'hello',
+      name: 'Slot',
+    },
+    label: '插槽',
+  });
 }

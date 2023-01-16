@@ -1,18 +1,16 @@
 import { useSetterContext } from '@prototyper/core';
-import { Button, Form, Input, Switch } from 'antd';
+import { Button, Form, Input } from 'antd';
 import React, { useState } from 'react';
 
 import { FormHeader } from '../form/FormHeader';
 
 export const NodeSetter = () => {
-  const { forVal, hiddenVal, slot, forKey, setFor, setHidden, setSlot } =
-    useSetterContext();
+  const { forVal, hiddenVal, forKey, setFor, setHidden } = useSetterContext();
   const [changed, setChanged] = useState(false);
   const [form] = Form.useForm();
   const formForVal = Form.useWatch('forVal', form);
   const onCommit = (obj) => {
     setFor(obj.forVal, obj.forKey);
-    setSlot(obj.slot);
     setHidden(obj.hiddenVal);
     setChanged(false);
   };
@@ -36,14 +34,6 @@ export const NodeSetter = () => {
           <Input placeholder="默认为'#{loop.index}',请输入格式化字符串"></Input>
         </Form.Item>
       ) : null}
-      <Form.Item
-        label="作为槽"
-        name="slot"
-        initialValue={slot}
-        valuePropName="checked"
-      >
-        <Switch></Switch>
-      </Form.Item>
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type={changed ? 'primary' : 'dashed'} htmlType="submit">
           {changed ? '提交修改' : '确定'}

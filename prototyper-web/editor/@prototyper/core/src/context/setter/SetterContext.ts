@@ -4,8 +4,6 @@ export interface SetterContextType {
   setProps: (props: Record<string, any>) => void;
   setHidden: (hide: string) => void;
   hiddenVal?: string;
-  setSlot: (isSlot?: boolean) => void;
-  slot: boolean;
   setFor: (expr: string, forKey?: string) => void;
   forVal?: string;
   forKey?: string;

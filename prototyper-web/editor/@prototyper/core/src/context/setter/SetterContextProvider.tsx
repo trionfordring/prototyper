@@ -12,14 +12,12 @@ export const SetterContextProvider = ({
     actions: { setProp, setCustom },
     hiddenVal,
     forVal,
-    slot,
     id,
     name,
   } = useNode((state) => ({
     props: state.data.props,
     hiddenVal: state.data.custom?.hiddenVal,
     forVal: state.data.custom?.forVal,
-    slot: state.data.custom?.slot,
     id: state.id,
     name: state.data.displayName,
   }));
@@ -56,12 +54,6 @@ export const SetterContextProvider = ({
           });
         },
         forVal,
-        setSlot(slot = true) {
-          setCustom((cust) => {
-            cust.slot = slot;
-          });
-        },
-        slot,
         selectedNode: {
           id,
           name,
