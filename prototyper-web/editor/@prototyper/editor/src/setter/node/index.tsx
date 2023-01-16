@@ -1,6 +1,8 @@
 import { useSetterContext } from '@prototyper/core';
-import { Button, Form, Input, Switch, Typography } from 'antd';
+import { Button, Form, Input, Switch } from 'antd';
 import React, { useState } from 'react';
+
+import { FormHeader } from '../form/FormHeader';
 
 export const NodeSetter = () => {
   const { forVal, hiddenVal, slot, forKey, setFor, setHidden, setSlot } =
@@ -22,11 +24,7 @@ export const NodeSetter = () => {
       onFinish={onCommit}
       onValuesChange={() => setChanged(true)}
     >
-      <Form.Item>
-        <Typography>
-          <Typography.Text>节点通用配置</Typography.Text>
-        </Typography>
-      </Form.Item>
+      <FormHeader title="节点通用配置"></FormHeader>
       <Form.Item label="隐藏节点" name="hiddenVal" initialValue={hiddenVal}>
         <Input placeholder="输入Bool格式的JS表达式"></Input>
       </Form.Item>

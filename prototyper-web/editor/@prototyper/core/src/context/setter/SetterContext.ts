@@ -11,6 +11,14 @@ export interface SetterContextType {
   forKey?: string;
   isRoot: boolean;
   props: any;
+  selectedNode?: SelectedNodeInfo;
+  deleteNode: () => void;
+}
+
+export interface SelectedNodeInfo {
+  id: string;
+  name: string;
+  isDeletable: boolean;
 }
 
 export const SetterContext = React.createContext<SetterContextType | undefined>(

@@ -1,15 +1,20 @@
 import { useSetterContext } from '@prototyper/core';
-import { Button, Form, Typography } from 'antd';
+import { Button, Form } from 'antd';
 import React, { FC, PropsWithChildren, useState } from 'react';
+import styled from 'styled-components';
+
+import { FormHeader } from './FormHeader';
 
 import { NodeSetter } from '../node';
+
+const RemoveButton = styled(Button)``;
 
 export const SetterForm: FC<
   PropsWithChildren<{
     initialValues?: Record<string, any>;
   }>
 > = ({ children, initialValues }) => {
-  const { setProps, isRoot } = useSetterContext();
+  const { setProps, isRoot, deleteNode, selectedNode } = useSetterContext();
   const [changed, setChanged] = useState(false);
   const onFinish = (values: any) => {
     setProps(values);
@@ -25,11 +30,18 @@ export const SetterForm: FC<
         onValuesChange={() => setChanged(true)}
       >
         {isRoot ? null : (
-          <Form.Item>
-            <Typography>
-              <Typography.Text>Props配置</Typography.Text>
-            </Typography>
-          </Form.Item>
+          <FormHeader title="Props配置">
+            {selectedNode?.isDeletable ? (
+              <RemoveButton
+                type="default"
+                danger
+                size="small"
+                onClick={deleteNode}
+              >
+                删除节点
+              </RemoveButton>
+            ) : null}
+          </FormHeader>
         )}
         {children}
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

@@ -1,4 +1,4 @@
-import { useNode } from '@craftjs/core';
+import { useEditor, useNode } from '@craftjs/core';
 import React from 'react';
 
 import { SetterContext } from './SetterContext';
@@ -13,11 +13,18 @@ export const SetterContextProvider = ({
     hiddenVal,
     forVal,
     slot,
+    id,
+    name,
   } = useNode((state) => ({
     props: state.data.props,
     hiddenVal: state.data.custom?.hiddenVal,
     forVal: state.data.custom?.forVal,
     slot: state.data.custom?.slot,
+    id: state.id,
+    name: state.data.displayName,
+  }));
+  const { actions, isDeletable } = useEditor((state, query) => ({
+    isDeletable: query.node(id).isDeletable(),
   }));
 
   const setProps = (props: Record<string, any>) => {
@@ -55,6 +62,14 @@ export const SetterContextProvider = ({
           });
         },
         slot,
+        selectedNode: {
+          id,
+          name,
+          isDeletable,
+        },
+        deleteNode: () => {
+          actions.delete(id);
+        },
       }}
     >
       {children}
