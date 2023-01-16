@@ -6,8 +6,9 @@ export interface SetterContextType {
   hiddenVal?: string;
   setSlot: (isSlot?: boolean) => void;
   slot: boolean;
-  setFor: (expr) => void;
+  setFor: (expr: string, forKey?: string) => void;
   forVal?: string;
+  forKey?: string;
   isRoot: boolean;
   props: any;
 }

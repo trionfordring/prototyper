@@ -42,9 +42,10 @@ export const SetterContextProvider = ({
           });
         },
         hiddenVal,
-        setFor(expr) {
+        setFor(expr, forKey) {
           setCustom((cust) => {
             cust.forVal = expr;
+            cust.forKey = forKey;
           });
         },
         forVal,
