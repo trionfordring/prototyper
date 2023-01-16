@@ -13,7 +13,7 @@ export const DropArea: FC<PropsWithChildren> = ({ children }) => {
       }}
     >
       <span>drop[</span>
-      {children}
+      {children ? children : <div>-将组件拖拽到此处-</div>}
       <span>]</span>
     </div>
   );

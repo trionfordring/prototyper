@@ -41,12 +41,12 @@ export function ComponentPaneItem({ dragger }: { dragger: ProtoDragger }) {
     connectors: { create },
   } = useEditor();
   const protoComponent = ApplicationContext.getComponent(descriptor);
-  let Component;
+  let component;
   let props: Record<string, any> = {};
   if (protoComponent.type === 'native') {
     props = dragger.compProps;
-    Component = protoComponent.component;
-    if (!Component) {
+    component = protoComponent.component;
+    if (!component) {
       console.error(
         `组件[${descriptor.namespace}.${descriptor.name}]的类型为native,但未配置渲染函数!`
       );
@@ -57,14 +57,14 @@ export function ComponentPaneItem({ dragger }: { dragger: ProtoDragger }) {
       props: dragger.compProps,
       descriptor: protoComponent.descriptor,
     };
-    Component = ComponentRenderer;
+    component = ComponentRenderer;
   }
   return (
     <ItemBox
       ref={(ref) =>
         create(
           ref,
-          <Element is={Component} canvas={dragger.canvas} {...props} />
+          <Element is={component} canvas={dragger.canvas} {...props} />
         )
       }
     >

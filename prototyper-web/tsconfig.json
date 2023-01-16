@@ -15,7 +15,7 @@
     "esModuleInterop": true,
     "sourceMap": true
   },
-  "exclude": ["**/node_modules/**","**/dist/**","*timestamp*","*.config.js"],
+  "exclude": ["**/node_modules/**","**/dist/**","*timestamp*","*js"],
   "ts-node": {
     "transpileOnly": true,
     "compilerOptions": {

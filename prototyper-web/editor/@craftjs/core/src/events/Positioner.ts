@@ -208,7 +208,14 @@ export class Positioner {
 
     return getCanvas(dropTargetId);
   }
-
+  clearIndicator() {
+    this.currentDropTargetId = null;
+    this.currentDropTargetCanvasAncestorId = null;
+    this.currentTargetChildDimensions = null;
+    this.currentTargetId = null;
+    this.dragError = null;
+    this.currentIndicator = null;
+  }
   /**
    * Compute a new Indicator object based on the dropTarget and x,y coords
    * Returns null if theres no change from the previous Indicator

@@ -1,4 +1,4 @@
-import { isChromium, isLinux } from '@craftjs/utils';
+import { isChromium, isLinux, ROOT_NODE } from '@craftjs/utils';
 import isFunction from 'lodash/isFunction';
 import React from 'react';
 
@@ -172,9 +172,32 @@ export class DefaultEventHandlers<O = {}> extends CoreEventHandlers<
           }
         );
 
+        const unbindRootDragLeave = function () {
+          if (targetId === ROOT_NODE) {
+            return this.addCraftEventListener(el, 'dragleave', (e) => {
+              e.craft.stopPropagation();
+              e.preventDefault();
+              // 如果是节点的移动，则不需要考虑移出的问题
+              if (this.dragTarget?.type === 'existing') {
+                return;
+              }
+              const { left, right, top, bottom } = el.getBoundingClientRect();
+              const { clientX: x, clientY: y } = e;
+              // 创建节点时，如果移出了根节点，则说明用户可能不打算创建这个节点了。
+              if (!(x >= left && x <= right && y >= top && y <= bottom)) {
+                store.actions.setIndicator(null);
+                this.positioner.clearIndicator();
+              }
+            });
+          } else {
+            return () => {};
+          }
+        }.call(this);
+
         return () => {
           unbindDragEnter();
           unbindDragOver();
+          unbindRootDragLeave();
         };
       },
       drag: (el: HTMLElement, id: NodeId) => {
