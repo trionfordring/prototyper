@@ -2,7 +2,7 @@ import { Editor, Frame, useNode } from '@craftjs/core';
 import React, { forwardRef, PropsWithChildren, useMemo } from 'react';
 
 import { ComponentProvider } from './ComponentProvider';
-import { DefaultComponentWarpper } from './DefaultComponentWarpper';
+import { ComponentWarpper } from './ComponentWarpper';
 import {
   ComponentDescriptor,
   ProtoComponent,
@@ -88,7 +88,6 @@ const JustComponentRenderer = forwardRef<
     () => getResolver(component.dependencies, applicationContext.getComponent),
     [component.dependencies, applicationContext.getComponent]
   );
-  const Warpper = (component.warpper || DefaultComponentWarpper) as any;
   const Content =
     component.type === 'virtual' ? (
       <Editor
@@ -114,7 +113,8 @@ const JustComponentRenderer = forwardRef<
       {root ? (
         Content
       ) : (
-        <Warpper
+        <ComponentWarpper
+          render={component.warpper}
           ref={ref}
           props={props}
           className={component.className}
@@ -122,7 +122,7 @@ const JustComponentRenderer = forwardRef<
           descriptor={component.descriptor}
         >
           {Content}
-        </Warpper>
+        </ComponentWarpper>
       )}
     </ComponentProvider>
   );

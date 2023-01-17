@@ -29,8 +29,7 @@ export const ApplicationProvider: FC<
   const [rootProps, realSetRootProps] = useState(app.initProps || {});
   const [version, setVersion] = useState(0);
   const setRootProps = (props: any) => {
-    const mappedProps = { ...rootProps, ...props };
-    realSetRootProps(mappedProps);
+    realSetRootProps(props);
   };
   function setComponent(component: ProtoComponent, props: DefaultPropsType) {
     setCurrentComponent(component);

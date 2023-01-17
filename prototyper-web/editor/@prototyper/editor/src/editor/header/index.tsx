@@ -1,19 +1,20 @@
 import { useComponentContext, useEditor } from '@prototyper/core';
-import { Button, Typography } from 'antd';
+import { Button, Space, Typography } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 
 const Header = styled.div`
   min-width: 600px;
   padding: 0 24px;
-  margin: 0 auto;
+  margin: 5px auto;
   display: flex;
   flex-wrap: nowrap;
-  align-items: baseline;
+  align-items: center;
 `;
 
-const Title = styled(Typography.Title)`
-  margin-bottom: 0 !important;
+const Title = styled.h1`
+  margin-bottom: 0;
+  margin-top: 0;
 `;
 
 const Center = styled.div`
@@ -46,9 +47,17 @@ const EditorHeader = () => {
         </Item>
       </Center>
       <Right>
-        <Button type="primary" onClick={save}>
-          保存
-        </Button>
+        <Space>
+          <Button type="primary" onClick={save}>
+            编辑脚本
+          </Button>
+          <Button type="primary" onClick={save}>
+            编辑样式表
+          </Button>
+          <Button type="primary" onClick={save}>
+            保存
+          </Button>
+        </Space>
       </Right>
     </Header>
   );

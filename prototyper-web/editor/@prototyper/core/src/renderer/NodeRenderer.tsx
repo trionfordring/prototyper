@@ -4,7 +4,7 @@ import React, { FC, useMemo } from 'react';
 import { RenderError } from './RenderError';
 import { RenderFailback } from './RenderFailback';
 
-import { DefaultComponentWarpper } from '../component/DefaultComponentWarpper';
+import { ComponentWarpper } from '../component/ComponentWarpper';
 import { defaultMapProps } from '../component/mapProps';
 import { LoopContext, useComponentContext } from '../context';
 import {
@@ -137,25 +137,27 @@ export const NodeRenderer: FC = () => {
       const isAppRoot = isRoot && componentContext.root;
       // 对于应用根节点，需要connect的Warpper
       if (isAppRoot) {
-        const Warpper = (protoComponent.warpper ||
-          DefaultComponentWarpper) as any;
         const realProps = getRealProps(
           name,
-          props,
+          componentContext.props,
           exprContext,
           protoComponent.mapProps
         );
+
+        if (realProps.error)
+          return <RenderError msg={realProps.error.message}></RenderError>;
         return (
-          <Warpper
+          <ComponentWarpper
+            render={protoComponent.warpper}
             ref={(ref) => connect(ref)}
-            props={realProps}
+            props={realProps.realProps}
             className={protoComponent.className}
             editing={componentContext.editing}
             descriptor={protoComponent.descriptor}
             root
           >
             {children}
-          </Warpper>
+          </ComponentWarpper>
         );
       } else if (isRoot) {
         // 对于非应用根节点的root，直接渲染它的子节点即可(它的warpper会被它的父Render渲染)

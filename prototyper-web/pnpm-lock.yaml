@@ -195,11 +195,14 @@ importers:
       '@types/lodash': ^4.14.190
       '@types/react': ^18.0.24
       '@types/react-dom': ^18.0.8
+      '@types/styled-components': ^5.1.26
       '@vitejs/plugin-react': ^2.2.0
       lodash: ^4.17.21
       react: ^18.2.0
       react-contenteditable: ^3.3.6
       react-dom: ^18.2.0
+      react-is: ^18.2.0
+      styled-components: ^5.3.6
       vite: ^3.2.3
     dependencies:
       '@craftjs/core': link:../../@craftjs/core
@@ -209,10 +212,13 @@ importers:
       react: registry.npmmirror.com/react/18.2.0
       react-contenteditable: registry.npmmirror.com/react-contenteditable/3.3.6_react@18.2.0
       react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
+      react-is: registry.npmmirror.com/react-is/18.2.0
+      styled-components: registry.npmmirror.com/styled-components/5.3.6_7i5myeigehqah43i5u7wbekgba
     devDependencies:
       '@types/lodash': registry.npmmirror.com/@types/lodash/4.14.190
       '@types/react': registry.npmmirror.com/@types/react/18.0.25
       '@types/react-dom': registry.npmmirror.com/@types/react-dom/18.0.9
+      '@types/styled-components': registry.npmmirror.com/@types/styled-components/5.1.26
       '@vitejs/plugin-react': registry.npmmirror.com/@vitejs/plugin-react/2.2.0_vite@3.2.4
       vite: registry.npmmirror.com/vite/3.2.4
 
