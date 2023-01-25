@@ -1,7 +1,9 @@
 import React from 'react';
 
+import { PropDeclear } from '../../utils';
+
 export interface SetterContextType {
-  setProps: (props: Record<string, any>) => void;
+  setProps: (props: Record<string, any>, propsMapper?: PropDeclear) => void;
   setHidden: (hide: string) => void;
   hiddenVal?: string;
   setFor: (expr: string, forKey?: string) => void;
@@ -9,6 +11,7 @@ export interface SetterContextType {
   forKey?: string;
   isRoot: boolean;
   props: any;
+  propsMapper?: PropDeclear;
   selectedNode?: SelectedNodeInfo;
   deleteNode: () => void;
 }

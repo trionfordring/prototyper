@@ -3,8 +3,8 @@ import { SetterForm, TextSetter } from '@prototyper/editor';
 import { FC, useEffect, useState } from 'react';
 import ContentEditable from 'react-contenteditable';
 export const Text: FC<{
-  textExpr: string;
-}> = ({ textExpr }) => {
+  text: string;
+}> = ({ text }) => {
   const {
     connectors: { connect, drag },
     actions: { setProp },
@@ -24,19 +24,19 @@ export const Text: FC<{
     if (!hasSelectedNode) {
       setEditable(false);
       if (editContent) {
-        setProp((props: any) => (props.textExpr = editContent));
+        setProp((props: any) => (props.text = editContent));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasSelectedNode]);
   useEffect(() => {
-    setEditContent(props.textExpr);
-  }, [props.textExpr]);
+    setEditContent(props.text);
+  }, [props.text]);
   return (
     <h3
       onDoubleClick={() => {
         if (enabled && !editable) {
-          setEditContent(props.textExpr);
+          setEditContent(props.text);
           setEditable(true);
         }
       }}
@@ -52,7 +52,7 @@ export const Text: FC<{
           }}
         ></ContentEditable>
       ) : (
-        textExpr
+        text
       )}
     </h3>
   );
@@ -61,7 +61,7 @@ export const Text: FC<{
 export const TextSettings = () => {
   return (
     <SetterForm>
-      <TextSetter propName="textExpr" label="文字"></TextSetter>
+      <TextSetter propName="text" label="文字"></TextSetter>
     </SetterForm>
   );
 };

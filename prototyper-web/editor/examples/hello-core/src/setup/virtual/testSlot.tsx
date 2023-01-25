@@ -47,7 +47,7 @@ export const testSlot = (pkg: ComponentPackage) => {
         },
         isCanvas: false,
         props: {
-          textExpr: '组件渲染器(num:#{state.num})',
+          text: '组件渲染器(num:#{state.num})',
         },
         displayName: 't1',
         custom: {},

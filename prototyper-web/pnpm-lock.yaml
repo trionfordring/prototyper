@@ -222,6 +222,35 @@ importers:
       '@vitejs/plugin-react': registry.npmmirror.com/@vitejs/plugin-react/2.2.0_vite@3.2.4
       vite: registry.npmmirror.com/vite/3.2.4
 
+  editor/materials/std-materials:
+    specifiers:
+      '@prototyper/core': workspace:*
+      '@prototyper/editor': workspace:*
+      '@types/lodash': ^4.14.190
+      '@types/react': ^18.0.24
+      '@types/styled-components': ^5.1.26
+      antd: ^5.1.2
+      lodash: ^4.17.21
+      react: ^18.2.0
+      react-contenteditable: ^3.3.6
+      react-dom: ^18.2.0
+      react-is: ^18.2.0
+      styled-components: ^5.3.6
+    dependencies:
+      '@prototyper/core': link:../../@prototyper/core
+      '@prototyper/editor': link:../../@prototyper/editor
+      antd: registry.npmmirror.com/antd/5.1.2_biqbaboplfbrettd7655fr4n2y
+      lodash: registry.npmmirror.com/lodash/4.17.21
+      react: registry.npmmirror.com/react/18.2.0
+      react-contenteditable: registry.npmmirror.com/react-contenteditable/3.3.6_react@18.2.0
+      react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
+      react-is: registry.npmmirror.com/react-is/18.2.0
+      styled-components: registry.npmmirror.com/styled-components/5.3.6_7i5myeigehqah43i5u7wbekgba
+    devDependencies:
+      '@types/lodash': registry.npmmirror.com/@types/lodash/4.14.190
+      '@types/react': registry.npmmirror.com/@types/react/18.0.25
+      '@types/styled-components': registry.npmmirror.com/@types/styled-components/5.1.26
+
 packages:
 
   registry.npmmirror.com/@ampproject/remapping/2.2.0:
@@ -10122,7 +10151,7 @@ packages:
       classnames: registry.npmmirror.com/classnames/2.3.2
       rc-motion: registry.npmmirror.com/rc-motion/2.6.2_biqbaboplfbrettd7655fr4n2y
       rc-util: registry.npmmirror.com/rc-util/5.27.1_biqbaboplfbrettd7655fr4n2y
-      rc-virtual-list: registry.npmmirror.com/rc-virtual-list/3.4.11_biqbaboplfbrettd7655fr4n2y
+      rc-virtual-list: registry.npmmirror.com/rc-virtual-list/3.4.13_biqbaboplfbrettd7655fr4n2y
       react: registry.npmmirror.com/react/18.2.0
       react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
     dev: false
@@ -10175,24 +10204,6 @@ packages:
       react: registry.npmmirror.com/react/18.2.0
       react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
       react-is: registry.npmmirror.com/react-is/16.13.1
-    dev: false
-
-  registry.npmmirror.com/rc-virtual-list/3.4.11_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-BvUUH60kkeTBPigN5F89HtGaA5jSP4y2aM6cJ4dk9Y42I9yY+h6i08wF6UKeDcxdfOU8j3I5HxkSS/xA77J3wA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/rc-virtual-list/-/rc-virtual-list-3.4.11.tgz}
-    id: registry.npmmirror.com/rc-virtual-list/3.4.11
-    name: rc-virtual-list
-    version: 3.4.11
-    engines: {node: '>=8.x'}
-    peerDependencies:
-      react: '*'
-      react-dom: '*'
-    dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.20.1
-      classnames: registry.npmmirror.com/classnames/2.3.2
-      rc-resize-observer: registry.npmmirror.com/rc-resize-observer/1.2.0_biqbaboplfbrettd7655fr4n2y
-      rc-util: registry.npmmirror.com/rc-util/5.27.1_biqbaboplfbrettd7655fr4n2y
-      react: registry.npmmirror.com/react/18.2.0
-      react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
     dev: false
 
   registry.npmmirror.com/rc-virtual-list/3.4.13_biqbaboplfbrettd7655fr4n2y:

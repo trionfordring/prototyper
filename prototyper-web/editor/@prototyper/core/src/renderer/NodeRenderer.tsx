@@ -1,71 +1,25 @@
-import { NodeElement, NodeId, useNode } from '@craftjs/core';
+import { useNode } from '@craftjs/core';
 import React, { FC, useMemo } from 'react';
 
 import { RenderError } from './RenderError';
 import { RenderFailback } from './RenderFailback';
 
 import { ComponentWarpper } from '../component/ComponentWarpper';
-import { defaultMapProps } from '../component/mapProps';
 import { LoopContext, useComponentContext } from '../context';
-import {
-  ProtoExprContext,
-  useProtoExprContext,
-} from '../hook/useProtoExprContext';
+import { useNodeChildren } from '../hook/useNodeChildren';
+import { useNodeCustom } from '../hook/useNodeCustom';
+import { useNodeProps } from '../hook/useNodeProps';
+import { useProtoExprContext } from '../hook/useProtoExprContext';
+import { Tool } from '../utils';
 
-function getRealProps(
-  name: string,
-  props: any,
-  context: ProtoExprContext,
-  mapFunc = defaultMapProps
-): {
-  realProps: any;
-  error?: Error;
-} {
-  try {
-    return {
-      realProps: mapFunc(props, context),
-    };
-  } catch (e) {
-    return {
-      realProps: {},
-      error: new Error(`节点[${name}]的属性计算失败: ${e.message || e}`),
-    };
-  }
-}
-
-function getRealCustom(
-  name: string,
-  custom: any,
-  context: ProtoExprContext,
-  mapFunc = defaultMapProps
-): {
-  realCustom: any;
-  error?: Error;
-} {
-  try {
-    return {
-      realCustom: mapFunc(custom, context),
-    };
-  } catch (e) {
-    return {
-      realCustom: {},
-      error: new Error(`节点[${name}]的通用设置计算失败: ${e.message || e}`),
-    };
-  }
-}
-
-function getForKey(
-  name: string,
-  forKey: any,
-  context: ProtoExprContext,
-  mapFunc = defaultMapProps
-) {
-  try {
-    return mapFunc({ keyExpr: forKey }, context)['keyExpr'];
-  } catch (e) {
-    throw new Error(`节点[${name}]的循环key计算失败: ${e.message || e}`);
-  }
-}
+export const NodeRenderer = () => {
+  const { name } = useNode((node) => ({ name: node.data.displayName }));
+  return (
+    <RenderFailback nodeName={name}>
+      <NodeRenderer1></NodeRenderer1>
+    </RenderFailback>
+  );
+};
 
 function getRender(
   type: string | React.ComponentType,
@@ -79,86 +33,84 @@ function getRender(
   return render;
 }
 
-export const NodeRenderer: FC = () => {
+const NodeRenderer1: FC = () => {
   const {
     type,
-    props,
-    nodes,
     hydrationTimestamp,
     id,
     connectors: { connect },
-    name,
-    custom,
   } = useNode((node) => ({
     type: node.data.type,
-    props: node.data.props,
-    nodes: node.data.nodes,
     hydrationTimestamp: node._hydrationTimestamp,
     id: node.id,
-    name: node.data.displayName,
-    custom: node.data.custom,
   }));
   const componentContext = useComponentContext();
   const exprContext = useProtoExprContext();
+  const children = useNodeChildren();
 
-  const node = useMemo(() => {
+  const { propsExpr, error: propsError } = useNodeProps();
+  const {
+    hiddenExpr,
+    hiddenExprError,
+    forValExpr,
+    forValExprError,
+    forKeyExpr,
+    forKeyExprError,
+  } = useNodeCustom();
+
+  return useMemo(() => {
     if (!type) return null;
-    const protoComponent = componentContext.component;
-    const { error: customError, realCustom } = getRealCustom(
-      name,
-      custom,
-      exprContext,
-      protoComponent.mapProps
-    );
-    if (customError) {
-      return <RenderError msg={customError.message}></RenderError>;
-    }
-
-    // 应用hidden属性
-    if (realCustom.hiddenVal) {
-      return null;
-    }
-
-    // 子节点计算
-    let children = props.children;
-    if (nodes && nodes.length > 0) {
-      children = (
-        <React.Fragment>
-          {nodes.map((id: NodeId) => (
-            <NodeElement id={id} key={id} />
-          ))}
-        </React.Fragment>
+    const syntaxError =
+      propsError || hiddenExprError || forValExprError || forKeyExprError;
+    if (syntaxError) {
+      return (
+        <RenderError
+          msg={`设置存在语法错误:${syntaxError.message}`}
+          withPrefix
+        />
       );
     }
+    let nodeScopeError: Error;
+    // 应用hidden属性
+    if (
+      Tool.try(() => hiddenExpr.run(exprContext)).catch((err) => {
+        nodeScopeError = err;
+        return true;
+      })
+    ) {
+      return nodeScopeError ? (
+        <RenderError
+          msg={`隐藏属性计算失败:${nodeScopeError.message}`}
+          withPrefix
+        />
+      ) : null;
+    }
 
+    const protoComponent = componentContext.component;
     // 对于根节点，直接返回
     {
       const isRoot = id === 'ROOT';
       const isAppRoot = isRoot && componentContext.root;
       // 对于应用根节点，需要connect的Warpper
       if (isAppRoot) {
-        const realProps = getRealProps(
-          name,
-          componentContext.props,
-          exprContext,
-          protoComponent.mapProps
-        );
-
-        if (realProps.error)
-          return <RenderError msg={realProps.error.message}></RenderError>;
-        return (
-          <ComponentWarpper
-            render={protoComponent.warpper}
-            ref={(ref) => connect(ref)}
-            props={realProps.realProps}
-            className={protoComponent.className}
-            editing={componentContext.editing}
-            descriptor={protoComponent.descriptor}
-            root
-          >
-            {children}
-          </ComponentWarpper>
-        );
+        return Tool.try(() => {
+          const realProps = componentContext.props;
+          return (
+            <ComponentWarpper
+              render={protoComponent.warpper}
+              ref={(ref) => connect(ref)}
+              props={realProps}
+              className={protoComponent.className}
+              editing={componentContext.editing}
+              descriptor={protoComponent.descriptor}
+              root
+            >
+              {children}
+            </ComponentWarpper>
+          );
+        }).catch((e) => {
+          return <RenderError msg={`应用根节点渲染失败:${e.message}`} />;
+        });
       } else if (isRoot) {
         // 对于非应用根节点的root，直接渲染它的子节点即可(它的warpper会被它的父Render渲染)
         return children;
@@ -168,7 +120,17 @@ export const NodeRenderer: FC = () => {
     let render;
 
     // 处理for循环
-    let forVal = realCustom['forVal'];
+    let forVal = Tool.try(() => forValExpr.run(exprContext)).catch(
+      (e) => (nodeScopeError = e)
+    );
+    if (nodeScopeError) {
+      return (
+        <RenderError
+          msg={`无法通过表达式循环节点:${nodeScopeError.message}`}
+          withPrefix
+        />
+      );
+    }
     // 当forVal为一个数字，将重复该元素指定次数
     if (typeof forVal === 'number') {
       const undefList = [];
@@ -178,26 +140,19 @@ export const NodeRenderer: FC = () => {
     // 进行数组映射
     if (Array.isArray(forVal)) {
       // 先映射props
-      let propsWithLoopList;
-      try {
-        propsWithLoopList = forVal.map((value, index, array) => {
+      let propsWithLoopList = Tool.try(() =>
+        forVal.map((value, index, array) => {
           // 通过custom.forKey计算key
-          let key = custom.forKey
-            ? getForKey(
-                name,
-                custom.forKey,
-                {
-                  ...exprContext,
-                  loop: {
-                    value,
-                    index,
-                    array,
-                    key: undefined,
-                  },
-                },
-                protoComponent.mapProps
-              )
-            : index;
+          const key =
+            forKeyExpr.run({
+              ...exprContext,
+              loop: {
+                value,
+                index,
+                array,
+                key: undefined,
+              },
+            }) || index;
           // 构造loop上下文
           const loop = {
             value,
@@ -205,75 +160,73 @@ export const NodeRenderer: FC = () => {
             array,
             key,
           };
+          let err;
           // 基于loop上下文，计算realProps
-          const realProps = getRealProps(name, props, {
-            ...exprContext,
-            loop,
-          });
+          const realProps = Tool.try(() =>
+            propsExpr.run({
+              ...exprContext,
+              loop,
+            })
+          ).catch((e) => (err = e));
           return {
-            realProps: realProps.realProps,
+            realProps: realProps,
             loop,
-            error: realProps.error,
+            error: err,
           };
-        });
-      } catch (e) {
-        return <RenderError msg={e.message || e}></RenderError>;
-      }
-      // 将映射完成的props渲染为react节点
-      try {
-        render = (
-          <React.Fragment>
-            {propsWithLoopList.map(({ realProps, loop, error }) => {
-              if (error) {
-                return (
-                  <RenderError key={loop.key} msg={error.message}></RenderError>
-                );
-              }
-              return (
-                <LoopContext.Provider key={loop.key} value={loop}>
-                  {getRender(type, realProps, children)}
-                </LoopContext.Provider>
-              );
-            })}
-          </React.Fragment>
-        );
-      } catch (e) {
+        })
+      ).catch((e) => (nodeScopeError = e));
+      if (nodeScopeError) {
         return (
           <RenderError
-            msg={`节点[${name}]循环映射失败: ${e.message || e}`}
-          ></RenderError>
+            msg={`循环key计算失败:${nodeScopeError.message}`}
+            withPrefix
+          />
         );
       }
+      // 将映射完成的props渲染为react节点
+      render = (
+        <React.Fragment>
+          {propsWithLoopList.map(({ realProps, loop, error }) => {
+            if (error) {
+              return (
+                <RenderError
+                  key={loop.key}
+                  msg={`[${loop.key}]:${error.message}`}
+                  withPrefix
+                ></RenderError>
+              );
+            }
+            return (
+              <LoopContext.Provider key={loop.key} value={loop}>
+                {getRender(type, realProps, children)}
+              </LoopContext.Provider>
+            );
+          })}
+        </React.Fragment>
+      );
     } else {
       // 如果无需循环，则直接渲染单个节点即可
-      const { realProps, error } = getRealProps(
-        name,
-        props,
-        exprContext,
-        protoComponent.mapProps
-      );
-      if (error) {
-        return <RenderError msg={error.message}></RenderError>;
-      }
-      render = getRender(type, realProps, children);
+      render = Tool.try(() => {
+        const realProps = propsExpr.run(exprContext);
+        return getRender(type, realProps, children);
+      }).catch((e) => {
+        return <RenderError msg={`节点属性计算失败:${e.message}`} withPrefix />;
+      });
     }
     return render;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     type,
-    componentContext.component,
-    componentContext.root,
-    componentContext.editing,
-    name,
-    custom,
+    hiddenExpr,
     exprContext,
-    props,
-    nodes,
+    componentContext,
     id,
-    connect,
+    children,
+    forKeyExpr,
+    propsExpr,
+    forValExpr,
     hydrationTimestamp,
   ]);
-  return <RenderFailback nodeName={name}>{node}</RenderFailback>;
 };
 
 export const SimpleElement = ({ render }: any) => {

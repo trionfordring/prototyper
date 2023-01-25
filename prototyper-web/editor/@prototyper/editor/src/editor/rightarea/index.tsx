@@ -9,7 +9,8 @@ import { RootSettings } from './settings/RootSettings';
 const Panel = styled.div`
   width: 23rem;
   margin: 0 5px;
-  height: auto;
+  max-height: calc(100vh - 48px);
+  overflow: auto;
 `;
 
 const EditorRight: FC = () => {

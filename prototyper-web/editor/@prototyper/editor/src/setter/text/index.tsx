@@ -1,8 +1,10 @@
-import { useSetterContext } from '@prototyper/core';
-import { Form, Input } from 'antd';
+import { FMT_EXPR, JS_EXPR } from '@prototyper/core/src/utils';
+import { Input } from 'antd';
 import { TextAreaProps } from 'antd/es/input';
 import React, { useMemo } from 'react';
 import { FC } from 'react';
+
+import { FormItem } from '../form';
 
 export const TextSetter: FC<
   {
@@ -10,9 +12,6 @@ export const TextSetter: FC<
     label: string;
   } & TextAreaProps
 > = ({ propName, label, ...props }) => {
-  const { propValue } = useSetterContext((props) => ({
-    propValue: props[propName],
-  }));
   const placeholder = useMemo(() => {
     const k = propName;
     if (k.startsWith('on') || k.endsWith('val') || k.endsWith('Val')) {
@@ -22,8 +21,8 @@ export const TextSetter: FC<
     }
   }, [propName]);
   return (
-    <Form.Item name={propName} label={label} initialValue={propValue}>
+    <FormItem propName={propName} label={label} allow={['', FMT_EXPR, JS_EXPR]}>
       <Input.TextArea placeholder={placeholder} {...props}></Input.TextArea>
-    </Form.Item>
+    </FormItem>
   );
 };

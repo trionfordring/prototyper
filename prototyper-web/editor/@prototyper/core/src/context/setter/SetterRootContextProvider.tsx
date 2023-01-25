@@ -2,6 +2,7 @@ import React, { PropsWithChildren } from 'react';
 
 import { SetterContext } from './SetterContext';
 
+import { PropDeclear } from '../../utils';
 import { useApplicationContext } from '../application/useApplicationContext';
 
 function unsupport() {
@@ -9,19 +10,23 @@ function unsupport() {
 }
 
 export const SetterRootContextProvider = ({ children }: PropsWithChildren) => {
-  const { setRootProps, rootProps } = useApplicationContext();
+  const { setRootProps, rootProps, rootPropsMapper } = useApplicationContext();
 
-  const setProps = (props: Record<string, any>) => {
-    setRootProps({
-      ...(rootProps || {}),
-      ...props,
-    });
+  const setProps = (props: Record<string, any>, propsMapper?: PropDeclear) => {
+    setRootProps(
+      {
+        ...(rootProps || {}),
+        ...props,
+      },
+      propsMapper
+    );
   };
 
   return (
     <SetterContext.Provider
       value={{
         props: rootProps || {},
+        propsMapper: rootPropsMapper,
         isRoot: true,
         setProps,
         setHidden: unsupport,

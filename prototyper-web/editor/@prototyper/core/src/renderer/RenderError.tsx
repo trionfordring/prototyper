@@ -3,11 +3,18 @@ import React from 'react';
 
 import { useComponentContext } from '../context';
 
-export const RenderError = ({ msg }: { msg: string }) => {
+export const RenderError = ({
+  msg,
+  withPrefix,
+}: {
+  msg: string;
+  withPrefix?: boolean;
+}) => {
   const { editing } = useComponentContext();
   const {
     connectors: { drag, connect },
-  } = useNode();
+    name,
+  } = useNode((node) => ({ name: node.data.displayName }));
   return (
     <div
       ref={(ref) => {
@@ -16,6 +23,7 @@ export const RenderError = ({ msg }: { msg: string }) => {
       }}
       className="render-error"
     >
+      {withPrefix ? `[节点${name}]` : null}
       {msg}
     </div>
   );

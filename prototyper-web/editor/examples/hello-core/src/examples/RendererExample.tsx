@@ -44,7 +44,7 @@ const component = createProtoComponent({
     },
     t1: {
       props: {
-        textExpr: 't1:这个示例将帮助你理解虚拟组件的数据结构。',
+        text: 't1:这个示例将帮助你理解虚拟组件的数据结构。',
       },
       isCanvas: false,
       displayName: 't1',
@@ -58,7 +58,7 @@ const component = createProtoComponent({
     },
     t2: {
       props: {
-        textExpr: '这是t2。',
+        text: '这是t2。',
       },
       isCanvas: false,
       displayName: 't2',
@@ -72,7 +72,7 @@ const component = createProtoComponent({
     },
     t3: {
       props: {
-        textExpr: '这是t3。',
+        text: '这是t3。',
       },
       isCanvas: false,
       displayName: 't3',
@@ -99,7 +99,7 @@ const component = createProtoComponent({
     },
     t4: {
       props: {
-        textExpr: '父组件state.num=#{state.num}',
+        text: '父组件state.num=#{state.num}',
       },
       isCanvas: false,
       displayName: 't4',

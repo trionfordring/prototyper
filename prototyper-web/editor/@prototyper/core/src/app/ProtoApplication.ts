@@ -5,6 +5,7 @@ import {
   ProtoComponent,
   WithDescriptor,
 } from '../component';
+import { PropDeclear } from '../utils';
 
 export type UseSetupAppStates<S = DefaultStatesType> = () => S;
 
@@ -15,6 +16,7 @@ export type GetComponentFunc = (
 export interface ProtoApplication<S = DefaultStatesType> {
   index: ProtoComponent & Partial<WithDescriptor>;
   initProps?: DefaultPropsType;
+  initPropsMapper?: PropDeclear;
 
   useSetupAppStates?: UseSetupAppStates<S>;
   getComponent?: GetComponentFunc;

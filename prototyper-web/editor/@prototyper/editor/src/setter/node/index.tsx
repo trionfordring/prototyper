@@ -16,11 +16,13 @@ export const NodeSetter = () => {
   };
   return (
     <Form
+      labelAlign="left"
       form={form}
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 18 }}
       onFinish={onCommit}
       onValuesChange={() => setChanged(true)}
+      size="small"
     >
       <FormHeader title="节点通用配置"></FormHeader>
       <Form.Item label="隐藏节点" name="hiddenVal" initialValue={hiddenVal}>

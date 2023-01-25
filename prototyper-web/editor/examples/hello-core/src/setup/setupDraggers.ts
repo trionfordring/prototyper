@@ -18,7 +18,7 @@ export function setupDraggers(pkg: ComponentPackage) {
     },
     label: '文本',
     compProps: {
-      textExpr: 'Hello',
+      text: 'Hello',
     },
   });
   pkg.addDragger({

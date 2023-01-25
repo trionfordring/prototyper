@@ -18,7 +18,7 @@ export class RenderFailback extends React.Component<
   componentDidCatch(error, errorInfo) {
     console.error('组件渲染失败', error, errorInfo);
     const msg = (error.message || error).toString();
-    this.setState({ error: `节点[${this.props.nodeName}]渲染失败:${msg}` });
+    this.setState({ error: `[节点${this.props.nodeName}]渲染失败:${msg}` });
   }
 
   render() {

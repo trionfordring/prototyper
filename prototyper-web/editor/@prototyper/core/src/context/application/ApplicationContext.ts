@@ -6,6 +6,7 @@ import {
   ProtoComponent,
   WithDescriptor,
 } from '../../component';
+import { PropDeclear } from '../../utils';
 
 export interface ApplicationContextType<S = DefaultPropsType> {
   appStates: S;
@@ -13,14 +14,16 @@ export interface ApplicationContextType<S = DefaultPropsType> {
   currentComponent: ProtoComponent & Partial<WithDescriptor>;
   setCurrentComponent: (
     c: ProtoComponent & Partial<WithDescriptor>,
-    props: DefaultPropsType
+    props: DefaultPropsType,
+    propsMapper: PropDeclear
   ) => void;
 
   getComponent: GetComponentFunc;
 
   editing?: boolean;
   rootProps?: DefaultPropsType;
-  setRootProps: (props: any) => void;
+  rootPropsMapper?: PropDeclear;
+  setRootProps: (props: any, propsMapper: PropDeclear) => void;
 }
 
 export const ApplicationContext = React.createContext<

@@ -16,18 +16,26 @@ export const SetterForm: FC<
 > = ({ children, initialValues }) => {
   const { setProps, isRoot, deleteNode, selectedNode } = useSetterContext();
   const [changed, setChanged] = useState(false);
-  const onFinish = (values: any) => {
-    setProps(values);
+  const onFinish = ({ propsMapper: mapper, ...props }: any) => {
+    const propsMapper = {};
+    Object.keys(mapper || {}).forEach((k) => {
+      if (mapper[k]) propsMapper[k] = mapper[k];
+    });
+    console.log('setProps', props, propsMapper);
+    setProps(props, propsMapper);
     setChanged(false);
   };
   return (
     <React.Fragment>
       <Form
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
+        labelAlign="left"
+        labelWrap
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 16 }}
         initialValues={initialValues}
         onFinish={onFinish}
         onValuesChange={() => setChanged(true)}
+        size="small"
       >
         {isRoot ? null : (
           <FormHeader title="Props配置">
@@ -54,3 +62,5 @@ export const SetterForm: FC<
     </React.Fragment>
   );
 };
+
+export { FormItem } from './FormItem';

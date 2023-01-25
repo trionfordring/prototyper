@@ -32,7 +32,7 @@ export const setupSimple = (pkg: ComponentPackage) => {
       },
       t1: {
         props: {
-          textExpr: '组件渲染器(num:#{state.num})',
+          text: '组件渲染器(num:#{state.num})',
         },
         isCanvas: false,
         displayName: 't1',

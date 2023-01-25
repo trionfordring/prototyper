@@ -24,7 +24,7 @@ export const publishCore = withTaskName(
 );
 
 export const testCore = withTaskName('test:core', () =>
-  run('jest editor/@prototyper/corev2')
+  run('jest editor/@prototyper/core')
 );
 
 export default parallel(core, editor);
