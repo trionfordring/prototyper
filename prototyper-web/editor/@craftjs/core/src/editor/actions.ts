@@ -326,6 +326,7 @@ const Methods = (
       this.setNodeEvent('selected', null);
       this.setNodeEvent('hovered', null);
       this.setNodeEvent('dragged', null);
+      this.setNodeEvent('dragover', null);
       this.setIndicator(null);
     },
 
@@ -355,7 +356,6 @@ const Methods = (
           state.nodes[id].events[eventType] = false;
         }
       });
-
       state.events[eventType] = new Set();
 
       if (!nodeIdSelector) {
@@ -458,6 +458,7 @@ const Methods = (
       }
 
       this.setNodeEvent('hovered', null);
+      this.setNodeEvent('dragover', null);
     },
   };
 };

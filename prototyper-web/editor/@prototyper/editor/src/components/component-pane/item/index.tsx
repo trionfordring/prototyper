@@ -35,6 +35,8 @@ const ItemTitle = styled(Typography.Text)`
 
 export function ComponentPaneItem({ dragger }: { dragger: ProtoDragger }) {
   const Content = getSupportDraggerByType(dragger.type);
+  if (!Content)
+    throw new Error(`找不到dragger[type=${dragger.type}]对应类型的渲染器`);
   const descriptor = dragger.descriptor;
   const ApplicationContext = useApplicationContext();
   const {

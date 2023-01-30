@@ -1,5 +1,5 @@
 import { Resolver } from '@craftjs/core';
-import { mapValues, values } from 'lodash';
+import { mapValues, merge, values } from 'lodash';
 
 import {
   ComponentDescriptor,
@@ -22,16 +22,47 @@ export const defaultCompGetter: GetComponentFunc = (desc) => {
   );
 };
 
+function getComponentFullName(descriptor: ComponentDescriptor) {
+  return `${descriptor.namespace}.${descriptor.name}`;
+}
+
+function getComponents(
+  descriptor: ComponentDescriptor,
+  componentGetter: GetComponentFunc = defaultCompGetter
+) {
+  const root = componentGetter(descriptor);
+  if (!root) return {};
+  const ans: Record<string, any> = {};
+  const contain = (desc: ComponentDescriptor) =>
+    ans[getComponentFullName(desc)];
+  const add = (
+    desc: ComponentDescriptor,
+    comp: ProtoComponent & WithDescriptor
+  ) => {
+    ans[getComponentFullName(desc)] = comp.component;
+  };
+  if (root.type === 'native') add(descriptor, root);
+  const searchDeps = (descriptors: ComponentDescriptor[] = []) => {
+    descriptors
+      .filter((desc) => !contain(desc))
+      .map(componentGetter)
+      .filter((comp) => comp?.type === 'native')
+      .forEach((comp) => {
+        add(comp.descriptor, comp);
+        searchDeps(comp.dependencies);
+      });
+  };
+  searchDeps(root.dependencies);
+  return ans;
+}
+
 export function getResolver(
   descriptors: ComponentDescriptor[] = [],
   componentGetter: GetComponentFunc = defaultCompGetter
 ): Resolver {
-  return (descriptors || []).reduce((resolver, desc) => {
-    const comp = (componentGetter || defaultCompGetter)(desc);
-    resolver[`${comp.descriptor.namespace}.${comp.descriptor.name}`] =
-      comp.component;
-    return resolver;
-  }, {});
+  return (descriptors || [])
+    .map((desc) => getComponents(desc, componentGetter))
+    .reduce(merge, {});
 }
 
 export function getResolverFromPkgs(...pkgs: ComponentPackage[]): Resolver {

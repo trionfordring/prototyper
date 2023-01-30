@@ -44,6 +44,7 @@ export const emptyState = {
     dragged: null,
     selected: null,
     hovered: null,
+    dragover: null,
     indicator: null,
   },
   options: {

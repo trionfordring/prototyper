@@ -1,7 +1,6 @@
 import React, {
   createRef,
   FC,
-  ForwardRefExoticComponent,
   PropsWithChildren,
   ReactNode,
   useEffect,
@@ -18,7 +17,7 @@ const doCreatePortal: CreateProtalType = createPortal || fallbackCreatePortal;
 
 const supportShadowDom = document?.body?.attachShadow && createPortal;
 export function createShadow<T extends HTMLElement, P = {}>(
-  Root: ForwardRefExoticComponent<P>,
+  Root: any,
   Component: React.ComponentType<
     P & {
       shadowRoot?: ShadowRoot;

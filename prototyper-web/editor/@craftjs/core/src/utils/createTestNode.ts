@@ -17,6 +17,7 @@ export const createTestNode = (id, data = {}, config: any = {}) => {
       selected: false,
       dragged: false,
       hovered: false,
+      dragover: false,
       ...(config.events || {}),
     },
     rules: {

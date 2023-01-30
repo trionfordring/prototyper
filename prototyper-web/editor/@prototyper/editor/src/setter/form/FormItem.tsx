@@ -4,8 +4,8 @@ import {
   JS_EXPR,
   SimplePropDeclear,
 } from '@prototyper/core/src/utils';
-import { Form, Popover, Segmented, Tag } from 'antd';
-import React, { PropsWithChildren, useMemo } from 'react';
+import { Form, FormItemProps, Popover, Segmented, Tag } from 'antd';
+import React, { PropsWithChildren, forwardRef, useMemo } from 'react';
 import styled from 'styled-components';
 
 import { IconBraces } from '../../icons/IconBraces';
@@ -17,11 +17,14 @@ export const FormItem = ({
   propName,
   label,
   allow: allowProp,
-}: PropsWithChildren<{
-  propName: string;
-  label: string;
-  allow?: (SimplePropDeclear | '')[];
-}>) => {
+  ...props
+}: PropsWithChildren<
+  {
+    propName: string;
+    label: string;
+    allow?: (SimplePropDeclear | '')[];
+  } & FormItemProps
+>) => {
   const { propValue, propType } = useSetterContext((props, mapper) => ({
     propValue: props[propName],
     propType: mapper && mapper[propName],
@@ -33,12 +36,13 @@ export const FormItem = ({
     } else if (k.endsWith('Expr') || k.endsWith('expr')) {
       return [FMT_EXPR];
     }
-    if (!allowProp) return [''];
+    if (!allowProp) return null;
     return allowProp;
   }, [propName, allowProp]);
+
   const labelNode = (
     <React.Fragment>
-      {allow.length === 1 ? (
+      {!allow ? null : allow.length === 1 ? (
         <TypeTag type={allow[0]} />
       ) : (
         <Form.Item
@@ -53,7 +57,12 @@ export const FormItem = ({
     </React.Fragment>
   );
   return (
-    <Form.Item name={propName} label={labelNode} initialValue={propValue}>
+    <Form.Item
+      {...props}
+      name={propName}
+      label={labelNode}
+      initialValue={propValue}
+    >
       {children}
     </Form.Item>
   );
@@ -110,7 +119,11 @@ const TypeTagInput = ({
     ></Segmented>
   );
   return (
-    <Popover title="选择类型" content={selector}>
+    <Popover
+      title="选择类型"
+      content={selector}
+      getPopupContainer={(trigger) => trigger}
+    >
       <TypeTag type={value} />
     </Popover>
   );
@@ -126,23 +139,27 @@ const type2String = (type?: string) => {
       return 'RAW';
   }
 };
-const TypeTagEle = styled(Tag)`
+const TypeTagEle = styled(Tag as any)`
   margin-inline-end: 0.5em;
   padding-inline: 0;
   width: 2.5em;
   text-align: center;
   line-height: initial;
   flex-grow: 1;
+  position: relative;
 `;
-const TypeTag = ({ type, ...props }: { type?: string }) => {
-  return (
-    <TypeTagEle
-      {...props}
-      color={
-        type === JS_EXPR ? 'orange' : type === FMT_EXPR ? 'blue' : 'default'
-      }
-    >
-      {type2String(type)}
-    </TypeTagEle>
-  );
-};
+const TypeTag = forwardRef<HTMLElement, { type?: string }>(
+  ({ type, ...props }, ref) => {
+    return (
+      <TypeTagEle
+        {...props}
+        color={
+          type === JS_EXPR ? 'orange' : type === FMT_EXPR ? 'blue' : 'default'
+        }
+        ref={ref}
+      >
+        {type2String(type)}
+      </TypeTagEle>
+    );
+  }
+);

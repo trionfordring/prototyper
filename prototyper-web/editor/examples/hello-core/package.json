@@ -12,6 +12,7 @@
     "@craftjs/core": "workspace:*",
     "@prototyper/core": "workspace:*",
     "@prototyper/editor": "workspace:*",
+    "@prototyper/std-materials": "workspace:*",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-contenteditable": "^3.3.6",

@@ -34,9 +34,10 @@ export const Editor = forwardRef<
   PropsWithChildren<
     ComponentProps<typeof ApplicationEditor> & {
       draggers: ProtoDragger[];
+      container?: React.ComponentType;
     }
   >
->(({ children, draggers, ...props }, ref) => {
+>(({ children, draggers, container, ...props }, ref) => {
   return (
     <EditorBox ref={ref}>
       <ApplicationEditor {...props}>
@@ -44,7 +45,9 @@ export const Editor = forwardRef<
         <EditorBody>
           <EditorLeft draggers={draggers} />
           <EditorMain>
-            <EditorMainContent>{children}</EditorMainContent>
+            <EditorMainContent container={container}>
+              {children}
+            </EditorMainContent>
           </EditorMain>
           <EditorRight />
         </EditorBody>

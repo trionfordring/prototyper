@@ -20,4 +20,5 @@ export class PackagesRegistry {
 
 export const globalPackagesRegistry = new PackagesRegistry();
 
-(window as any).globalPackagesRegistry = globalPackagesRegistry;
+if (typeof window === 'object')
+  (window as any).globalPackagesRegistry = globalPackagesRegistry;

@@ -10,8 +10,10 @@ export const TextSetter: FC<
   {
     propName: string;
     label: string;
+    singleLine?: boolean;
+    jsOnly?: boolean;
   } & TextAreaProps
-> = ({ propName, label, ...props }) => {
+> = ({ propName, label, singleLine, jsOnly, ...props }) => {
   const placeholder = useMemo(() => {
     const k = propName;
     if (k.startsWith('on') || k.endsWith('val') || k.endsWith('Val')) {
@@ -20,9 +22,17 @@ export const TextSetter: FC<
       return '请输入一个格式化字符串，用#{xxx}来编写JS表达式';
     }
   }, [propName]);
+  const InputComponent = singleLine ? Input : Input.TextArea;
   return (
-    <FormItem propName={propName} label={label} allow={['', FMT_EXPR, JS_EXPR]}>
-      <Input.TextArea placeholder={placeholder} {...props}></Input.TextArea>
+    <FormItem
+      propName={propName}
+      label={label}
+      allow={jsOnly ? [JS_EXPR] : ['', FMT_EXPR, JS_EXPR]}
+    >
+      <InputComponent
+        placeholder={placeholder}
+        {...(props as any)}
+      ></InputComponent>
     </FormItem>
   );
 };

@@ -10,6 +10,7 @@ const DRAGGERS: Record<
 > = {
   img: ImgDragger,
   native: NativeDragger,
+  icon: NativeDragger,
 };
 
 export function getSupportDraggerByType(type: string) {

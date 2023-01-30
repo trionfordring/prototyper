@@ -20,6 +20,7 @@
   },
   "sideEffects": true,
   "dependencies": {
+    "@ant-design/cssinjs": "^1.5.6",
     "antd": "^5.1.2",
     "lodash": "^4.17.21",
     "react-is": "^18.2.0",

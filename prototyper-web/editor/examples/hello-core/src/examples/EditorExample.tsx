@@ -19,12 +19,13 @@ const editorStyle = styled`
 `;
 function EditorExample() {
   const pkg = globalPackagesRegistry.getPackage('hello');
+  const stdPkg = globalPackagesRegistry.getPackage('std');
   return (
     <Editor
       app={{
         index: pkg.getComponent('TestVirtualComp') as any,
       }}
-      draggers={pkg.draggers}
+      draggers={[...pkg.draggers, ...stdPkg.draggers]}
     >
       <style>{editorStyle}</style>
     </Editor>

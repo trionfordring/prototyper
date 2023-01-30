@@ -33,11 +33,13 @@ export const SetterContextProvider = ({
 
   const setProps = (props: Record<string, any>, propsMapper?: PropDeclear) => {
     setProp((origProps) => {
-      if (virtual)
-        Object.assign(origProps, {
-          props,
+      if (virtual) origProps.props = props;
+      else {
+        Object.keys(origProps).forEach((k) => {
+          if (!props[k]) delete origProps[k];
         });
-      else Object.assign(origProps, props);
+        Object.assign(origProps, props);
+      }
     });
     setCustom((cust) => {
       cust.propsMapper = propsMapper;

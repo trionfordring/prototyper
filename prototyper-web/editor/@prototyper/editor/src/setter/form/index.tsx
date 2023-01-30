@@ -1,6 +1,11 @@
 import { useSetterContext } from '@prototyper/core';
 import { Button, Form } from 'antd';
-import React, { FC, PropsWithChildren, useState } from 'react';
+import React, {
+  ComponentPropsWithRef,
+  FC,
+  PropsWithChildren,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 
 import { FormHeader } from './FormHeader';
@@ -10,10 +15,12 @@ import { NodeSetter } from '../node';
 const RemoveButton = styled(Button)``;
 
 export const SetterForm: FC<
-  PropsWithChildren<{
-    initialValues?: Record<string, any>;
-  }>
-> = ({ children, initialValues }) => {
+  PropsWithChildren<
+    ComponentPropsWithRef<typeof Form> & {
+      initialValues?: Record<string, any>;
+    }
+  >
+> = ({ children, initialValues, ...props }) => {
   const { setProps, isRoot, deleteNode, selectedNode } = useSetterContext();
   const [changed, setChanged] = useState(false);
   const onFinish = ({ propsMapper: mapper, ...props }: any) => {
@@ -36,6 +43,7 @@ export const SetterForm: FC<
         onFinish={onFinish}
         onValuesChange={() => setChanged(true)}
         size="small"
+        {...props}
       >
         {isRoot ? null : (
           <FormHeader title="Props配置">

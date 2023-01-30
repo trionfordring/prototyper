@@ -7,17 +7,17 @@ export const NodeSettings = ({
   onSelected?: (node?: { id: string; name: string; settings: any }) => void;
 }) => {
   const { selected } = useEditor((state) => {
-    const [currentNodeId] = state.events.selected;
+    let [currentNodeId] = state.events.selected;
     let selected;
 
-    if (currentNodeId) {
+    while (currentNodeId && !(selected && selected.settings)) {
+      const node = state.nodes[currentNodeId];
       selected = {
         id: currentNodeId,
-        name: state.nodes[currentNodeId].data.name,
-        settings:
-          state.nodes[currentNodeId].related &&
-          state.nodes[currentNodeId].related.settings,
+        name: node.data.name,
+        settings: node.related && node.related.settings,
       };
+      currentNodeId = node.data.parent;
     }
     return {
       selected,
