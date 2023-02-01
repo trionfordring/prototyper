@@ -13,7 +13,7 @@ export const NodeToolBar = ({
   container?: Provider<HTMLElement>;
   relativePosition?: boolean;
 }) => {
-  const { hovered, selected, actions, rootDom, connectors } = useEditor(
+  const { activeNodes, actions, rootDom, connectors } = useEditor(
     (state, query) => {
       const rootDom: HTMLElement = state.nodes[ROOT_NODE]?.dom;
       function getByIds(
@@ -46,7 +46,10 @@ export const NodeToolBar = ({
         ),
         'hovered'
       );
-      return { selected, hovered, rootDom };
+      const activeNodes = [...selected, ...hovered].sort((a, b) =>
+        a.id.localeCompare(b.id)
+      );
+      return { activeNodes, rootDom };
     }
   );
   const container = useMemo(
@@ -55,26 +58,15 @@ export const NodeToolBar = ({
   );
   return (
     <React.Fragment>
-      {hovered.flatMap((node) => {
+      {activeNodes.flatMap((node) => {
         return (
           <NodeIndicator
             node={node}
-            key={`hovered-${node.id}`}
+            key={node.id}
             queryRoot={rootDom}
             container={container}
             relativePosition={relativePosition}
-          />
-        );
-      })}
-      {selected.flatMap((node) => {
-        return (
-          <NodeIndicator
-            node={node}
-            key={`selected-${node.id}`}
-            queryRoot={rootDom}
-            container={container}
-            relativePosition={relativePosition}
-            toolBar
+            toolBar={node.state === 'selected'}
           />
         );
       })}

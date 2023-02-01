@@ -83,7 +83,7 @@ export const NodeIndicator = ({
       }}
     >
       <ToolBarBox
-        ref={toolBar && node.drag}
+        ref={toolBar && node.drag ? node.drag : undefined}
         style={{
           height: `${toolbarHeight}px`,
           marginTop: `-${toolbarHeight - 1}px`,
