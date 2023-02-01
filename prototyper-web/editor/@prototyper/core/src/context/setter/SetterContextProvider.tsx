@@ -28,7 +28,7 @@ export const SetterContextProvider = ({
     name: state.data.displayName,
   }));
   const { actions, isDeletable } = useEditor((state, query) => ({
-    isDeletable: query.node(id).isDeletable(),
+    isDeletable: query.node(id).get() && query.node(id).isDeletable(),
   }));
 
   const setProps = (props: Record<string, any>, propsMapper?: PropDeclear) => {
