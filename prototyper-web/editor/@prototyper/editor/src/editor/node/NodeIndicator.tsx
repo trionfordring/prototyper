@@ -40,7 +40,7 @@ const Icons = styled(Space)`
 
 export const NodeIndicator = ({
   node,
-  container,
+  container: containerProp,
   queryRoot,
   style,
   padding: paddingProp,
@@ -50,7 +50,7 @@ export const NodeIndicator = ({
 }: {
   node: NodeIndicatorDescriptor;
   queryRoot: Provider<HTMLElement>;
-  container?: Provider<HTMLElement>;
+  container: Provider<HTMLElement>;
   relativePosition?: boolean;
   style?: CSSProperties;
   padding?: number;
@@ -59,13 +59,12 @@ export const NodeIndicator = ({
 }) => {
   const padding = paddingProp || 0;
   const toolbarHeight = toolbarHeightProp || 30;
+  const container = consumeProvider(containerProp);
   const rect = useDebounceMemo(
     () => {
       let rects = getNodeRects(queryRoot)(node);
       if (relativePosition)
-        rects = rects.map(
-          getRelativeRect(consumeProvider(container).getBoundingClientRect())
-        );
+        rects = rects.map(getRelativeRect(container.getBoundingClientRect()));
       return rects.reduce(getBoundingRect, null);
     },
     undefined,
@@ -110,6 +109,6 @@ export const NodeIndicator = ({
         </ToolBar>
       </ToolBarBox>
     </NodeIndicatorBox>,
-    consumeProvider(container)
+    container
   );
 };

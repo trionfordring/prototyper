@@ -1,13 +1,13 @@
 import { useEditor, ROOT_NODE } from '@prototyper/core';
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import { NodeIndicator } from './NodeIndicator';
 import { NodeIndicatorDescriptor } from './utils/NodeIndicatorDescriptor';
 
-import { consumeProvider, Provider } from '../../utils/Provider';
+import { Provider } from '../../utils/Provider';
 
 export const NodeToolBar = ({
-  container: containerProp,
+  container,
   relativePosition,
 }: {
   container?: Provider<HTMLElement>;
@@ -51,10 +51,6 @@ export const NodeToolBar = ({
       );
       return { activeNodes, rootDom };
     }
-  );
-  const container = useMemo(
-    () => consumeProvider(containerProp || document.body),
-    [containerProp]
   );
   return (
     <React.Fragment>

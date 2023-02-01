@@ -1,6 +1,6 @@
 import { StyleProvider, createCache } from '@ant-design/cssinjs';
 import { ComponentEditorFrame, createShadow } from '@prototyper/core';
-import React, { PropsWithChildren, useMemo } from 'react';
+import React, { PropsWithChildren, useMemo, useRef } from 'react';
 import styled, { StyleSheetManager } from 'styled-components';
 
 import { NodeToolBar } from '../node/NodeToolBar';
@@ -8,6 +8,9 @@ import { NodeToolBar } from '../node/NodeToolBar';
 const MainFrame = styled.div`
   width: 100%;
   height: fit-content;
+`;
+const IndicatorBox = styled.div`
+  position: relative;
 `;
 const EditorMain = createShadow<
   HTMLDivElement,
@@ -28,13 +31,17 @@ const EditorMain = createShadow<
     const cache = useMemo(() => {
       return createCache();
     }, []);
+    const indicatorBox = useRef();
     return (
       <Container>
-        {children}
-        <NodeToolBar />
         <StyleProvider container={shadowRoot} cache={cache}>
           <StyleSheetManager target={shadowRoot}>
-            <ComponentEditorFrame />
+            <React.Fragment>
+              {children}
+              <IndicatorBox ref={indicatorBox} />
+              <NodeToolBar container={() => indicatorBox.current} />
+              <ComponentEditorFrame />
+            </React.Fragment>
           </StyleSheetManager>
         </StyleProvider>
       </Container>
