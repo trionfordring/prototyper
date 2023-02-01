@@ -1,12 +1,12 @@
 import { useNode } from '@prototyper/core';
 
-export const useConnectors = () => {
+export const useConnectors = (disabled?: boolean) => {
   const {
     connectors: { drag, connect },
   } = useNode();
 
   return {
-    connect,
-    connectAndDrag: (ref) => connect(drag(ref)),
+    connect: disabled ? undefined : connect,
+    connectAndDrag: disabled ? undefined : (ref) => connect(drag(ref)),
   };
 };

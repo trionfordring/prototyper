@@ -1,6 +1,6 @@
 import { useNode } from '@prototyper/core';
 import { SetterForm, TextSetter } from '@prototyper/editor';
-import { FC } from 'react';
+import React, { FC } from 'react';
 
 export const Button: FC<{
   textExpr: string;
@@ -9,6 +9,9 @@ export const Button: FC<{
   const {
     connectors: { connect, drag },
   } = useNode();
+  React.useEffect(() => {
+    console.log(`btn mount`);
+  }, []);
   return (
     <button
       type="button"

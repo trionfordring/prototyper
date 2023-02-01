@@ -5,8 +5,7 @@ import { DropArea } from './DropArea';
 
 export const Slot = createSlot(
   ({ id }: { id?: string }) => {
-    const { id: nodeId } = useNode();
-    return <Element is={DropArea} id={id || nodeId} canvas></Element>;
+    return <Element is={DropArea} id={id || 'content'} canvas></Element>;
   },
   () => {
     const {

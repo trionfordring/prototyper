@@ -9,4 +9,5 @@ export * from './hook';
 export * from './hoc';
 export * from './utils';
 
-export { useNode, useEditor, Element } from '@craftjs/core';
+export { useNode, useEditor, Element, ROOT_NODE } from '@craftjs/core';
+export type { Node } from '@craftjs/core';

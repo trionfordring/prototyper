@@ -11,5 +11,7 @@ import './global.css';
 globalPackagesRegistry.addPackage(stdPackage);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <App />
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
 );

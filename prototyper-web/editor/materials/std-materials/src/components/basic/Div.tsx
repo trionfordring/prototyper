@@ -13,7 +13,7 @@ export const Div = ({
   const { connectAndDrag } = useConnectors();
   return (
     <div {...props} ref={connectAndDrag}>
-      <DropArea id="content">{children}</DropArea>
+      <DropArea>{children}</DropArea>
     </div>
   );
 };

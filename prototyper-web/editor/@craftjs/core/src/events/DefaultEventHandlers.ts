@@ -40,6 +40,7 @@ export class DefaultEventHandlers<O = {}> extends CoreEventHandlers<
     return {
       connect: (el: HTMLElement, id: NodeId) => {
         store.actions.setDOM(id, el);
+        el.setAttribute('nodeid', id);
 
         return this.reflect((connectors) => {
           connectors.select(el, id);

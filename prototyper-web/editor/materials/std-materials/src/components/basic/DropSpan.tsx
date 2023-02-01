@@ -21,14 +21,16 @@ export const DropSpanNode = ({
   children,
   label: labelProp,
   dragoverLabel: dragoverLabelProp,
+  direct,
 }: PropsWithChildren<{
   label?: NodeProvider;
   dragoverLabel?: NodeProvider;
+  direct?: boolean;
 }>) => {
   const { dragover } = useNode((state) => ({
     dragover: state.events.dragover,
   }));
-  const { connectAndDrag } = useConnectors();
+  const { connectAndDrag } = useConnectors(direct);
   const labelNode = useDebounceMemo(
     () => {
       const label = labelProp || '';
@@ -64,10 +66,16 @@ export const DropSpan = ({
   dragoverLabel,
   id,
 }: PropsWithChildren<{
-  id: string;
+  id?: string;
   label?: NodeProvider;
   dragoverLabel?: NodeProvider;
 }>) => {
+  if (!id)
+    return (
+      <DropSpanNode label={label} dragoverLabel={dragoverLabel} direct>
+        {children}
+      </DropSpanNode>
+    );
   return (
     <Element
       is={DropSpanNode}

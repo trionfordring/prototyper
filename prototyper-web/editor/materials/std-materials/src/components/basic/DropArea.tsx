@@ -22,14 +22,16 @@ export const DropAreaNode = ({
   children,
   label: labelProp,
   dragoverLabel: dragoverLabelProp,
+  direct,
 }: PropsWithChildren<{
   label?: NodeProvider;
   dragoverLabel?: NodeProvider;
+  direct?: boolean;
 }>) => {
   const { dragover } = useNode((state) => ({
     dragover: state.events.dragover,
   }));
-  const { connectAndDrag } = useConnectors();
+  const { connectAndDrag } = useConnectors(direct);
   const labelNode = useDebounceMemo(
     () => {
       const label = labelProp || '请拖入组件';
@@ -66,10 +68,16 @@ export const DropArea = ({
   dragoverLabel,
   id,
 }: PropsWithChildren<{
-  id: string;
+  id?: string;
   label?: NodeProvider;
   dragoverLabel?: NodeProvider;
 }>) => {
+  if (!id)
+    return (
+      <DropAreaNode label={label} dragoverLabel={dragoverLabel} direct>
+        {children}
+      </DropAreaNode>
+    );
   return (
     <Element
       is={DropAreaNode}

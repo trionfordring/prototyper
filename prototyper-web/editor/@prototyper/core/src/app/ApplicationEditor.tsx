@@ -12,7 +12,7 @@ import {
   getResolverFromPkgs,
 } from '../component/getResolver';
 import { globalPackagesRegistry } from '../context';
-import { NodeRenderer } from '../renderer/NodeRenderer';
+import { useNodeRender } from '../hook/useNodeRender';
 
 export const ApplicationEditor: FC<
   PropsWithChildren<{
@@ -32,16 +32,18 @@ export const ApplicationEditor: FC<
         : getResolver(devDependencies, app.getComponent),
     [devDependencies, app.getComponent]
   );
+  const renderer = useNodeRender(onRender);
   return (
     <ApplicationProvider
       app={app}
       editing={!disabled}
       getComponent={getComponent || defaultCompGetter}
+      onRender={onRender}
     >
       <EditorComponentProvider>
         <Editor
           enabled={!disabled}
-          onRender={onRender || NodeRenderer}
+          onRender={renderer}
           resolver={{
             ...resolver,
             ComponentRenderer,

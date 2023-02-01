@@ -11,7 +11,7 @@ import {
 import { defaultCompGetter, getResolver } from './getResolver';
 
 import { SetterContextProvider, useApplicationContext } from '../context';
-import { NodeRenderer } from '../renderer/NodeRenderer';
+import { useNodeRender } from '../hook/useNodeRender';
 
 export const ComponentRenderer: React.FC<
   PropsWithChildren<{
@@ -19,7 +19,7 @@ export const ComponentRenderer: React.FC<
     descriptor?: ComponentDescriptor;
   }>
 > = ({ props, descriptor, children }) => {
-  const { getComponent } = useApplicationContext();
+  const { getComponent, onRender } = useApplicationContext();
   const {
     connectors: { drag, connect },
   } = useNode();
@@ -33,6 +33,7 @@ export const ComponentRenderer: React.FC<
       ref={(ref) => connect(drag(ref))}
       props={props}
       component={component}
+      onRender={onRender}
     >
       {children}
     </JustComponentRenderer>
@@ -64,10 +65,18 @@ ComponentRenderer['craft'] = {
 export const RootComponentRenderer: React.FC<PropsWithChildren> = ({
   children,
 }) => {
-  const { currentComponent: component, rootProps: props } =
-    useApplicationContext();
+  const {
+    currentComponent: component,
+    rootProps: props,
+    onRender,
+  } = useApplicationContext();
   return (
-    <JustComponentRenderer props={props} component={component} root>
+    <JustComponentRenderer
+      props={props}
+      component={component}
+      onRender={onRender}
+      root
+    >
       {children}
     </JustComponentRenderer>
   );
@@ -80,26 +89,33 @@ const JustComponentRenderer = forwardRef<
     component: ProtoComponent & Partial<WithDescriptor>;
     editing?: boolean;
     root?: boolean;
+    onRender?: React.ComponentType<{
+      render: React.ReactElement;
+    }>;
   }>
->(({ props, component, children, editing, root }, ref) => {
+>(({ props, component, children, editing, root, onRender }, ref) => {
   const NativeComponent = component.component;
   const applicationContext = useApplicationContext();
   const resolver = useMemo(
-    () => getResolver(component.dependencies, applicationContext.getComponent),
+    () => ({
+      ...getResolver(component.dependencies, applicationContext.getComponent),
+      ComponentRenderer,
+    }),
     [component.dependencies, applicationContext.getComponent]
   );
-  const Content =
+  const editorOnRender = useNodeRender(onRender);
+  const frameData = useMemo(
+    () => component?.virtualDom as string,
+    [component?.virtualDom]
+  );
+  const content =
     component.type === 'virtual' ? (
-      <Editor
-        resolver={{
-          ...resolver,
-          ComponentRenderer,
-        }}
-        onRender={NodeRenderer}
-        enabled={!!editing}
-      >
-        <Frame data={component?.virtualDom as string}></Frame>
-      </Editor>
+      <DoVirtualComponentRender
+        resolver={resolver}
+        onRender={editorOnRender}
+        vdom={frameData}
+        editing={!!editing}
+      />
     ) : (
       <NativeComponent {...props}>{children}</NativeComponent>
     );
@@ -111,7 +127,7 @@ const JustComponentRenderer = forwardRef<
       root={root}
     >
       {root ? (
-        Content
+        content
       ) : (
         <ComponentWarpper
           render={component.warpper}
@@ -121,9 +137,17 @@ const JustComponentRenderer = forwardRef<
           editing={editing}
           descriptor={component.descriptor}
         >
-          {Content}
+          {content}
         </ComponentWarpper>
       )}
     </ComponentProvider>
   );
 });
+
+const DoVirtualComponentRender = ({ resolver, onRender, editing, vdom }) => {
+  return (
+    <Editor resolver={resolver} onRender={onRender} enabled={editing}>
+      <Frame data={vdom}></Frame>
+    </Editor>
+  );
+};

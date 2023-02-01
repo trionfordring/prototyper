@@ -24,6 +24,10 @@ export interface ApplicationContextType<S = DefaultPropsType> {
   rootProps?: DefaultPropsType;
   rootPropsMapper?: PropDeclear;
   setRootProps: (props: any, propsMapper: PropDeclear) => void;
+
+  onRender?: React.ComponentType<{
+    render: React.ReactElement;
+  }>;
 }
 
 export const ApplicationContext = React.createContext<

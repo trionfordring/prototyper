@@ -10,12 +10,16 @@ export const ApplicationRenderer: FC<
   PropsWithChildren<{
     app: ProtoApplication;
     getComponent?: GetComponentFunc;
+    onRender?: React.ComponentType<{
+      render: React.ReactElement;
+    }>;
   }>
-> = ({ app, children, getComponent }) => {
+> = ({ app, children, getComponent, onRender }) => {
   return (
     <ApplicationProvider
       app={app}
       getComponent={getComponent || defaultCompGetter}
+      onRender={onRender}
     >
       {children}
       <RootComponentRenderer />

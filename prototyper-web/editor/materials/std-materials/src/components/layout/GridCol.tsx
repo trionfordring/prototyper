@@ -13,7 +13,7 @@ export const GridCol = ({
   const { connectAndDrag } = useConnectors();
   return (
     <Col {...props} ref={connectAndDrag}>
-      <DropArea id="context">{children}</DropArea>
+      <DropArea>{children}</DropArea>
     </Col>
   );
 };

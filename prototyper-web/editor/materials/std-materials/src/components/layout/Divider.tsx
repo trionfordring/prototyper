@@ -16,7 +16,7 @@ export const Divider = ({ children, ...props }: PropsWithChildren) => {
   return (
     <div ref={connectAndDrag}>
       <AntdDivider {...props}>
-        <DropSpan id="content" label="标题" dragoverLabel="松开!">
+        <DropSpan label="标题" dragoverLabel="松开!">
           {children}
         </DropSpan>
       </AntdDivider>
