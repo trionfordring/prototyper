@@ -20,7 +20,9 @@
     "changelog": "pnpm run gulp changelog",
     "build": "pnpm run lint:fix && pnpm run gulp",
     "build:prod": "cross-env NODE_ENV=production pnpm run build",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "core": "pnpm run -F @prototyper/core",
+    "dev": "pnpm run gulp dev"
   },
   "peerDependencies": {
     "react": ">=16.11.0"

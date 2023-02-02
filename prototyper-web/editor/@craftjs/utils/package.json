@@ -4,10 +4,12 @@
   "version": "0.2.0-beta.8",
   "author": "Prev Wong <prevwong@gmail.com>",
   "license": "MIT",
-  "main": "src/index.ts",
+  "main": "dist/esm/index.js",
+  "types": "src/index.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "gulp -f gulpfile.ts"
+    "build": "gulp -f gulpfile.ts",
+    "dev": "gulp -f gulpfile.ts dev"
   },
   "dependencies": {
     "immer": "^9.0.6",

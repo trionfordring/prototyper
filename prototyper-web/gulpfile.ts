@@ -28,3 +28,11 @@ export const testCore = withTaskName('test:core', () =>
 );
 
 export default parallel(core, editor);
+
+export const devTask = withTaskName(
+  'dev',
+  parallel(
+    () => run('pnpm run -F @prototyper/editor dev'),
+    () => run('pnpm run -F @prototyper/std-materials dev')
+  )
+);

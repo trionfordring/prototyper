@@ -18,14 +18,16 @@
   "author": "Prev Wong <prevwong@gmail.com>",
   "homepage": "https://github.com/prevwong/craft.js/",
   "license": "MIT",
-  "main": "src/index.ts",
+  "main": "dist/esm/index.js",
+  "types": "src/index.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/prevwong/craft.js/"
   },
   "scripts": {
     "clean": "rimraf dist",
-    "build": "gulp -f gulpfile.ts"
+    "build": "gulp -f gulpfile.ts",
+    "dev": "gulp -f gulpfile.ts dev"
   },
   "bugs": {
     "url": "https://github.com/prevwong/craft.js/issues"

@@ -9,9 +9,6 @@ export const Button: FC<{
   const {
     connectors: { connect, drag },
   } = useNode();
-  React.useEffect(() => {
-    console.log(`btn mount`);
-  }, []);
   return (
     <button
       type="button"

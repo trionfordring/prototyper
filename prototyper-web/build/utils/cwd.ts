@@ -27,6 +27,10 @@ export function indexPath() {
   return path.resolve(buildOptions.workDir, 'src', 'index.ts');
 }
 
+export function packagePath() {
+  return path.resolve(buildOptions.workDir, 'package.json');
+}
+
 export function srcPath() {
   return path.resolve(buildOptions.workDir, 'src');
 }

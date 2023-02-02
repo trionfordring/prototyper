@@ -10,9 +10,11 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "gulp -f gulpfile.ts"
+    "build": "gulp -f gulpfile.ts",
+    "dev": "gulp -f gulpfile.ts dev"
   },
-  "main": "src/index.ts",
+  "main": "dist/esm/index.js",
+  "types": "src/index.ts",
   "publishConfig": {
     "main": "./dist/cjs/index.js",
     "module": "./dist/esm/index.js",
