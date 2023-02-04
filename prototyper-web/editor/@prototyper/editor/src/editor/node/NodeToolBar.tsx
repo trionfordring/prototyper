@@ -10,7 +10,7 @@ export const NodeToolBar = ({
   container,
   relativePosition,
 }: {
-  container?: Provider<HTMLElement>;
+  container: Provider<HTMLElement>;
   relativePosition?: boolean;
 }) => {
   const { activeNodes, actions, rootDom, connectors } = useEditor(

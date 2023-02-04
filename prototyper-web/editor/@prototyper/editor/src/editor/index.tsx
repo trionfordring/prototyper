@@ -18,10 +18,6 @@ const EditorBody = styled.div`
   flex-wrap: nowrap;
   justify-content: space-between;
   display: flex;
-
-  & > * {
-    height: 100%;
-  }
 `;
 
 const EditorMain = styled.div`

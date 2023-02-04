@@ -1,9 +1,5 @@
 import { useSetterContext } from '@prototyper/core';
-import {
-  FMT_EXPR,
-  JS_EXPR,
-  SimplePropDeclear,
-} from '@prototyper/core/src/utils';
+import { FMT_EXPR, JS_EXPR, SimplePropDeclear } from '@prototyper/core';
 import { Form, FormItemProps, Popover, Segmented, Tag } from 'antd';
 import React, { PropsWithChildren, forwardRef, useMemo } from 'react';
 import styled from 'styled-components';

@@ -1,7 +1,15 @@
-import { useComponentContext, useEditor } from '@prototyper/core';
+import {
+  ComponentDescriptor,
+  SerializedNodes,
+  useComponentContext,
+  useEditor,
+} from '@prototyper/core';
 import { Button, Space, Typography } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
+
+import { forEachSerializedNode } from '../../utils/forEachSerializedNode';
+import { minifySerializedNodes } from '../../utils/minifySerializedNodes';
 
 const Header = styled.div`
   min-width: 600px;
@@ -34,7 +42,29 @@ const EditorHeader = () => {
   const { query } = useEditor();
   const { component } = useComponentContext();
   function save() {
-    console.log(query.getSerializedNodes());
+    const nodes: SerializedNodes = minifySerializedNodes(
+      query.getSerializedNodes()
+    );
+    const depsSet = new Set<string>();
+    forEachSerializedNode(nodes, (node) => {
+      depsSet.add(node.type['resolvedName']);
+    });
+    const deps: ComponentDescriptor[] = Array.from(depsSet)
+      .filter((dep) => dep.includes('.'))
+      .map((dep) => {
+        const [namespace, name] = dep.split('.');
+        return {
+          namespace,
+          name,
+        };
+      });
+    console.log('节点树', nodes);
+    console.log('依赖', deps);
+    navigator.clipboard
+      .writeText(JSON.stringify(nodes, undefined, 4))
+      .then(() => {
+        console.log('已写入剪贴板');
+      });
   }
   return (
     <Header>

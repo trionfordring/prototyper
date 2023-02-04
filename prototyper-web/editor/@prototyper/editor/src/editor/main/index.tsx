@@ -39,7 +39,10 @@ const EditorMain = createShadow<
             <React.Fragment>
               {children}
               <IndicatorBox ref={indicatorBox} />
-              <NodeToolBar container={() => indicatorBox.current} />
+              <NodeToolBar
+                container={() => indicatorBox.current}
+                relativePosition
+              />
               <ComponentEditorFrame />
             </React.Fragment>
           </StyleSheetManager>

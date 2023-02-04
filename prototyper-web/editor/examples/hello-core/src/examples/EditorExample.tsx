@@ -23,7 +23,7 @@ function EditorExample() {
   return (
     <Editor
       app={{
-        index: pkg.getComponent('TestVirtualComp') as any,
+        index: pkg.getComponent('StdComponent') as any,
       }}
       draggers={[...pkg.draggers, ...stdPkg.draggers]}
     >

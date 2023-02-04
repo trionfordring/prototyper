@@ -6,6 +6,7 @@ export interface BuildOptions {
 
   styledComponent: boolean;
   transformLodash: boolean;
+  svg: boolean;
 }
 
 export let buildOptions: BuildOptions = {
@@ -15,6 +16,7 @@ export let buildOptions: BuildOptions = {
 
   styledComponent: false,
   transformLodash: true,
+  svg: true,
 };
 
 export function setBuildEnv(options: Partial<BuildOptions>) {

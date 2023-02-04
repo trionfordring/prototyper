@@ -1,4 +1,4 @@
-import { FMT_EXPR, JS_EXPR } from '@prototyper/core/src/utils';
+import { FMT_EXPR, JS_EXPR } from '@prototyper/core';
 import { AutoComplete as AC, AutoCompleteProps } from 'antd';
 import React, { useMemo } from 'react';
 import { FC } from 'react';

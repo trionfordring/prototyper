@@ -1,4 +1,4 @@
-import { FMT_EXPR, JS_EXPR } from '@prototyper/core/src/utils';
+import { FMT_EXPR, JS_EXPR } from '@prototyper/core';
 import { Input } from 'antd';
 import { TextAreaProps } from 'antd/es/input';
 import React, { useMemo } from 'react';

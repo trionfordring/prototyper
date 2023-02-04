@@ -32,7 +32,13 @@ export default parallel(core, editor);
 export const devTask = withTaskName(
   'dev',
   parallel(
+    () => run('pnpm run -F @craftjs/core dev'),
+    () => run('pnpm run -F @craftjs/utils dev'),
+    () => run('pnpm run -F @craftjs/layers dev'),
+
+    () => run('pnpm run -F @prototyper/core dev'),
     () => run('pnpm run -F @prototyper/editor dev'),
+
     () => run('pnpm run -F @prototyper/std-materials dev')
   )
 );

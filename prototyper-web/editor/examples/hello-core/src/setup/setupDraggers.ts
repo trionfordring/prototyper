@@ -5,37 +5,6 @@ export function setupDraggers(pkg: ComponentPackage) {
     type: 'native',
     descriptor: {
       namespace: 'hello',
-      name: 'Container',
-    },
-    label: '容器',
-    canvas: true,
-  });
-  pkg.addDragger({
-    type: 'native',
-    descriptor: {
-      namespace: 'hello',
-      name: 'Text',
-    },
-    label: '文本',
-    compProps: {
-      text: 'Hello',
-    },
-  });
-  pkg.addDragger({
-    type: 'native',
-    descriptor: {
-      namespace: 'hello',
-      name: 'Button',
-    },
-    label: '按钮',
-    compProps: {
-      textExpr: 'button',
-    },
-  });
-  pkg.addDragger({
-    type: 'native',
-    descriptor: {
-      namespace: 'hello',
       name: 'TestVirtualComp',
     },
     label: '自定义组件',
@@ -44,11 +13,11 @@ export function setupDraggers(pkg: ComponentPackage) {
     type: 'native',
     descriptor: {
       namespace: 'hello',
-      name: 'Card',
+      name: 'StdComponent',
     },
-    label: '卡片',
-    canvas: true,
+    label: 'Std库测试组件',
   });
+
   pkg.addDragger({
     type: 'native',
     descriptor: {

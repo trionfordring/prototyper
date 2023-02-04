@@ -1,4 +1,4 @@
-import { JS_EXPR } from '@prototyper/core/src/utils';
+import { JS_EXPR } from '@prototyper/core';
 import { Form, Input, InputProps, Switch, SwitchProps } from 'antd';
 import React from 'react';
 import { FC } from 'react';

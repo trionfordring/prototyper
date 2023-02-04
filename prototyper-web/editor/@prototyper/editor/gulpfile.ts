@@ -6,7 +6,6 @@ import { buildDts } from '../../../build/dts';
 import { buildLib } from '../../../build/lib';
 import { buildUmd } from '../../../build/umd';
 import { setBuildEnv } from '../../../build/utils/env';
-import { run } from '../../../build/utils/process';
 import { withTaskName } from '../../../build/utils/withTaskName';
 
 setBuildEnv({
@@ -29,7 +28,4 @@ export default series(
   )
 );
 
-export const devTask = withTaskName(
-  'dev',
-  parallel(dev(), () => run('pnpm run -F @prototyper/core dev'))
-);
+export const devTask = withTaskName('dev', dev());

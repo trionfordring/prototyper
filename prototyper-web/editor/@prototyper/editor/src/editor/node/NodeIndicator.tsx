@@ -18,7 +18,6 @@ import { getRelativeRect } from './utils/getRelativeRect';
 import { consumeProvider, Provider } from '../../utils/Provider';
 
 const NodeIndicatorBox = styled.div`
-  position: fixed;
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -62,6 +61,7 @@ export const NodeIndicator = ({
   const container = consumeProvider(containerProp);
   const rect = useDebounceMemo(
     () => {
+      if (!container) return null;
       let rects = getNodeRects(queryRoot)(node);
       if (relativePosition)
         rects = rects.map(getRelativeRect(container.getBoundingClientRect()));
@@ -74,6 +74,7 @@ export const NodeIndicator = ({
   return ReactDOM.createPortal(
     <NodeIndicatorBox
       style={{
+        position: relativePosition ? 'absolute' : 'fixed',
         height: `${rect.height + padding * 2}px`,
         width: `${rect.width + padding * 2}px`,
         top: `${rect.top - padding - 1}px`,

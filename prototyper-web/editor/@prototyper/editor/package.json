@@ -24,6 +24,7 @@
   "dependencies": {
     "@ant-design/cssinjs": "^1.5.6",
     "@ant-design/icons": "^5.0.1",
+    "@craftjs/layers": "workspace:*",
     "antd": "^5.1.2",
     "lodash": "^4.17.21",
     "react-is": "^18.2.0",
