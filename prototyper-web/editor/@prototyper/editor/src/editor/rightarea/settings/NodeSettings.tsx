@@ -14,7 +14,7 @@ export const NodeSettings = ({
       const node = state.nodes[currentNodeId];
       selected = {
         id: currentNodeId,
-        name: node.data.name,
+        name: node.data.custom?.displayName || node.data.displayName,
         settings: node.related && node.related.settings,
       };
       currentNodeId = node.data.parent;

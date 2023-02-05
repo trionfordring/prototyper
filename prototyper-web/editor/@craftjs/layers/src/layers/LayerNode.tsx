@@ -14,7 +14,6 @@ export const LayerNode: React.FC = () => {
   const { data, shouldBeExpanded } = useEditor((state, query) => {
     // TODO: handle multiple selected elements
     const selected = query.getEvent('selected').first();
-
     return {
       data: state.nodes[id] && state.nodes[id].data,
       shouldBeExpanded:
@@ -23,7 +22,7 @@ export const LayerNode: React.FC = () => {
   });
 
   const {
-    actions: { registerLayer, toggleLayer },
+    actions: { registerLayer, setExpandedState },
     renderLayer,
     expandRootOnLoad,
   } = useLayerManager((state) => ({
@@ -41,21 +40,17 @@ export const LayerNode: React.FC = () => {
   const expandedRef = useRef<boolean>(expanded);
   expandedRef.current = expanded;
 
-  const shouldBeExpandedOnLoad = useRef<boolean>(
-    expandRootOnLoad && id === ROOT_NODE
-  );
-
   useEffect(() => {
     if (!expandedRef.current && shouldBeExpanded) {
-      toggleLayer(id);
+      setExpandedState(id, true);
     }
-  }, [toggleLayer, id, shouldBeExpanded]);
+  }, [setExpandedState, id, shouldBeExpanded]);
 
   useEffect(() => {
-    if (shouldBeExpandedOnLoad.current) {
-      toggleLayer(id);
+    if (expandRootOnLoad && id === ROOT_NODE) {
+      setExpandedState(id, true);
     }
-  }, [toggleLayer, id]);
+  }, [setExpandedState, id, expandRootOnLoad]);
 
   return data && isRegistered ? (
     <div className={`craft-layer-node ${id}`}>

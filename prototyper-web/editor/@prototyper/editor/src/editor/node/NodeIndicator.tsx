@@ -31,10 +31,15 @@ const ToolBar = styled(Space)`
   margin-left: -1px;
   padding: 0 0.5em;
   pointer-events: initial;
+  white-space: nowrap;
 `;
 
 const Icons = styled(Space)`
   font-size: 1.2em;
+`;
+
+const Title = styled.span`
+  white-space: nowrap;
 `;
 
 export const NodeIndicator = ({
@@ -97,7 +102,7 @@ export const NodeIndicator = ({
             ...style,
           }}
         >
-          <span>{node.name}</span>
+          <Title>{node.name}</Title>
           {toolBar ? (
             <Icons size="small">
               {node.drag ? <DragOutlined /> : null}

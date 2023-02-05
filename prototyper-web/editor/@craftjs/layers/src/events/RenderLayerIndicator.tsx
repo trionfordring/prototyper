@@ -24,9 +24,8 @@ export const RenderLayerIndicator: React.FC<any> = ({ children }) => {
 
       if (indicator.onCanvas && layers[parent.id].dom != null) {
         const parentPos = layers[parent.id].dom.getBoundingClientRect();
-        const parentHeadingPos = layers[
-          parent.id
-        ].headingDom.getBoundingClientRect();
+        const parentHeadingPos =
+          layers[parent.id].headingDom.getBoundingClientRect();
         return {
           top: parentHeadingPos.top,
           left: parentPos.left,

@@ -3,6 +3,8 @@ import React from 'react';
 import { PropDeclear } from '../../utils';
 
 export interface SetterContextType {
+  name: string;
+  setName: (name: string) => void;
   setProps: (props: Record<string, any>, propsMapper?: PropDeclear) => void;
   setHidden: (hide: string) => void;
   hiddenVal?: string;

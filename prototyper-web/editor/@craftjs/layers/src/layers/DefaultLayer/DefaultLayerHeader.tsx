@@ -123,7 +123,7 @@ export const DefaultLayerHeader: React.FC = () => {
       >
         <Eye />
       </Hide>
-      <div className="inner">
+      <div className="inner" onClick={() => toggleLayer()}>
         <div ref={layerHeader}>
           {topLevel ? (
             <TopLevelIndicator>
@@ -136,7 +136,7 @@ export const DefaultLayerHeader: React.FC = () => {
           </div>
           <div>
             {children && children.length ? (
-              <Expand expanded={expanded} onMouseDown={() => toggleLayer()}>
+              <Expand expanded={expanded}>
                 <Arrow />
               </Expand>
             ) : null}

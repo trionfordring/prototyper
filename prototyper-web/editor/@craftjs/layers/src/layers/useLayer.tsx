@@ -8,9 +8,11 @@ import { Layer } from '../interfaces';
 import { useLayerManager } from '../manager';
 
 export function useLayer<S = null>(collect?: (layer: Layer) => S) {
-  const { id, depth, connectors: internalConnectors } = useContext(
-    LayerContext
-  );
+  const {
+    id,
+    depth,
+    connectors: internalConnectors,
+  } = useContext(LayerContext);
 
   const { actions: managerActions, ...collected } = useLayerManager((state) => {
     return id && state.layers[id] && collect && collect(state.layers[id]);

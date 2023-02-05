@@ -25,7 +25,7 @@ export const SetterContextProvider = ({
     forKey: state.data.custom?.forKey,
     propsMapper: state.data.custom?.propsMapper,
     id: state.id,
-    name: state.data.displayName,
+    name: state.data.custom?.displayName || state.data.displayName,
   }));
   const { actions, isDeletable } = useEditor((state, query) => ({
     isDeletable: query.node(id).get() && query.node(id).isDeletable(),
@@ -49,6 +49,12 @@ export const SetterContextProvider = ({
   return (
     <SetterContext.Provider
       value={{
+        name,
+        setName(name) {
+          setCustom((cust) => {
+            cust.displayName = name;
+          });
+        },
         props: virtual ? props.props || {} : props,
         isRoot: false,
         setProps,

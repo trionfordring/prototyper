@@ -1,321 +1,340 @@
 {
-  "ROOT": {
-      "type": {
-          "resolvedName": "ComponentRenderer"
-      },
-      "isCanvas": true,
-      "props": {},
-      "displayName": "ROOT",
-      "custom": {},
-      "hidden": false,
-      "nodes": [
-          "CKRupuRkv7",
-          "nxW8EhU4lK",
-          "JQ9GKPczqQ",
-          "s_Zj7aIgag"
-      ],
-      "linkedNodes": {}
-  },
-  "CKRupuRkv7": {
-      "type": {
-          "resolvedName": "std.Typography"
-      },
-      "isCanvas": false,
-      "props": {
-          "text": "测试组件",
-          "domType": "title",
-          "level": 3
-      },
-      "displayName": "Typography",
-      "custom": {
-          "propsMapper": {}
-      },
-      "parent": "ROOT",
-      "hidden": false,
-      "nodes": [],
-      "linkedNodes": {}
-  },
-  "nxW8EhU4lK": {
-      "type": {
-          "resolvedName": "std.Divider"
-      },
-      "isCanvas": true,
-      "props": {
-          "orientation": "right"
-      },
-      "displayName": "Divider",
-      "custom": {
-          "propsMapper": {}
-      },
-      "parent": "ROOT",
-      "hidden": false,
-      "nodes": [
-          "AUZoJA2ljW"
-      ],
-      "linkedNodes": {}
-  },
-  "AUZoJA2ljW": {
-      "type": {
-          "resolvedName": "std.Typography"
-      },
-      "isCanvas": false,
-      "props": {
-          "text": "Test Component",
-          "domType": "text",
-          "type": "secondary",
-          "italic": true
-      },
-      "displayName": "Typography",
-      "custom": {
-          "propsMapper": {}
-      },
-      "parent": "nxW8EhU4lK",
-      "hidden": false,
-      "nodes": [],
-      "linkedNodes": {}
-  },
-  "s_Zj7aIgag": {
-      "type": {
-          "resolvedName": "std.GridRow"
-      },
-      "isCanvas": false,
-      "props": {
-          "colNum": 3,
-          "gutter": 12,
-          "align": "middle",
-          "justify": "space-around"
-      },
-      "displayName": "GridRow",
-      "custom": {
-          "propsMapper": {}
-      },
-      "parent": "ROOT",
-      "hidden": false,
-      "nodes": [],
-      "linkedNodes": {
-          "col_0": "mk6N62q6Vu",
-          "col_1": "U8HC8G7I0d",
-          "col_2": "AIZzPvotMh"
-      }
-  },
-  "mk6N62q6Vu": {
-      "type": {
-          "resolvedName": "std.GridCol"
-      },
-      "isCanvas": true,
-      "props": {
-          "span": 4
-      },
-      "displayName": "GridCol",
-      "custom": {
-          "propsMapper": {}
-      },
-      "parent": "s_Zj7aIgag",
-      "hidden": false,
-      "nodes": [
-          "57DOuGsnTk"
-      ],
-      "linkedNodes": {}
-  },
-  "U8HC8G7I0d": {
-      "type": {
-          "resolvedName": "std.GridCol"
-      },
-      "isCanvas": true,
-      "props": {
-          "span": 12
-      },
-      "displayName": "GridCol",
-      "custom": {},
-      "parent": "s_Zj7aIgag",
-      "hidden": false,
-      "nodes": [
-          "dbKoPzwq54",
-          "u7G3ShvgAV",
-          "c62fya0mon"
-      ],
-      "linkedNodes": {}
-  },
-  "JQ9GKPczqQ": {
-      "type": {
-          "resolvedName": "std.Div"
-      },
-      "isCanvas": true,
-      "props": {},
-      "displayName": "Div",
-      "custom": {},
-      "parent": "ROOT",
-      "hidden": false,
-      "nodes": [
-          "8NI-SAtkaY"
-      ],
-      "linkedNodes": {}
-  },
-  "8NI-SAtkaY": {
-      "type": {
-          "resolvedName": "std.Typography"
-      },
-      "isCanvas": false,
-      "props": {
-          "text": "本组件将展示一个基本的虚拟组件结构。",
-          "domType": "paragraph"
-      },
-      "displayName": "Typography",
-      "custom": {
-          "propsMapper": {}
-      },
-      "parent": "JQ9GKPczqQ",
-      "hidden": false,
-      "nodes": [],
-      "linkedNodes": {}
-  },
-  "AIZzPvotMh": {
-      "type": {
-          "resolvedName": "std.GridCol"
-      },
-      "isCanvas": true,
-      "props": {
-          "span": 4
-      },
-      "displayName": "GridCol",
-      "custom": {
-          "propsMapper": {}
-      },
-      "parent": "s_Zj7aIgag",
-      "hidden": false,
-      "nodes": [
-          "xklqoKVg73"
-      ],
-      "linkedNodes": {}
-  },
-  "dbKoPzwq54": {
-      "type": {
-          "resolvedName": "std.Typography"
-      },
-      "isCanvas": false,
-      "props": {
-          "text": "当前的状态下的NUM",
-          "domType": "title",
-          "level": 4
-      },
-      "displayName": "Typography",
-      "custom": {
-          "propsMapper": {}
-      },
-      "parent": "U8HC8G7I0d",
-      "hidden": false,
-      "nodes": [],
-      "linkedNodes": {}
-  },
-  "u7G3ShvgAV": {
-      "type": {
-          "resolvedName": "std.Divider"
-      },
-      "isCanvas": true,
-      "props": {},
-      "displayName": "Divider",
-      "custom": {},
-      "parent": "U8HC8G7I0d",
-      "hidden": false,
-      "nodes": [],
-      "linkedNodes": {}
-  },
-  "c62fya0mon": {
-      "type": {
-          "resolvedName": "std.Typography"
-      },
-      "isCanvas": false,
-      "props": {
-          "text": "num: #{state.num}",
-          "domType": "text"
-      },
-      "displayName": "Typography",
-      "custom": {
-          "propsMapper": {
-              "text": "fmtExpr"
-          }
-      },
-      "parent": "U8HC8G7I0d",
-      "hidden": false,
-      "nodes": [],
-      "linkedNodes": {}
-  },
-  "57DOuGsnTk": {
-      "type": {
-          "resolvedName": "std.Button"
-      },
-      "isCanvas": true,
-      "props": {
-          "onClick": "state.add",
-          "size": "large",
-          "type": "primary"
-      },
-      "displayName": "Button",
-      "custom": {
-          "propsMapper": {}
-      },
-      "parent": "mk6N62q6Vu",
-      "hidden": false,
-      "nodes": [],
-      "linkedNodes": {
-          "content": "DbggG6jjBc"
-      }
-  },
-  "DbggG6jjBc": {
-      "type": {
-          "resolvedName": "std.Typography"
-      },
-      "isCanvas": false,
-      "props": {
-          "text": "+1",
-          "domType": "text"
-      },
-      "displayName": "Typography",
-      "custom": {
-          "propsMapper": {}
-      },
-      "parent": "57DOuGsnTk",
-      "hidden": false,
-      "nodes": [],
-      "linkedNodes": {}
-  },
-  "xklqoKVg73": {
-      "type": {
-          "resolvedName": "std.Button"
-      },
-      "isCanvas": true,
-      "props": {
-          "onClick": "()=>state.add(-1)",
-          "size": "large",
-          "type": "dashed"
-      },
-      "displayName": "Button",
-      "custom": {
-          "propsMapper": {}
-      },
-      "parent": "AIZzPvotMh",
-      "hidden": false,
-      "nodes": [],
-      "linkedNodes": {
-          "content": "IWAOhtmzb4"
-      }
-  },
-  "IWAOhtmzb4": {
-      "type": {
-          "resolvedName": "std.Typography"
-      },
-      "isCanvas": false,
-      "props": {
-          "text": "-1",
-          "domType": "text"
-      },
-      "displayName": "Typography",
-      "custom": {
-          "propsMapper": {}
-      },
-      "parent": "xklqoKVg73",
-      "hidden": false,
-      "nodes": [],
-      "linkedNodes": {}
-  }
+    "ROOT": {
+        "type": {
+            "resolvedName": "ComponentRenderer"
+        },
+        "isCanvas": true,
+        "props": {},
+        "displayName": "ROOT",
+        "custom": {},
+        "hidden": false,
+        "nodes": [
+            "CKRupuRkv7",
+            "nxW8EhU4lK",
+            "JQ9GKPczqQ",
+            "s_Zj7aIgag"
+        ],
+        "linkedNodes": {}
+    },
+    "CKRupuRkv7": {
+        "type": {
+            "resolvedName": "std.Typography"
+        },
+        "isCanvas": false,
+        "props": {
+            "text": "测试组件",
+            "domType": "title",
+            "level": 3
+        },
+        "displayName": "Typography",
+        "custom": {
+            "propsMapper": {},
+            "displayName": "标题"
+        },
+        "parent": "ROOT",
+        "hidden": false,
+        "nodes": [],
+        "linkedNodes": {}
+    },
+    "nxW8EhU4lK": {
+        "type": {
+            "resolvedName": "std.Divider"
+        },
+        "isCanvas": true,
+        "props": {
+            "orientation": "right"
+        },
+        "displayName": "Divider",
+        "custom": {
+            "propsMapper": {},
+            "displayName": "标题分割线"
+        },
+        "parent": "ROOT",
+        "hidden": false,
+        "nodes": [
+            "AUZoJA2ljW"
+        ],
+        "linkedNodes": {}
+    },
+    "AUZoJA2ljW": {
+        "type": {
+            "resolvedName": "std.Typography"
+        },
+        "isCanvas": false,
+        "props": {
+            "text": "Test Component",
+            "domType": "text",
+            "type": "secondary",
+            "italic": true
+        },
+        "displayName": "Typography",
+        "custom": {
+            "propsMapper": {},
+            "displayName": "分割线文本"
+        },
+        "parent": "nxW8EhU4lK",
+        "hidden": false,
+        "nodes": [],
+        "linkedNodes": {}
+    },
+    "JQ9GKPczqQ": {
+        "type": {
+            "resolvedName": "std.Div"
+        },
+        "isCanvas": true,
+        "props": {},
+        "displayName": "Div",
+        "custom": {
+            "displayName": "说明"
+        },
+        "parent": "ROOT",
+        "hidden": false,
+        "nodes": [
+            "8NI-SAtkaY"
+        ],
+        "linkedNodes": {}
+    },
+    "8NI-SAtkaY": {
+        "type": {
+            "resolvedName": "std.Typography"
+        },
+        "isCanvas": false,
+        "props": {
+            "text": "本组件将展示一个基本的虚拟组件结构。",
+            "domType": "paragraph"
+        },
+        "displayName": "Typography",
+        "custom": {
+            "propsMapper": {},
+            "displayName": "文本"
+        },
+        "parent": "JQ9GKPczqQ",
+        "hidden": false,
+        "nodes": [],
+        "linkedNodes": {}
+    },
+    "s_Zj7aIgag": {
+        "type": {
+            "resolvedName": "std.GridRow"
+        },
+        "isCanvas": false,
+        "props": {
+            "colNum": 3,
+            "gutter": 12,
+            "align": "middle",
+            "justify": "space-around"
+        },
+        "displayName": "GridRow",
+        "custom": {
+            "propsMapper": {},
+            "displayName": "三栏"
+        },
+        "parent": "ROOT",
+        "hidden": false,
+        "nodes": [],
+        "linkedNodes": {
+            "col_0": "mk6N62q6Vu",
+            "col_1": "U8HC8G7I0d",
+            "col_2": "AIZzPvotMh"
+        }
+    },
+    "mk6N62q6Vu": {
+        "type": {
+            "resolvedName": "std.GridCol"
+        },
+        "isCanvas": true,
+        "props": {
+            "span": 4
+        },
+        "displayName": "GridCol",
+        "custom": {
+            "propsMapper": {},
+            "displayName": "左边栏"
+        },
+        "parent": "s_Zj7aIgag",
+        "hidden": false,
+        "nodes": [
+            "57DOuGsnTk"
+        ],
+        "linkedNodes": {}
+    },
+    "57DOuGsnTk": {
+        "type": {
+            "resolvedName": "std.Button"
+        },
+        "isCanvas": true,
+        "props": {
+            "onClick": "state.add",
+            "size": "large",
+            "type": "primary"
+        },
+        "displayName": "Button",
+        "custom": {
+            "propsMapper": {},
+            "displayName": "增加按钮"
+        },
+        "parent": "mk6N62q6Vu",
+        "hidden": false,
+        "nodes": [],
+        "linkedNodes": {
+            "content": "DbggG6jjBc"
+        }
+    },
+    "DbggG6jjBc": {
+        "type": {
+            "resolvedName": "std.Typography"
+        },
+        "isCanvas": false,
+        "props": {
+            "text": "+1",
+            "domType": "text"
+        },
+        "displayName": "Typography",
+        "custom": {
+            "propsMapper": {},
+            "displayName": "文本"
+        },
+        "parent": "57DOuGsnTk",
+        "hidden": false,
+        "nodes": [],
+        "linkedNodes": {}
+    },
+    "U8HC8G7I0d": {
+        "type": {
+            "resolvedName": "std.GridCol"
+        },
+        "isCanvas": true,
+        "props": {
+            "span": 12
+        },
+        "displayName": "GridCol",
+        "custom": {
+            "displayName": "内容"
+        },
+        "parent": "s_Zj7aIgag",
+        "hidden": false,
+        "nodes": [
+            "dbKoPzwq54",
+            "u7G3ShvgAV",
+            "c62fya0mon"
+        ],
+        "linkedNodes": {}
+    },
+    "dbKoPzwq54": {
+        "type": {
+            "resolvedName": "std.Typography"
+        },
+        "isCanvas": false,
+        "props": {
+            "text": "当前的状态下的NUM",
+            "domType": "title",
+            "level": 4
+        },
+        "displayName": "Typography",
+        "custom": {
+            "propsMapper": {},
+            "displayName": "二级标题"
+        },
+        "parent": "U8HC8G7I0d",
+        "hidden": false,
+        "nodes": [],
+        "linkedNodes": {}
+    },
+    "u7G3ShvgAV": {
+        "type": {
+            "resolvedName": "std.Divider"
+        },
+        "isCanvas": true,
+        "props": {},
+        "displayName": "Divider",
+        "custom": {
+            "displayName": "分割线"
+        },
+        "parent": "U8HC8G7I0d",
+        "hidden": false,
+        "nodes": [],
+        "linkedNodes": {}
+    },
+    "c62fya0mon": {
+        "type": {
+            "resolvedName": "std.Typography"
+        },
+        "isCanvas": false,
+        "props": {
+            "text": "num: #{state.num}",
+            "domType": "text"
+        },
+        "displayName": "Typography",
+        "custom": {
+            "propsMapper": {
+                "text": "fmtExpr"
+            },
+            "displayName": "计数"
+        },
+        "parent": "U8HC8G7I0d",
+        "hidden": false,
+        "nodes": [],
+        "linkedNodes": {}
+    },
+    "AIZzPvotMh": {
+        "type": {
+            "resolvedName": "std.GridCol"
+        },
+        "isCanvas": true,
+        "props": {
+            "span": 4
+        },
+        "displayName": "GridCol",
+        "custom": {
+            "propsMapper": {},
+            "displayName": "右边栏"
+        },
+        "parent": "s_Zj7aIgag",
+        "hidden": false,
+        "nodes": [
+            "xklqoKVg73"
+        ],
+        "linkedNodes": {}
+    },
+    "xklqoKVg73": {
+        "type": {
+            "resolvedName": "std.Button"
+        },
+        "isCanvas": true,
+        "props": {
+            "onClick": "()=>state.add(-1)",
+            "size": "large",
+            "type": "dashed"
+        },
+        "displayName": "Button",
+        "custom": {
+            "propsMapper": {},
+            "displayName": "减少按钮"
+        },
+        "parent": "AIZzPvotMh",
+        "hidden": false,
+        "nodes": [],
+        "linkedNodes": {
+            "content": "IWAOhtmzb4"
+        }
+    },
+    "IWAOhtmzb4": {
+        "type": {
+            "resolvedName": "std.Typography"
+        },
+        "isCanvas": false,
+        "props": {
+            "text": "-1",
+            "domType": "text"
+        },
+        "displayName": "Typography",
+        "custom": {
+            "propsMapper": {},
+            "displayName": "文本"
+        },
+        "parent": "xklqoKVg73",
+        "hidden": false,
+        "nodes": [],
+        "linkedNodes": {}
+    }
 }

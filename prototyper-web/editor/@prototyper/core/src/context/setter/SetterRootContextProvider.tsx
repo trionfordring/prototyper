@@ -1,3 +1,4 @@
+import { ROOT_NODE } from '@craftjs/core';
 import React, { PropsWithChildren } from 'react';
 
 import { SetterContext } from './SetterContext';
@@ -25,6 +26,8 @@ export const SetterRootContextProvider = ({ children }: PropsWithChildren) => {
   return (
     <SetterContext.Provider
       value={{
+        name: ROOT_NODE,
+        setName: unsupport,
         props: rootProps || {},
         propsMapper: rootPropsMapper,
         isRoot: true,

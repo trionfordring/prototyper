@@ -26,7 +26,7 @@ export const NodeToolBar = ({
           .filter((node) => node)
           .map((node) => ({
             id: node.id,
-            name: node.data.displayName,
+            name: node.data.custom?.displayName || node.data.displayName,
             state,
             remove: query.node(node.id).isDeletable()
               ? () => actions.delete(node.id)

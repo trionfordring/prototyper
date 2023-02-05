@@ -5,11 +5,13 @@ import React, { useState } from 'react';
 import { FormHeader } from '../form/FormHeader';
 
 export const NodeSetter = () => {
-  const { forVal, hiddenVal, forKey, setFor, setHidden } = useSetterContext();
+  const { forVal, hiddenVal, forKey, setFor, setHidden, name, setName } =
+    useSetterContext();
   const [changed, setChanged] = useState(false);
   const [form] = Form.useForm();
   const formForVal = Form.useWatch('forVal', form);
   const onCommit = (obj) => {
+    setName(obj.name);
     setFor(obj.forVal, obj.forKey);
     setHidden(obj.hiddenVal);
     setChanged(false);
@@ -25,6 +27,9 @@ export const NodeSetter = () => {
       size="small"
     >
       <FormHeader title="节点通用配置"></FormHeader>
+      <Form.Item label="节点名称" name="name" initialValue={name}>
+        <Input placeholder="输入节点名称"></Input>
+      </Form.Item>
       <Form.Item label="隐藏节点" name="hiddenVal" initialValue={hiddenVal}>
         <Input placeholder="输入Bool格式的JS表达式"></Input>
       </Form.Item>
