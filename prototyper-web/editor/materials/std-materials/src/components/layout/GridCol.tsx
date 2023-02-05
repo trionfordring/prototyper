@@ -1,12 +1,12 @@
 import { SetterForm, SliderSetter, TextSetter } from '@prototyper/editor';
 import { Col, ColProps } from 'antd';
-import React from 'react';
+import React, { FC } from 'react';
 import { PropsWithChildren } from 'react';
 
 import { useConnectors } from '../../utils/useConnectors';
 import { DropArea } from '../basic';
 
-export const GridCol = ({
+export const GridCol: FC<ColProps> = ({
   children,
   ...props
 }: PropsWithChildren<ColProps>) => {

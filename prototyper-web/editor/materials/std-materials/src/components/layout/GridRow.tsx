@@ -1,11 +1,11 @@
-import { Element } from '@prototyper/core';
+import { PreDefinedElement, useElements } from '@prototyper/core';
 import {
   AutoCompleteSetter,
   SetterForm,
   SliderSetter,
 } from '@prototyper/editor';
 import { Row } from 'antd';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { GridCol } from './GridCol';
 
@@ -15,21 +15,27 @@ import { DropAreaContainer } from '../basic';
 
 export const GridRow = ({ colNum, ...props }: { colNum: number }) => {
   const { connectAndDrag } = useConnectors();
+  const colElements = useMemo(() => {
+    const newColElements = [];
+    for (let i = 0; i < colNum; i++) {
+      const element = {
+        id: String(i),
+        is: GridCol,
+        canvas: true,
+        span: Math.floor(24 / colNum),
+      };
+      newColElements.push(element);
+    }
+    return newColElements;
+  }, [colNum]);
+  useElements(colElements);
   const cols = usePlaceholder(
     <DropAreaContainer>点此编辑栅格</DropAreaContainer>,
     () => {
       const nodes = [];
       for (let i = 0; i < colNum; i++) {
-        const id = `col_${i}`;
-        nodes.push(
-          <Element
-            key={id}
-            id={id}
-            is={GridCol as any}
-            canvas
-            span={Math.floor(24 / colNum)}
-          />
-        );
+        const id = String(i);
+        nodes.push(<PreDefinedElement key={id} id={id} />);
       }
       return nodes.length > 0 ? nodes : null;
     }

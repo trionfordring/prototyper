@@ -1,4 +1,4 @@
-import { Element } from '@prototyper/core';
+import { PreDefinedElement, useElements } from '@prototyper/core';
 import {
   AutoCompleteSetter,
   BoolSetter,
@@ -15,9 +15,18 @@ import { useConnectors } from '../../utils/useConnectors';
 import { usePlaceholder } from '../../utils/usePlaceholder';
 
 export const Button: FC<PropsWithChildren> = ({ children, ...props }) => {
-  const placeholder = (
-    <Element id="content" is={Typography} text="按钮"></Element>
+  useElements(
+    children
+      ? []
+      : [
+          {
+            id: 'content',
+            is: Typography,
+            text: '按钮',
+          },
+        ]
   );
+  const placeholder = <PreDefinedElement id="content"></PreDefinedElement>;
   const { connectAndDrag } = useConnectors();
   const content = usePlaceholder(placeholder, children, placeholder);
   return (

@@ -10,6 +10,7 @@ import {
   Delete,
   ERROR_NOT_IN_RESOLVER,
 } from '@craftjs/utils';
+import { forEach } from 'lodash';
 import invariant from 'tiny-invariant';
 
 import { QueryMethods } from './query';
@@ -118,8 +119,14 @@ const Methods = (
   };
 
   const deleteNode = (id: NodeId) => {
-    const targetNode = state.nodes[id],
-      parentNode = state.nodes[targetNode.data.parent];
+    const targetNode = state.nodes[id];
+
+    if (!targetNode) {
+      console.warn('试图删除不存在的节点', id);
+
+      return;
+    }
+    const parentNode = state.nodes[targetNode.data.parent];
 
     if (targetNode.data.nodes) {
       // we deep clone here because otherwise immer will mutate the node
@@ -140,7 +147,7 @@ const Methods = (
       parentChildren.splice(parentChildren.indexOf(id), 1);
     } else {
       const linkedId = Object.keys(parentNode.data.linkedNodes).find(
-        (id) => parentNode.data.linkedNodes[id] === id
+        (slotId) => parentNode.data.linkedNodes[slotId] === id
       );
       if (linkedId) {
         delete parentNode.data.linkedNodes[linkedId];
@@ -177,6 +184,40 @@ const Methods = (
         };
       }
       addNodeTreeToParent(tree, parentId, { type: 'linked', id });
+    },
+
+    setLinkedNodeFromTree(
+      nodeId: NodeId,
+      links: { id: string; treeProvider: () => NodeTree; cache: boolean }[]
+    ) {
+      const node = state.nodes[nodeId];
+      if (!node) {
+        console.warn(`试图在一个不存在的节点[${nodeId}]上添加槽节点`, links);
+        return;
+      }
+      const linkedNodes = node.data.linkedNodes;
+      // 删除多余的节点
+      forEach(linkedNodes, (id, slotId) => {
+        if (links.some((n) => n.id === slotId)) return;
+        deleteNode(id);
+      });
+
+      // 添加新增/替换的节点
+      links.forEach((link) => {
+        const existingLinkedNode = linkedNodes[link.id];
+        // 已存在节点并开启缓存，则直接跳过
+        if (existingLinkedNode && link.cache) return;
+        // 已存在节点并禁用缓存，则替换节点
+        if (existingLinkedNode && !link.cache) {
+          deleteNode(existingLinkedNode);
+        }
+        const tree = link.treeProvider();
+        if (tree)
+          addNodeTreeToParent(tree, nodeId, {
+            type: 'linked',
+            id: link.id,
+          });
+      });
     },
 
     /**

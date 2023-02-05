@@ -9,5 +9,4 @@ export * from './hook';
 export * from './hoc';
 export * from './utils';
 
-export { useNode, useEditor, Element, ROOT_NODE } from '@craftjs/core';
-export type { Node, SerializedNodes, SerializedNode } from '@craftjs/core';
+export * from '@craftjs/core';
