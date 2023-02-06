@@ -7,10 +7,14 @@ import { NodeSettings } from './settings/NodeSettings';
 import { RootSettings } from './settings/RootSettings';
 
 const Panel = styled.div`
-  width: 23rem;
+  width: 400px;
   margin: 0 5px;
-  max-height: calc(100vh - 48px);
   overflow: auto;
+  margin-left: auto;
+  height: fit-content;
+  position: relative;
+  z-index: 15;
+  max-height: calc(100vh - 64px);
 `;
 
 const EditorRight: FC = () => {

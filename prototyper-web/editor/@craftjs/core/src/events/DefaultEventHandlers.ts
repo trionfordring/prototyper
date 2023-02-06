@@ -186,7 +186,7 @@ export class DefaultEventHandlers<O = {}> extends CoreEventHandlers<
               const { left, right, top, bottom } = el.getBoundingClientRect();
               const { clientX: x, clientY: y } = e;
               // 创建节点时，如果移出了根节点，则说明用户可能不打算创建这个节点了。
-              if (!(x >= left && x <= right && y >= top && y <= bottom)) {
+              if (!(x >= left && x <= right - 1 && y >= top && y <= bottom)) {
                 store.actions.setIndicator(null);
                 store.actions.setNodeEvent('dragover', null);
                 this.positioner.clearIndicator();

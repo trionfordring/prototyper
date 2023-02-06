@@ -371,6 +371,11 @@ const Methods = (
       this.setIndicator(null);
     },
 
+    clearHovered() {
+      this.setNodeEvent('hovered', null);
+      this.setNodeEvent('dragover', null);
+    },
+
     /**
      * Resets all the editor state.
      */

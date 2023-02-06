@@ -12,6 +12,7 @@ const Bar = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  z-index: 15;
   .item {
     height: 48px;
     width: 100%;

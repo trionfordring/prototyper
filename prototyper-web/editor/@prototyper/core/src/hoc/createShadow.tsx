@@ -3,6 +3,7 @@ import React, {
   FC,
   PropsWithChildren,
   ReactNode,
+  RefAttributes,
   useEffect,
   useState,
 } from 'react';
@@ -17,11 +18,13 @@ const doCreatePortal: CreateProtalType = createPortal || fallbackCreatePortal;
 
 const supportShadowDom = document?.body?.attachShadow && createPortal;
 export function createShadow<T extends HTMLElement, P = {}>(
-  Root: any,
+  Root: React.ComponentType<RefAttributes<T> & P>,
   Component: React.ComponentType<
-    P & {
-      shadowRoot?: ShadowRoot;
-    }
+    PropsWithChildren<
+      P & {
+        shadowRoot?: ShadowRoot;
+      }
+    >
   >
 ) {
   const ShadowComponent: FC<PropsWithChildren<P>> = ({

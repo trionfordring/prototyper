@@ -44,7 +44,7 @@ const Expand = styled.a<{ expanded: boolean }>`
   height: 8px;
   display: block;
   transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-  transform: rotate(${(props) => (props.expanded ? 180 : 270)}deg);
+  transform: rotate(${(props) => (props.expanded ? 0 : -90)}deg);
   opacity: 0.7;
   cursor: pointer;
   transform-origin: 60% center;

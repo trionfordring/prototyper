@@ -10,25 +10,27 @@ const editorStyle = styled`
   }
   /* 可以通过root类访问到根渲染器 */
   .root {
-    border: 1px solid #000;
-    padding: 5px;
-  }
-  .component:not(.root) {
-    border: 1px solid blue;
   }
 `;
+
 function EditorExample() {
   const pkg = globalPackagesRegistry.getPackage('hello');
   const stdPkg = globalPackagesRegistry.getPackage('std');
   return (
-    <Editor
-      app={{
-        index: pkg.getComponent('StdComponent') as any,
+    <div
+      style={{
+        height: '99vh',
       }}
-      draggers={[...pkg.draggers, ...stdPkg.draggers]}
     >
-      <style>{editorStyle}</style>
-    </Editor>
+      <Editor
+        app={{
+          index: pkg.getComponent('StdComponent') as any,
+        }}
+        draggers={[...pkg.draggers, ...stdPkg.draggers]}
+      >
+        <style>{editorStyle}</style>
+      </Editor>
+    </div>
   );
 }
 

@@ -13,8 +13,13 @@ export const NodeToolBar = ({
   container: Provider<HTMLElement>;
   relativePosition?: boolean;
 }) => {
-  const { activeNodes, actions, rootDom, connectors } = useEditor(
+  const { activeNodes, actions, rootDom, connectors, enabled } = useEditor(
     (state, query) => {
+      if (!state.options.enabled) {
+        return {
+          enabled: false,
+        };
+      }
       const rootDom: HTMLElement = state.nodes[ROOT_NODE]?.dom;
       function getByIds(
         ids: Iterable<string>,
@@ -49,9 +54,10 @@ export const NodeToolBar = ({
       const activeNodes = [...selected, ...hovered].sort((a, b) =>
         a.id.localeCompare(b.id)
       );
-      return { activeNodes, rootDom };
+      return { activeNodes, rootDom, enabled: true };
     }
   );
+  if (!enabled) return null;
   return (
     <React.Fragment>
       {activeNodes.flatMap((node) => {

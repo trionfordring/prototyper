@@ -6,18 +6,24 @@ import {
 } from '@prototyper/core';
 import { Button, Space, Typography } from 'antd';
 import React from 'react';
+import { Props as RndProps } from 'react-rnd';
 import styled from 'styled-components';
 
 import { forEachSerializedNode } from '../../utils/forEachSerializedNode';
 import { minifySerializedNodes } from '../../utils/minifySerializedNodes';
 
-const Header = styled.div`
+const Header = styled.div.attrs({
+  height: '48px',
+})`
+  position: relative;
+  z-index: 10;
+  background-color: #fff;
   min-width: 600px;
   padding: 0 24px;
-  margin: 5px auto;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
+  height: ${(props) => props.height};
 `;
 
 const Title = styled.h1`
@@ -38,7 +44,22 @@ const Right = styled.div`
   justify-self: flex-end;
 `;
 
-const EditorHeader = () => {
+function format(content: string | number) {
+  if (typeof content === 'number') {
+    return content.toFixed(1);
+  }
+  return content;
+}
+
+const EditorHeader = ({
+  height,
+  size,
+  setSize,
+}: {
+  height?: string;
+  size: RndProps['size'];
+  setSize: (size: RndProps['size']) => void;
+}) => {
   const { query } = useEditor();
   const { component } = useComponentContext();
   function save() {
@@ -67,7 +88,7 @@ const EditorHeader = () => {
       });
   }
   return (
-    <Header>
+    <Header height={height}>
       <Title>Editor</Title>
       <Center>
         <Item>
@@ -78,6 +99,11 @@ const EditorHeader = () => {
       </Center>
       <Right>
         <Space>
+          <Space>
+            <Button type="dashed">{`画布尺寸: ${format(size.height)} x ${format(
+              size.width
+            )}`}</Button>
+          </Space>
           <Button type="primary" onClick={save}>
             编辑脚本
           </Button>

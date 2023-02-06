@@ -13,7 +13,18 @@ import { ComponentPane } from '../../components/component-pane';
 import { Layers } from '../../components/layers';
 
 const SideBar = styled(Activitybar)`
-  height: calc(98vh - 32px);
+  height: 100%;
+  margin-right: 16rem;
+`;
+
+const Pane = styled.div`
+  background-color: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  z-index: 13;
+  padding-left: 5px;
+  left: 48px;
+  bottom: 0;
+  top: 0;
 `;
 
 const EditorLeft = ({ draggers }: { draggers: ProtoDragger[] }) => {
@@ -56,7 +67,7 @@ const EditorLeft = ({ draggers }: { draggers: ProtoDragger[] }) => {
         onChange={toggle}
       />
 
-      {activePane}
+      <Pane>{activePane}</Pane>
     </React.Fragment>
   );
 };

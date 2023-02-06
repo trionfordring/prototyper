@@ -8,6 +8,12 @@ const Pane = styled.section`
   width: 16rem;
   min-width: 200px;
   height: 100%;
+
+  overflow-x: hide;
+  overflow-y: auto;
+`;
+
+const Components = styled.div`
   display: flex;
   flex-wrap: wrap;
 `;
@@ -15,12 +21,14 @@ const Pane = styled.section`
 export function ComponentPane({ draggers }: { draggers: ProtoDragger[] }) {
   return (
     <Pane>
-      {draggers.map((d) => (
-        <ComponentPaneItem
-          dragger={d}
-          key={`${d.descriptor.namespace}.${d.descriptor.name}`}
-        />
-      ))}
+      <Components>
+        {draggers.map((d) => (
+          <ComponentPaneItem
+            dragger={d}
+            key={`${d.descriptor.namespace}.${d.descriptor.name}`}
+          />
+        ))}
+      </Components>
     </Pane>
   );
 }
