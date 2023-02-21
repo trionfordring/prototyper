@@ -32,7 +32,9 @@ export const Frame: React.FC<React.PropsWithChildren<Frame>> = ({
   json,
   data,
 }) => {
-  const { actions, query } = useInternalEditor();
+  const { actions, query, hasInited } = useInternalEditor((editor) => ({
+    hasInited: !!editor.nodes[ROOT_NODE],
+  }));
 
   if (!!json) {
     deprecationWarning('<Frame json={...} />', {
@@ -46,6 +48,7 @@ export const Frame: React.FC<React.PropsWithChildren<Frame>> = ({
   });
 
   useEffect(() => {
+    if (hasInited) return;
     const { initialChildren, initialData } = initialState.current;
 
     if (initialData) {

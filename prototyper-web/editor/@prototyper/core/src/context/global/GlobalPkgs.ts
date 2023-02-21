@@ -5,6 +5,9 @@ import { ComponentPackage } from '../../pkg';
 export class PackagesRegistry {
   private store: Record<string, ComponentPackage> = {};
 
+  private umdMap: Record<string, string> = {};
+  private dataMap: Record<string, any> = {};
+
   getPackage(namespace: string) {
     return this.store[namespace];
   }
@@ -16,9 +19,22 @@ export class PackagesRegistry {
   getAllPackages() {
     return values(this.store);
   }
+
+  require(pkgName: string) {
+    const ret = this.dataMap[pkgName] || this.umdMap[pkgName];
+    if (ret === undefined) throw new Error(`找不到依赖[${pkgName}]`);
+    return ret;
+  }
+
+  registerUmd(pkgName: string, umdName: string) {
+    this.umdMap[pkgName] = umdName;
+  }
+  registerData(pkgName: string, data: any) {
+    this.dataMap[pkgName] = data;
+  }
 }
 
 export const globalPackagesRegistry = new PackagesRegistry();
 
-if (typeof window === 'object')
-  (window as any).globalPackagesRegistry = globalPackagesRegistry;
+// eslint-disable-next-line no-restricted-globals
+(self as any).globalPackagesRegistry = globalPackagesRegistry;

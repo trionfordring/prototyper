@@ -6,6 +6,7 @@ import esbuild from 'rollup-plugin-esbuild';
 
 import { buildOptions } from './env';
 
+import { blob } from '../plugins/blob';
 import { transformLodash } from '../plugins/transformLodash';
 
 export const rollupPlugins = () => {
@@ -21,6 +22,7 @@ export const rollupPlugins = () => {
     resolve({
       browser: true,
     }),
+    blob(),
     commonjs(),
     esbuild({
       include: /\.[jt]sx?$/,

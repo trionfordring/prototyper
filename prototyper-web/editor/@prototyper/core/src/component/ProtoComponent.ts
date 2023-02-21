@@ -7,7 +7,7 @@ export type DefaultPropsType = any;
 export type DefaultStatesType = any;
 export type DefaultMataType = any;
 
-export type ProtoElementType<P = DefaultPropsType> = React.ElementType<P>;
+export type ProtoElementType<P = DefaultPropsType> = React.ComponentType<P>;
 
 export type UseSetupStates<
   P = DefaultPropsType,

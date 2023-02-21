@@ -97,9 +97,14 @@ const EditorMain = createShadow<HTMLDivElement, EditorMainProps>(
   }
 );
 
-const NodeCanvas = React.memo<
-  PropsWithChildren<{ shadowRoot: ShadowRoot; container: React.ComponentType }>
->(({ children, shadowRoot, container }) => {
+const NodeCanvas = ({
+  children,
+  shadowRoot,
+  container,
+}: PropsWithChildren<{
+  shadowRoot: ShadowRoot;
+  container: React.ComponentType;
+}>) => {
   const Container = container ? container : FrameContainer;
   const cache = useMemo(() => {
     return createCache();
@@ -120,6 +125,6 @@ const NodeCanvas = React.memo<
       </StyleSheetManager>
     </StyleProvider>
   );
-});
+};
 
 export default EditorMain;

@@ -10,4 +10,6 @@ setupComponents(helloPackage);
 setupDraggers(helloPackage);
 setupVirtual(helloPackage);
 
+console.log('载入hello包');
+
 globalPackagesRegistry.addPackage(helloPackage);

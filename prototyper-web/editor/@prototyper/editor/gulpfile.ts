@@ -28,4 +28,9 @@ export default series(
   )
 );
 
-export const devTask = withTaskName('dev', dev());
+export const devTask = withTaskName(
+  'dev',
+  dev(['monaco-editor/esm/vs/language/typescript/ts.worker'])
+);
+
+export const lib = withTaskName('lib', buildLib());

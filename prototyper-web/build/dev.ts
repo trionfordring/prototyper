@@ -1,8 +1,7 @@
-import path from 'path';
-
 import { watch } from 'rollup';
 
 import { distPath, indexPath, packagePath } from './utils/cwd';
+import { rollupExternal } from './utils/rollupExternal';
 import { rollupPlugins } from './utils/rollupPlugins';
 import { withTaskName } from './utils/withTaskName';
 
@@ -10,16 +9,13 @@ export const dev = (bundle = ['tslib']) => {
   return withTaskName('dev', async () => {
     const watcher = watch({
       input: indexPath(),
-      external: (id) => {
-        return (
-          !id.startsWith('.') && !path.isAbsolute(id) && !bundle.includes(id)
-        );
-      },
+      external: rollupExternal(bundle),
       plugins: rollupPlugins(),
       output: [
         {
           dir: distPath('esm'),
           format: 'esm',
+          sourcemap: 'inline',
         },
       ],
     });

@@ -27,10 +27,12 @@
     "@craftjs/layers": "workspace:*",
     "antd": "^5.1.2",
     "lodash": "^4.17.21",
+    "monaco-editor": "^0.35.0",
     "react-is": "^18.2.0",
     "react-json-view": "^1.21.3",
     "react-rnd": "^10.4.1",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "sucrase": "^3.29.0"
   },
   "devDependencies": {
     "@prototyper/core": "workspace:*",
