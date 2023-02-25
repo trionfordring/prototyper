@@ -32,10 +32,7 @@ const ItemContent = styled.div`
 
 const ItemTitle = styled(Typography.Text)`
   text-align: center;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  font-size: 0.9em;
+  line-height: 1.8em;
 `;
 
 export function ComponentPaneItem({ dragger }: { dragger: ProtoDragger }) {
@@ -78,7 +75,7 @@ export function ComponentPaneItem({ dragger }: { dragger: ProtoDragger }) {
       <ItemContent>
         <Content dragger={dragger} />
       </ItemContent>
-      <ItemTitle>{dragger.label}</ItemTitle>
+      <ItemTitle ellipsis={true}>{dragger.label}</ItemTitle>
     </ItemBox>
   );
 }

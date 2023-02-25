@@ -55,7 +55,7 @@ const EditorLeft = ({
       default:
         return null;
     }
-  }, [currentActive, draggers]);
+  }, [catalogue, currentActive, draggers]);
   return (
     <React.Fragment>
       <SideBar
