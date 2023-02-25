@@ -4,7 +4,14 @@ import {
   createShadow,
   useEditor,
 } from '@prototyper/core';
-import React, { forwardRef, PropsWithChildren, useMemo, useRef } from 'react';
+import { noop } from 'lodash';
+import React, {
+  forwardRef,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { Rnd, Props as RndProps } from 'react-rnd';
 import styled, { StyleSheetManager } from 'styled-components';
 
@@ -13,12 +20,16 @@ import { NodeToolBar } from '../node/NodeToolBar';
 const MainFrame = styled.div`
   width: 100%;
   height: 100%;
+  background-color: #fff;
+`;
+const Padding = styled.div`
+  border: 1px solid #f0f0f0;
+  padding: 7px;
+  width: 100%;
+  height: 100%;
 `;
 const StyledRnd = styled(Rnd)`
   z-index: 5;
-  padding: 7px;
-  background-color: #fff;
-  border: 1px solid #f0f0f0;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 3%), 0 1px 6px -1px rgb(0 0 0 / 2%),
     0 2px 4px 0 rgb(0 0 0 / 2%);
 `;
@@ -33,6 +44,8 @@ type EditorMainProps = {
   setPosition: (pos: RndProps['position']) => void;
   size: RndProps['size'];
   setSize: (size: RndProps['size']) => void;
+
+  onFrameMounted?: (el: HTMLDivElement) => void;
 };
 
 const FrameContainer = styled.div`
@@ -47,11 +60,23 @@ const FrameContainer = styled.div`
 const EditorMain = createShadow<HTMLDivElement, EditorMainProps>(
   forwardRef<HTMLDivElement, PropsWithChildren<EditorMainProps>>(
     (
-      { children, enableDragging, position, setPosition, size, setSize },
+      {
+        children,
+        enableDragging,
+        position,
+        setPosition,
+        size,
+        setSize,
+        onFrameMounted = noop,
+      },
       ref
     ) => {
       const resizingRect = useRef<DOMRect>();
       const { actions } = useEditor();
+      const frameRef = useRef<HTMLDivElement>();
+      useEffect(() => {
+        onFrameMounted(frameRef.current);
+      }, [onFrameMounted]);
       return (
         <StyledRnd
           position={position}
@@ -79,10 +104,10 @@ const EditorMain = createShadow<HTMLDivElement, EditorMainProps>(
               userSelect: enableDragging ? 'none' : undefined,
               height: '100%',
             }}
-            ref={ref}
             onMouseLeave={() => actions.clearHovered()}
+            ref={frameRef}
           >
-            {children}
+            <Padding ref={ref}>{children}</Padding>
           </MainFrame>
         </StyledRnd>
       );

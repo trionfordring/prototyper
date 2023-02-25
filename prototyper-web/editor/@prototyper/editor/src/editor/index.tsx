@@ -10,6 +10,7 @@ import React, {
   ComponentProps,
   forwardRef,
   PropsWithChildren,
+  RefObject,
   useCallback,
   useEffect,
   useRef,
@@ -77,9 +78,10 @@ export const Editor = forwardRef<
   >
 >(({ children, draggers, container, app, catalogue, ...props }, ref) => {
   const applicationInstanceRef = useRef<ApplicationEditorInstance>();
+  const frameRef = useRef<HTMLDivElement>();
   const [editorMode, setEditorMode] = useState<EditorMode>('edit-canvas');
   const { mode, setMode, position, setPosition, size, setSize, mainRef } =
-    useCanvasInfo();
+    useCanvasInfo(frameRef);
   const {
     version,
     useSetupAppStates,
@@ -171,6 +173,7 @@ export const Editor = forwardRef<
                   enableDragging={mode === 'drag'}
                   size={size}
                   setSize={setSize}
+                  onFrameMounted={(el) => (frameRef.current = el)}
                 >
                   {children}
                 </EditorMainContent>
@@ -217,7 +220,7 @@ function EditorName({
   );
 }
 
-function useCanvasInfo() {
+function useCanvasInfo(frameRef: RefObject<HTMLDivElement>) {
   const [mode, setMode] = useState<CanvasMode>('edit');
   const [position, setPosition] = useState<RndProps['position']>({
     x: 0,
@@ -245,6 +248,45 @@ function useCanvasInfo() {
   useEffect(() => {
     resetCanvas();
   }, [resetCanvas]);
+  useEffect(() => {
+    if (mode !== 'drag') return;
+    const listener = (e: WheelEvent) => {
+      const dom = frameRef.current;
+      const root = mainRef.current;
+      if (!dom || !root) return;
+      const rootRect = root.getBoundingClientRect();
+      const rect = dom.getBoundingClientRect();
+      const center = [e.clientX - rect.x, e.clientY - rect.y];
+      if (
+        !(
+          center[0] >= 0 &&
+          center[0] <= rect.width &&
+          center[1] >= 0 &&
+          center[1] <= rect.height
+        )
+      )
+        return;
+
+      const delta = e.deltaY;
+      const offset = (delta / 1250) * 0.75;
+      const scale = offset + 1;
+      center[0] *= scale;
+      center[1] *= scale;
+
+      setPosition({
+        x: e.clientX - center[0] - rootRect.x,
+        y: e.clientY - center[1] - rootRect.y,
+      });
+      setSize({
+        height: rect.height * scale,
+        width: rect.width * scale,
+      });
+    };
+    document.addEventListener('wheel', listener);
+    return () => {
+      document.removeEventListener('wheel', listener);
+    };
+  }, [frameRef, mode]);
 
   return {
     mode,
