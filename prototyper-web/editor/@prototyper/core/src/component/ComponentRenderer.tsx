@@ -13,6 +13,30 @@ import { defaultCompGetter, getResolver } from './getResolver';
 import { SetterContextProvider, useApplicationContext } from '../context';
 import { useNodeRender } from '../hook/useNodeRender';
 
+export const EmbeddedComponentRenderer: React.FC<
+  PropsWithChildren<{
+    props?: Record<string, any>;
+    descriptor: ComponentDescriptor;
+  }>
+> = ({ props, descriptor, children }) => {
+  const { getComponent, onRender } = useApplicationContext();
+  const component = useMemo(
+    () => getComponent(descriptor),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [descriptor.namespace, descriptor.name]
+  );
+  return (
+    <JustComponentRenderer
+      props={props}
+      component={component}
+      onRender={onRender}
+      root
+    >
+      {children}
+    </JustComponentRenderer>
+  );
+};
+
 export const ComponentRenderer: React.FC<
   PropsWithChildren<{
     props?: Record<string, any>;

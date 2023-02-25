@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, useState } from 'react';
+import React, { FC, PropsWithChildren, useMemo, useState } from 'react';
 
 import { ProtoApplication } from './ProtoApplication';
 
@@ -20,12 +20,14 @@ export const ApplicationProvider: FC<
       | 'setCurrentComponent'
       | 'rootProps'
       | 'setRootProps'
+      | 'setRootMeta'
     >
   >
 > = ({ app, children, ...options }) => {
   const states = (app.useSetupAppStates && app.useSetupAppStates()) || {};
   const [currentComponent, setCurrentComponent] = useState(app.index);
   const [rootProps, realSetRootProps] = useState(app.initProps || {});
+  const [rootMeta, setRootMeta] = useState(app.index.meta || {});
   const [propsMapper, setPropsMapper] = useState(app.initPropsMapper || {});
   const [version, setVersion] = useState(0);
   const setRootProps = (props: any, mapper: PropDeclear, context: object) => {
@@ -43,15 +45,23 @@ export const ApplicationProvider: FC<
       appStates: states,
       meta: component.meta || {},
     });
+    setRootMeta(component.meta || {});
     setVersion((v) => v + 1);
   }
+  const currentComponentWithMeta = useMemo(
+    () => ({
+      ...currentComponent,
+      meta: rootMeta,
+    }),
+    [currentComponent, rootMeta]
+  );
   return (
     <ApplicationContext.Provider
       key={version}
       value={{
         ...options,
         appStates: states,
-        currentComponent,
+        currentComponent: currentComponentWithMeta,
         setCurrentComponent: setComponent,
         rootProps,
         rootPropsMapper: propsMapper,
@@ -62,6 +72,7 @@ export const ApplicationProvider: FC<
             meta: currentComponent.meta || {},
           });
         },
+        setRootMeta,
       }}
     >
       {children}

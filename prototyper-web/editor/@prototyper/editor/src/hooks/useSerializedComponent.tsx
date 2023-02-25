@@ -8,6 +8,7 @@ import {
   META_EDITOR_KEY,
   SerializedProtoComponent,
 } from '../types/SerializedProtoComponent';
+import { SerializedSettings } from '../types/SerializedSettings';
 
 function getEditorMeta(component: SerializedProtoComponent) {
   if (!component.meta) return undefined;
@@ -18,7 +19,8 @@ export function useSerializedComponent(
   component: SerializedProtoComponent,
   useSetupStatesInfo?: SerializedModule,
   warpperInfo?: SerializedModule,
-  nodes?: SerializedNodes | string
+  nodes?: SerializedNodes | string,
+  settings?: SerializedSettings
 ) {
   const useSetupStates = useSerializedModule(
     useSetupStatesInfo || getEditorMeta(component)?.useSetupStates,
@@ -35,8 +37,25 @@ export function useSerializedComponent(
       useSetupStates,
       warpper,
       virtualDom: nodes,
+      meta: {
+        ...component.meta,
+        [META_EDITOR_KEY]: {
+          ...component.meta?.[META_EDITOR_KEY],
+          settings,
+          warpper: warpperInfo,
+          useSetupStates: useSetupStatesInfo,
+        },
+      },
     }),
-    [useSetupStates, warpper, component, nodes]
+    [
+      component,
+      useSetupStates,
+      warpper,
+      nodes,
+      settings,
+      warpperInfo,
+      useSetupStatesInfo,
+    ]
   );
 
   return retComponent;

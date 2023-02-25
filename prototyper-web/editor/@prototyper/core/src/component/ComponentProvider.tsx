@@ -1,9 +1,20 @@
-import React, { FC, PropsWithChildren } from 'react';
+import { noop } from 'lodash';
+import React, {
+  FC,
+  PropsWithChildren,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { ProtoComponent, WithDescriptor } from './ProtoComponent';
 
 import { SaveComponentContext } from '../context';
 import { ComponentContext } from '../context/component/ComponentContext';
+
+export interface ComponentInstanceType {
+  setMeta(meta: React.Dispatch<any>): void;
+}
 
 export const ComponentProvider: FC<
   PropsWithChildren<{
@@ -11,11 +22,29 @@ export const ComponentProvider: FC<
     component: ProtoComponent & Partial<WithDescriptor>;
     editing?: boolean;
     root?: boolean;
+    onComponentMounted?: (instance: ComponentInstanceType) => void;
   }>
-> = ({ props, component, children, editing, root }) => {
-  const meta = component.meta || {};
+> = ({
+  props,
+  component,
+  children,
+  editing,
+  root,
+  onComponentMounted = noop,
+}) => {
+  const [meta, setMeta] = useState(component.meta || {});
   const states =
     (component.useSetupStates && component.useSetupStates(props, meta)) || {};
+  const inited = useRef(false);
+  useEffect(() => {
+    if (!inited.current) {
+      inited.current = true;
+      onComponentMounted({
+        setMeta,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <SaveComponentContext>
       <ComponentContext.Provider

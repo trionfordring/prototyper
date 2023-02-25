@@ -1,3 +1,4 @@
+import { ProtoComponent, WithDescriptor } from '@prototyper/core';
 import { Collapse } from 'antd';
 import React, { FC, useState } from 'react';
 import styled from 'styled-components';
@@ -5,6 +6,8 @@ import styled from 'styled-components';
 import { ComponentInfo } from './info';
 import { NodeSettings } from './settings/NodeSettings';
 import { RootSettings } from './settings/RootSettings';
+
+import { SerializedSettings } from '../../types/SerializedSettings';
 
 const Panel = styled.div`
   width: 400px;
@@ -17,7 +20,12 @@ const Panel = styled.div`
   max-height: calc(100vh - 64px);
 `;
 
-const EditorRight: FC = () => {
+const EditorRight: FC<{
+  onEditComponentSettings?: (
+    component: ProtoComponent & Partial<WithDescriptor>
+  ) => void;
+  onSettingsMetaChange?: (settingsMeta?: SerializedSettings) => void;
+}> = ({ onEditComponentSettings, onSettingsMetaChange }) => {
   const [currentNode, setCurrentNode] = useState('');
   const onNodeSelected = (node?: { name: string; id: string }) => {
     if (node) setCurrentNode(` - ${node.name}[${node.id}]`);
@@ -30,7 +38,10 @@ const EditorRight: FC = () => {
           <ComponentInfo></ComponentInfo>
         </Collapse.Panel>
         <Collapse.Panel header="组件设置" key="component-settings">
-          <RootSettings></RootSettings>
+          <RootSettings
+            onSettingsMetaChange={onSettingsMetaChange}
+            onEditComponentSettings={onEditComponentSettings}
+          ></RootSettings>
         </Collapse.Panel>
         <Collapse.Panel header={`节点设置${currentNode}`} key="settings">
           <NodeSettings onSelected={onNodeSelected}></NodeSettings>

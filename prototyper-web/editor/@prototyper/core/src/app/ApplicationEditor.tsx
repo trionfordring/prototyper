@@ -1,22 +1,36 @@
 import { Editor, SerializedNodes, useEditor } from '@craftjs/core';
 import { noop } from 'lodash';
-import React, { FC, PropsWithChildren, useEffect, useMemo } from 'react';
+import React, {
+  Dispatch,
+  FC,
+  MutableRefObject,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 
 import { ApplicationProvider } from './ApplicationProvider';
 import { GetComponentFunc, ProtoApplication } from './ProtoApplication';
 
-import { ComponentDescriptor, ComponentRenderer } from '../component';
+import {
+  ComponentDescriptor,
+  ComponentInstanceType,
+  ComponentRenderer,
+} from '../component';
 import { EditorComponentProvider } from '../component/EditorComponentProvider';
 import {
   defaultCompGetter,
   getResolver,
   getResolverFromPkgs,
 } from '../component/getResolver';
-import { globalPackagesRegistry } from '../context';
+import { globalPackagesRegistry, useApplicationContext } from '../context';
 import { useNodeRender } from '../hook/useNodeRender';
 
 export interface ApplicationEditorInstance {
   getSerializedNodes(): SerializedNodes;
+  getCurrentComponentInstance(): ComponentInstanceType;
+  setRootMeta(meta: Dispatch<any>): void;
 }
 
 export const ApplicationEditor: FC<
@@ -47,6 +61,7 @@ export const ApplicationEditor: FC<
     [devDependencies, getComponent]
   );
   const renderer = useNodeRender(onRender);
+  const currentComponentInstance = useRef<ComponentInstanceType>();
   return (
     <ApplicationProvider
       app={app}
@@ -54,7 +69,9 @@ export const ApplicationEditor: FC<
       getComponent={getComponent || defaultCompGetter}
       onRender={onRender}
     >
-      <EditorComponentProvider>
+      <EditorComponentProvider
+        onComponentMounted={(i) => (currentComponentInstance.current = i)}
+      >
         <Editor
           enabled={!disabled}
           onRender={renderer}
@@ -63,7 +80,10 @@ export const ApplicationEditor: FC<
             ComponentRenderer,
           }}
         >
-          <EditorInstanceReporter onApplicationMounted={onApplicationMounted} />
+          <EditorInstanceReporter
+            onApplicationMounted={onApplicationMounted}
+            currentComponentInstance={currentComponentInstance}
+          />
           {children}
         </Editor>
       </EditorComponentProvider>
@@ -73,15 +93,25 @@ export const ApplicationEditor: FC<
 
 function EditorInstanceReporter({
   onApplicationMounted = noop,
+  currentComponentInstance,
 }: {
   onApplicationMounted?: (instance: ApplicationEditorInstance) => void;
+  currentComponentInstance: MutableRefObject<ComponentInstanceType>;
 }) {
   const { query } = useEditor();
+  const { setRootMeta } = useApplicationContext();
 
   useEffect(() => {
     onApplicationMounted({
       getSerializedNodes() {
         return query.getSerializedNodes();
+      },
+      getCurrentComponentInstance() {
+        return currentComponentInstance.current;
+      },
+      setRootMeta(meta) {
+        setRootMeta(meta);
+        currentComponentInstance.current?.setMeta(meta);
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

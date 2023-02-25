@@ -89,6 +89,7 @@ export const Editor = forwardRef<
     containerScript,
     setContainerScript,
     setNodes,
+    setSettings,
   } = useCodeInfo(app);
   function warpCodeSave(cb: Function) {
     return (...args: any) => {
@@ -172,7 +173,21 @@ export const Editor = forwardRef<
                   {children}
                 </EditorMainContent>
               </EditorMain>
-              <EditorRight />
+              <EditorRight
+                onSettingsMetaChange={(settings) => {
+                  console.log('设置组件的设置器:', settings);
+                  setSettings(settings);
+                  applicationInstanceRef.current.setRootMeta((meta) => {
+                    return {
+                      ...meta,
+                      [META_EDITOR_KEY]: {
+                        ...meta?.[META_EDITOR_KEY],
+                        settings,
+                      },
+                    };
+                  });
+                }}
+              />
             </React.Fragment>
           )}
         </ApplicationEditor>
@@ -255,12 +270,16 @@ function useCodeInfo(app: SerializedProtoApplication) {
   );
 
   const [nodes, setNodes] = useState(app.index?.virtualDom);
+
+  const [settings, setSettings] = useState(getEditorMeta(app.index)?.settings);
+
   const index = useSerializedComponent(
     app.index,
 
     useSetupStatesInfo,
     warpperInfo,
-    nodes
+    nodes,
+    settings
   );
   const [version, setVersion] = useState(0);
   const initMark = useRef(false);
@@ -293,6 +312,8 @@ function useCodeInfo(app: SerializedProtoApplication) {
 
     nodes,
     setNodes,
+
+    setSettings,
 
     index,
     version,

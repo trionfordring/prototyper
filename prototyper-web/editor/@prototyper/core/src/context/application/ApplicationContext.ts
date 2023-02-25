@@ -24,6 +24,7 @@ export interface ApplicationContextType<S = DefaultPropsType> {
   rootProps?: DefaultPropsType;
   rootPropsMapper?: PropDeclear;
   setRootProps: (props: any, propsMapper: PropDeclear) => void;
+  setRootMeta: (meta: React.Dispatch<any>) => void;
 
   onRender?: React.ComponentType<{
     render: React.ReactElement;
