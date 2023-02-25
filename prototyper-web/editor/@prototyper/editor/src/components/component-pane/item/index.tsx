@@ -20,6 +20,7 @@ const ItemBox = styled.div`
   flex-wrap: nowrap;
   margin: 1px;
   border: 1px solid #f0f0f0;
+  padding: 1px;
 `;
 
 const ItemContent = styled.div`
@@ -31,6 +32,10 @@ const ItemContent = styled.div`
 
 const ItemTitle = styled(Typography.Text)`
   text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 0.9em;
 `;
 
 export function ComponentPaneItem({ dragger }: { dragger: ProtoDragger }) {

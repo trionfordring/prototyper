@@ -3,7 +3,7 @@ import {
   FolderOpenOutlined,
   FolderOutlined,
 } from '@ant-design/icons';
-import { ProtoDragger } from '@prototyper/core';
+import { Category, ProtoDragger } from '@prototyper/core';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 
@@ -27,7 +27,13 @@ const Pane = styled.div`
   top: 0;
 `;
 
-const EditorLeft = ({ draggers }: { draggers: ProtoDragger[] }) => {
+const EditorLeft = ({
+  draggers,
+  catalogue,
+}: {
+  draggers: ProtoDragger[];
+  catalogue?: Category[];
+}) => {
   const [currentActive, setActive] = useState('ComponentPane');
   function toggle(val: string) {
     setActive((current) => {
@@ -38,7 +44,12 @@ const EditorLeft = ({ draggers }: { draggers: ProtoDragger[] }) => {
   const activePane = useMemo(() => {
     switch (currentActive) {
       case 'ComponentPane':
-        return <ComponentPane draggers={draggers}></ComponentPane>;
+        return (
+          <ComponentPane
+            draggers={draggers}
+            catalogue={catalogue}
+          ></ComponentPane>
+        );
       case 'Layers':
         return <Layers />;
       default:

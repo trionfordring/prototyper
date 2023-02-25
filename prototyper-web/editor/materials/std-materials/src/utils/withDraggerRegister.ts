@@ -1,6 +1,12 @@
 import { ComponentPackage } from '@prototyper/core';
 
 export const withDraggerRegister = (pkg: ComponentPackage) => {
+  let category = pkg.namespace;
+  let subcategory = 'default';
+  function subcate(name: string) {
+    subcategory = name;
+  }
+
   const register = (
     name: string,
     label: string,
@@ -10,9 +16,11 @@ export const withDraggerRegister = (pkg: ComponentPackage) => {
   ) => {
     pkg.addDragger({
       label,
-      type: 'icon',
+      type: 'native',
       draggerProps: {
-        icon,
+        render: icon,
+        category,
+        subcategory,
       },
       descriptor: {
         namespace: pkg.namespace,
@@ -31,5 +39,6 @@ export const withDraggerRegister = (pkg: ComponentPackage) => {
   return {
     register,
     registerCanvas,
+    subcate,
   };
 };

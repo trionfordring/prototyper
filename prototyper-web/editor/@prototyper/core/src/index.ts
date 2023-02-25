@@ -8,5 +8,6 @@ export * from './renderer';
 export * from './hook';
 export * from './hoc';
 export * from './utils';
+export * from './types';
 
 export * from '@craftjs/core';

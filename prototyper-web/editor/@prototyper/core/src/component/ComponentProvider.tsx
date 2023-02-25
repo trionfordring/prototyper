@@ -11,9 +11,10 @@ import { ProtoComponent, WithDescriptor } from './ProtoComponent';
 
 import { SaveComponentContext } from '../context';
 import { ComponentContext } from '../context/component/ComponentContext';
+import { Setter } from '../utils';
 
 export interface ComponentInstanceType {
-  setMeta(meta: React.Dispatch<any>): void;
+  setMeta(meta: Setter): void;
 }
 
 export const ComponentProvider: FC<

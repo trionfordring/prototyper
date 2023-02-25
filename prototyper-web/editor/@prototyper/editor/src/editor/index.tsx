@@ -1,6 +1,7 @@
 import {
   ApplicationEditor,
   ApplicationEditorInstance,
+  Category,
   ComponentDescriptor,
   ProtoDragger,
 } from '@prototyper/core';
@@ -70,10 +71,11 @@ export const Editor = forwardRef<
     ComponentProps<typeof ApplicationEditor> & {
       app: SerializedProtoApplication;
       draggers: ProtoDragger[];
+      catalogue?: Category[];
       container?: React.ComponentType;
     }
   >
->(({ children, draggers, container, app, ...props }, ref) => {
+>(({ children, draggers, container, app, catalogue, ...props }, ref) => {
   const applicationInstanceRef = useRef<ApplicationEditorInstance>();
   const [editorMode, setEditorMode] = useState<EditorMode>('edit-canvas');
   const { mode, setMode, position, setPosition, size, setSize, mainRef } =
@@ -159,7 +161,7 @@ export const Editor = forwardRef<
         >
           {editorMode === 'edit-canvas' && (
             <React.Fragment>
-              <EditorLeft draggers={draggers} />
+              <EditorLeft draggers={draggers} catalogue={catalogue} />
               <ModeSlider mode={mode} setMode={setMode} />
               <EditorMain ref={mainRef}>
                 <EditorMainContent

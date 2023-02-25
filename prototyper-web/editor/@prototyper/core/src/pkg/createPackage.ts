@@ -11,10 +11,13 @@ export function createPackage(
     ...components,
   };
   const draggers = [];
+  let meta = {};
+  const catalogue = [];
   return {
     namespace,
     components: componentsStore,
     draggers,
+    catalogue,
     createComponent: ({ name, ...component }) => {
       const protoComponent = createProtoComponent({
         ...component,
@@ -37,5 +40,30 @@ export function createPackage(
       };
     },
     addDragger: (dragger) => draggers.push(dragger),
+    meta() {
+      return meta;
+    },
+    setMeta(metaFn) {
+      if (typeof metaFn === 'function') meta = metaFn(meta);
+      meta = metaFn;
+    },
+    createCategory(name, label, order) {
+      const subcategories = [];
+      catalogue.push({
+        name,
+        label,
+        order,
+        subcategories,
+      });
+      return {
+        addSubcategory(name, label, order) {
+          subcategories.push({
+            name,
+            label,
+            order,
+          });
+        },
+      };
+    },
   };
 }

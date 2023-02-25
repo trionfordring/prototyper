@@ -1,7 +1,6 @@
 import { Editor, SerializedNodes, useEditor } from '@craftjs/core';
 import { noop } from 'lodash';
 import React, {
-  Dispatch,
   FC,
   MutableRefObject,
   PropsWithChildren,
@@ -26,11 +25,12 @@ import {
 } from '../component/getResolver';
 import { globalPackagesRegistry, useApplicationContext } from '../context';
 import { useNodeRender } from '../hook/useNodeRender';
+import { Setter } from '../utils';
 
 export interface ApplicationEditorInstance {
   getSerializedNodes(): SerializedNodes;
   getCurrentComponentInstance(): ComponentInstanceType;
-  setRootMeta(meta: Dispatch<any>): void;
+  setRootMeta(meta: Setter<any>): void;
 }
 
 export const ApplicationEditor: FC<

@@ -6,7 +6,7 @@ import {
   ProtoComponent,
   WithDescriptor,
 } from '../../component';
-import { PropDeclear } from '../../utils';
+import { PropDeclear, Setter } from '../../utils';
 
 export interface ApplicationContextType<S = DefaultPropsType> {
   appStates: S;
@@ -24,7 +24,7 @@ export interface ApplicationContextType<S = DefaultPropsType> {
   rootProps?: DefaultPropsType;
   rootPropsMapper?: PropDeclear;
   setRootProps: (props: any, propsMapper: PropDeclear) => void;
-  setRootMeta: (meta: React.Dispatch<any>) => void;
+  setRootMeta: (meta: Setter) => void;
 
   onRender?: React.ComponentType<{
     render: React.ReactElement;

@@ -31,6 +31,7 @@ function EditorExample() {
           index: pkg.getComponent('StdComponent') as any,
         }}
         draggers={[...pkg.draggers, ...stdPkg.draggers]}
+        catalogue={stdPkg.catalogue}
       >
         <style>{editorStyle}</style>
       </Editor>
