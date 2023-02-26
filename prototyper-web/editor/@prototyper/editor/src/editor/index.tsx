@@ -6,6 +6,7 @@ import {
   ProtoDragger,
 } from '@prototyper/core';
 import { Typography } from 'antd';
+import { noop, omit } from 'lodash';
 import React, {
   ComponentProps,
   forwardRef,
@@ -34,6 +35,8 @@ import {
   META_EDITOR_KEY,
   SerializedProtoComponent,
 } from '../types/SerializedProtoComponent';
+import { forEachSerializedNode } from '../utils/forEachSerializedNode';
+import { minifySerializedNodes } from '../utils/minifySerializedNodes';
 
 const EditorBox = styled.section`
   display: flex;
@@ -74,133 +77,163 @@ export const Editor = forwardRef<
       draggers: ProtoDragger[];
       catalogue?: Category[];
       container?: React.ComponentType;
+      onSave?: (component: SerializedProtoComponent) => void;
     }
   >
->(({ children, draggers, container, app, catalogue, ...props }, ref) => {
-  const applicationInstanceRef = useRef<ApplicationEditorInstance>();
-  const frameRef = useRef<HTMLDivElement>();
-  const [editorMode, setEditorMode] = useState<EditorMode>('edit-canvas');
-  const { mode, setMode, position, setPosition, size, setSize, mainRef } =
-    useCanvasInfo(frameRef);
-  const {
-    version,
-    useSetupAppStates,
-    index,
-    setUseSetupStates,
-    setWarpper,
-    script,
-    setScript,
-    containerScript,
-    setContainerScript,
-    setNodes,
-    setSettings,
-  } = useCodeInfo(app);
-  function warpCodeSave(cb: Function) {
-    return (...args: any) => {
-      const instance = applicationInstanceRef.current;
-      if (instance) {
-        const nodes = instance.getSerializedNodes();
-        console.log('暂存节点树', nodes);
-        setNodes(nodes);
-      } else {
-        console.warn('保存代码时applicationInstance为空.');
-      }
-      cb(...args);
-    };
-  }
-  const editorArea = (() => {
-    switch (editorMode) {
-      case 'edit-script':
-        return (
-          <TsxEditor
-            key="script"
-            name="script"
-            label={<EditorName descriptor={index.descriptor} target="脚本" />}
-            defaultCode={SCRIPT_TEMPLATE}
-            initCode={script}
-            onChange={setScript}
-            onSave={warpCodeSave(setUseSetupStates)}
-          ></TsxEditor>
-        );
-      case 'edit-container':
-        return (
-          <TsxEditor
-            key="container"
-            name="container"
-            label={<EditorName descriptor={index.descriptor} target="容器" />}
-            defaultCode={CONTAINER_TEMPLATE}
-            initCode={containerScript}
-            onChange={setContainerScript}
-            onSave={warpCodeSave(setWarpper)}
-          ></TsxEditor>
-        );
-      default:
-        return null;
+>(
+  (
+    { children, draggers, container, app, catalogue, onSave = noop, ...props },
+    ref
+  ) => {
+    const applicationInstanceRef = useRef<ApplicationEditorInstance>();
+    const frameRef = useRef<HTMLDivElement>();
+    const [editorMode, setEditorMode] = useState<EditorMode>('edit-canvas');
+    const { mode, setMode, position, setPosition, size, setSize, mainRef } =
+      useCanvasInfo(frameRef);
+    const {
+      version,
+      useSetupAppStates,
+      index,
+      setUseSetupStates,
+      setWarpper,
+      script,
+      setScript,
+      containerScript,
+      setContainerScript,
+      setNodes,
+      setSettings,
+    } = useCodeInfo(app);
+    function handleOnSave() {
+      const editor = applicationInstanceRef.current;
+      const ans = omit(index, 'useSetupStates', 'warpper', 'settings');
+      const vdom = minifySerializedNodes(editor.getSerializedNodes());
+      const depsSet = new Set<string>();
+      forEachSerializedNode(vdom, (node) => {
+        depsSet.add(node.type['resolvedName']);
+      });
+      const deps: ComponentDescriptor[] = Array.from(depsSet)
+        .filter((dep) => dep.includes('.'))
+        .map((dep) => {
+          const [namespace, name] = dep.split('.');
+          return {
+            namespace,
+            name,
+          };
+        });
+      ans.type = 'virtual';
+      ans.virtualDom = vdom;
+      ans.dependencies = deps;
+      console.log('[editor] 保存虚拟组件:', ans);
+      onSave(ans);
     }
-  })();
-  return (
-    <EditorBox ref={ref}>
-      <EditorHeader
-        size={size}
-        setSize={setSize}
-        mode={editorMode}
-        setMode={setEditorMode}
-      />
-      <EditorBody>
-        <ApplicationEditor
-          {...props}
-          key={version}
-          app={{
-            initProps: app.initProps,
-            initPropsMapper: app.initPropsMapper,
-            useSetupAppStates,
-            index,
-          }}
-          onApplicationMounted={(instance) =>
-            (applicationInstanceRef.current = instance)
-          }
-          disabled={props.disabled || mode !== 'edit'}
-        >
-          {editorMode === 'edit-canvas' && (
-            <React.Fragment>
-              <EditorLeft draggers={draggers} catalogue={catalogue} />
-              <ModeSlider mode={mode} setMode={setMode} />
-              <EditorMain ref={mainRef}>
-                <EditorMainContent
-                  position={position}
-                  setPosition={setPosition}
-                  container={container}
-                  enableDragging={mode === 'drag'}
-                  size={size}
-                  setSize={setSize}
-                  onFrameMounted={(el) => (frameRef.current = el)}
-                >
-                  {children}
-                </EditorMainContent>
-              </EditorMain>
-              <EditorRight
-                onSettingsMetaChange={(settings) => {
-                  console.log('设置组件的设置器:', settings);
-                  setSettings(settings);
-                  applicationInstanceRef.current.setRootMeta((meta) => {
-                    return {
-                      ...meta,
-                      [META_EDITOR_KEY]: {
-                        ...meta?.[META_EDITOR_KEY],
-                        settings,
-                      },
-                    };
-                  });
-                }}
-              />
-            </React.Fragment>
-          )}
-        </ApplicationEditor>
-        {editorArea}
-      </EditorBody>
-    </EditorBox>
-  );
-});
+    function warpCodeSave(cb: Function) {
+      return (...args: any) => {
+        const instance = applicationInstanceRef.current;
+        if (instance) {
+          const nodes = instance.getSerializedNodes();
+          console.log('暂存节点树', nodes);
+          setNodes(nodes);
+        } else {
+          console.warn('保存代码时applicationInstance为空.');
+        }
+        cb(...args);
+      };
+    }
+    const editorArea = (() => {
+      switch (editorMode) {
+        case 'edit-script':
+          return (
+            <TsxEditor
+              key="script"
+              name="script"
+              label={<EditorName descriptor={index.descriptor} target="脚本" />}
+              defaultCode={SCRIPT_TEMPLATE}
+              initCode={script}
+              onChange={setScript}
+              onSave={warpCodeSave(setUseSetupStates)}
+            ></TsxEditor>
+          );
+        case 'edit-container':
+          return (
+            <TsxEditor
+              key="container"
+              name="container"
+              label={<EditorName descriptor={index.descriptor} target="容器" />}
+              defaultCode={CONTAINER_TEMPLATE}
+              initCode={containerScript}
+              onChange={setContainerScript}
+              onSave={warpCodeSave(setWarpper)}
+            ></TsxEditor>
+          );
+        default:
+          return null;
+      }
+    })();
+    return (
+      <EditorBox ref={ref}>
+        <EditorHeader
+          size={size}
+          setSize={setSize}
+          mode={editorMode}
+          setMode={setEditorMode}
+          onSave={handleOnSave}
+        />
+        <EditorBody>
+          <ApplicationEditor
+            {...props}
+            key={version}
+            app={{
+              initProps: app.initProps,
+              initPropsMapper: app.initPropsMapper,
+              useSetupAppStates,
+              index,
+            }}
+            onApplicationMounted={(instance) =>
+              (applicationInstanceRef.current = instance)
+            }
+            disabled={props.disabled || mode !== 'edit'}
+          >
+            {editorMode === 'edit-canvas' && (
+              <React.Fragment>
+                <EditorLeft draggers={draggers} catalogue={catalogue} />
+                <ModeSlider mode={mode} setMode={setMode} />
+                <EditorMain ref={mainRef}>
+                  <EditorMainContent
+                    position={position}
+                    setPosition={setPosition}
+                    container={container}
+                    enableDragging={mode === 'drag'}
+                    size={size}
+                    setSize={setSize}
+                    onFrameMounted={(el) => (frameRef.current = el)}
+                  >
+                    {children}
+                  </EditorMainContent>
+                </EditorMain>
+                <EditorRight
+                  onSettingsMetaChange={(settings) => {
+                    console.log('设置组件的设置器:', settings);
+                    setSettings(settings);
+                    applicationInstanceRef.current.setRootMeta((meta) => {
+                      return {
+                        ...meta,
+                        [META_EDITOR_KEY]: {
+                          ...meta?.[META_EDITOR_KEY],
+                          settings,
+                        },
+                      };
+                    });
+                  }}
+                />
+              </React.Fragment>
+            )}
+          </ApplicationEditor>
+          {editorArea}
+        </EditorBody>
+      </EditorBox>
+    );
+  }
+);
 
 function EditorName({
   descriptor,

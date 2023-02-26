@@ -1,12 +1,8 @@
-import { ComponentDescriptor, SerializedNodes } from '@prototyper/core';
 import { Button, Space } from 'antd';
 import { noop } from 'lodash';
 import React from 'react';
 import { Props as RndProps } from 'react-rnd';
 import styled from 'styled-components';
-
-import { forEachSerializedNode } from '../../utils/forEachSerializedNode';
-import { minifySerializedNodes } from '../../utils/minifySerializedNodes';
 
 const Header = styled.div.attrs({
   height: '48px',
@@ -52,6 +48,7 @@ const EditorHeader = ({
   setSize,
   mode = 'edit-canvas',
   setMode = noop,
+  onSave = noop,
 }: {
   height?: string;
   size: RndProps['size'];
@@ -59,32 +56,8 @@ const EditorHeader = ({
 
   mode?: EditorMode;
   setMode?: (mode: EditorMode) => void;
+  onSave?: () => void;
 }) => {
-  function save() {
-    // const nodes: SerializedNodes = minifySerializedNodes(
-    //   query.getSerializedNodes()
-    // );
-    // const depsSet = new Set<string>();
-    // forEachSerializedNode(nodes, (node) => {
-    //   depsSet.add(node.type['resolvedName']);
-    // });
-    // const deps: ComponentDescriptor[] = Array.from(depsSet)
-    //   .filter((dep) => dep.includes('.'))
-    //   .map((dep) => {
-    //     const [namespace, name] = dep.split('.');
-    //     return {
-    //       namespace,
-    //       name,
-    //     };
-    //   });
-    // console.log('节点树', nodes);
-    // console.log('依赖', deps);
-    // navigator.clipboard
-    //   .writeText(JSON.stringify(nodes, undefined, 4))
-    //   .then(() => {
-    //     console.log('已写入剪贴板');
-    //   });
-  }
   return (
     <Header height={height}>
       <Title>Editor</Title>
@@ -111,7 +84,7 @@ const EditorHeader = ({
           </Button>
         )}
         {mode === 'edit-canvas' && (
-          <Button type="primary" onClick={save}>
+          <Button type="primary" onClick={onSave}>
             保存
           </Button>
         )}
