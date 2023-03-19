@@ -1,4 +1,4 @@
-import { createPackage } from '@prototyper/core';
+import { createPackage, globalPackagesRegistry } from '@prototyper/core';
 
 import { setupComponents } from './components';
 import { setupCate } from './setupCate';
@@ -9,5 +9,7 @@ const stdPackage = createPackage('std');
 setupComponents(stdPackage);
 setupDraggers(stdPackage);
 setupCate(stdPackage);
+
+globalPackagesRegistry.addPackage(stdPackage);
 
 export default stdPackage;

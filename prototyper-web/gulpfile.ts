@@ -7,6 +7,12 @@ export const core = () => run('pnpm run -F @prototyper/core build');
 
 export const editor = () => run('pnpm run -F @prototyper/editor build');
 
+export const materials = parallel(() =>
+  run('pnpm run -F @prototyper/std-materials build')
+);
+
+export const previewer = () => run('pnpm run -F @prototyper/previewer build');
+
 export const changelog = () => run('changeset add');
 
 export const release = () => run('changeset version');
@@ -27,7 +33,7 @@ export const testCore = withTaskName('test:core', () =>
   run('jest editor/@prototyper/core')
 );
 
-export default parallel(core, editor);
+export default parallel(core, editor, previewer);
 
 export const devTask = withTaskName(
   'dev',

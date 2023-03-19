@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_component_descriptors",
+  "info": {
+    "displayName": "Descriptor"
+  },
+  "options": {},
+  "attributes": {
+    "namespace": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "name": {
+      "type": "string",
+      "unique": true,
+      "required": true
+    }
+  }
+}

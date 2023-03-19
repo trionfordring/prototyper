@@ -1,32 +1,34 @@
-import 'monaco-editor/esm/vs/language/typescript/monaco.contribution';
-import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution';
+import MonacoEditor, { useMonaco } from '@monaco-editor/react';
 import { noop } from 'lodash';
-import * as monaco from 'monaco-editor';
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import type { editor } from 'monaco-editor';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { withEditorContainer } from './EditorContainer';
 import { EditorInstance, EditorPropsType } from './EditorProps';
-import MonacoEditor from './MonacoEditor';
 
 import { SerializedModule } from '../../types/SerializedModule';
 import { JSXParser } from '../../utils/parser/JSXParser';
 
-monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-  jsx: monaco.languages.typescript.JsxEmit.React,
-  jsxFactory: 'React.createElement',
-  reactNamespace: 'React',
-  allowNonTsExtensions: true,
-  allowJs: true,
-  target: monaco.languages.typescript.ScriptTarget.Latest,
-});
-
-monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-  noSemanticValidation: true,
-});
-
 function RawTsxEditor(props: EditorPropsType) {
-  const editor = useRef<monaco.editor.IStandaloneCodeEditor>();
+  const [ready, setReady] = useState(false);
+  const monaco = useMonaco()!;
+  const editor = useRef<editor.IStandaloneCodeEditor>();
   const editorInstance = useRef<EditorInstance>();
+  useEffect(() => {
+    if (!monaco) return;
+    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+      jsx: monaco.languages.typescript.JsxEmit.React,
+      jsxFactory: 'React.createElement',
+      reactNamespace: 'React',
+      allowNonTsExtensions: true,
+      allowJs: true,
+      target: monaco.languages.typescript.ScriptTarget.Latest,
+    });
+
+    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+      noSemanticValidation: true,
+    });
+  }, [monaco]);
   const {
     name,
     tabSize = 2,
@@ -40,7 +42,7 @@ function RawTsxEditor(props: EditorPropsType) {
   const getValue = useCallback(() => {
     return editor.current?.getValue();
   }, []);
-  const setValue = useCallback((text: string) => {
+  const setValue = useCallback((text: string | undefined) => {
     const model = editor.current?.getModel();
     if (!model) return;
     model.pushEditOperations(
@@ -48,13 +50,13 @@ function RawTsxEditor(props: EditorPropsType) {
       [
         {
           range: model.getFullModelRange(),
-          text: text,
+          text: text || null,
         },
       ],
       undefined
     );
   }, []);
-  const save = useCallback(async (): Promise<SerializedModule> => {
+  const save = useCallback(async (): Promise<SerializedModule | null> => {
     const instance = editor.current;
     if (!instance) return null;
     const rawCode = instance.getValue({
@@ -78,17 +80,8 @@ function RawTsxEditor(props: EditorPropsType) {
     onSave(module, editorInstance.current);
     return module;
   }, [onSave]);
-  const options =
-    useMemo<monaco.editor.IStandaloneEditorConstructionOptions>(() => {
-      const uri = monaco.Uri.parse(`ts:filename/${name}.tsx`);
-      const code = initCode === undefined ? defaultCode : initCode;
-      return {
-        tabSize,
-        model:
-          monaco.editor.getModel(uri) ||
-          monaco.editor.createModel(code, 'typescript', uri),
-      };
-    }, [initCode, defaultCode, name, tabSize]);
+  const [options, setOptions] =
+    useState<editor.IStandaloneEditorConstructionOptions>({});
   useEffect(() => {
     const saveListener = function (e: KeyboardEvent) {
       const instance = editor.current;
@@ -112,16 +105,27 @@ function RawTsxEditor(props: EditorPropsType) {
     if (initCode === undefined) {
       onChange(defaultCode);
     }
+    if (!monaco) throw new Error('monaco尚未初始化');
+    const uri = monaco.Uri.parse(`ts:filename/${name}.tsx`);
+    const code = initCode === undefined ? defaultCode : initCode;
+    setOptions({
+      tabSize,
+      model:
+        monaco.editor.getModel(uri) ||
+        monaco.editor.createModel(code || '', 'typescript', uri),
+    });
+    setReady(true);
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(init, []);
-  function setupEditor(editor: monaco.editor.IStandaloneCodeEditor) {}
+  function setupEditor(editor: editor.IStandaloneCodeEditor) {}
+  if (!ready) return <>编辑器尚未就绪</>;
   return (
     <MonacoEditor
       language="typescript"
       options={options}
       onChange={onChange}
-      editorDidMount={(instance) => {
+      onMount={(instance) => {
         editor.current = instance;
         setupEditor(instance);
         editorInstance.current = {

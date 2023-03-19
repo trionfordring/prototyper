@@ -1,6 +1,7 @@
 import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
+import replace from '@rollup/plugin-replace';
 import image from '@svgr/rollup';
 import esbuild from 'rollup-plugin-esbuild';
 
@@ -21,6 +22,13 @@ export const rollupPlugins = () => {
   const ans = [
     resolve({
       browser: true,
+    }),
+    replace({
+      values: {
+        'process.env.NODE_ENV': JSON.stringify('production'),
+        __buildDate__: () => JSON.stringify(new Date()),
+      },
+      preventAssignment: true,
     }),
     blob(),
     commonjs(),

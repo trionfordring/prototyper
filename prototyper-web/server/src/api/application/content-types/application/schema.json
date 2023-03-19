@@ -1,0 +1,56 @@
+{
+  "kind": "collectionType",
+  "collectionName": "applications",
+  "info": {
+    "singularName": "application",
+    "pluralName": "applications",
+    "displayName": "Application",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "minLength": 1
+    },
+    "creator": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "dependencies": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::package.package"
+    },
+    "initProps": {
+      "type": "json"
+    },
+    "label": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "readme": {
+      "type": "text"
+    },
+    "index": {
+      "type": "component",
+      "repeatable": false,
+      "component": "component.descriptor",
+      "required": true
+    },
+    "mainPackage": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::package.package",
+      "mappedBy": "application"
+    }
+  }
+}

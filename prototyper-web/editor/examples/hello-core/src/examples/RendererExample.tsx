@@ -1,4 +1,8 @@
-import { ApplicationRenderer, createProtoComponent } from '@prototyper/core';
+import {
+  ApplicationRenderer,
+  createProtoComponent,
+  globalPackagesRegistry,
+} from '@prototyper/core';
 import { useEffect, useState } from 'react';
 
 const component = createProtoComponent({
@@ -159,6 +163,7 @@ const component = createProtoComponent({
 });
 
 function RendererExample() {
+  const pkg = globalPackagesRegistry.getPackage('hello');
   useEffect(() => {
     console.log('渲染根组件', component);
   }, []);
@@ -166,8 +171,7 @@ function RendererExample() {
   return (
     <ApplicationRenderer
       app={{
-        index: component,
-        useSetupAppStates: () => ({}),
+        index: pkg.getComponent('StdComponent')!,
       }}
     ></ApplicationRenderer>
   );

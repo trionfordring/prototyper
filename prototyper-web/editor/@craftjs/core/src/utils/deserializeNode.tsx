@@ -34,6 +34,12 @@ export const deserializeComp = (
   const main = restoreType(type, resolver);
 
   if (!main) {
+    console.warn(
+      '反序列化组件出现错误,找不到虚拟组件节点对应的类型~ 数据:',
+      data,
+      'resolver:',
+      resolver
+    );
     return;
   }
 

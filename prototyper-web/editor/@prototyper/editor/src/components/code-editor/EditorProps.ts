@@ -3,7 +3,7 @@ import { SerializedModule } from '../../types/SerializedModule';
 export interface EditorInstance {
   reset(): void;
   save(): Promise<SerializedModule | null>;
-  getRawCode(): string;
+  getRawCode(): string | undefined;
   setRawCode(text: string): void;
 }
 

@@ -67,7 +67,7 @@ export const Frame: React.FC<React.PropsWithChildren<Frame>> = ({
 
       actions.history.ignore().addNodeTree(node);
     }
-  }, [actions, query]);
+  }, [actions, hasInited, query]);
 
   return <RenderRootNode />;
 };

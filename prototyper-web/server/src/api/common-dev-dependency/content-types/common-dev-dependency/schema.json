@@ -1,0 +1,20 @@
+{
+  "kind": "singleType",
+  "collectionName": "common_dev_dependencies",
+  "info": {
+    "singularName": "common-dev-dependency",
+    "pluralName": "common-dev-dependencies",
+    "displayName": "CommonDevDependency"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "packages": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::package.package"
+    }
+  }
+}

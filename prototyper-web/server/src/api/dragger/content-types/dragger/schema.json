@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "draggers",
+  "info": {
+    "singularName": "dragger",
+    "pluralName": "draggers",
+    "displayName": "Dragger",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true,
+      "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "required": true
+    },
+    "canvas": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "draggerProps": {
+      "type": "json"
+    },
+    "compProps": {
+      "type": "json"
+    },
+    "component": {
+      "type": "component",
+      "repeatable": false,
+      "component": "component.descriptor",
+      "required": true
+    }
+  }
+}

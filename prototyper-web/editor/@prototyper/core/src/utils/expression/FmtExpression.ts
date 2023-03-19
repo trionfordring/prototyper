@@ -25,7 +25,8 @@ function compileFmtStr(
   const ans = [];
   const iter = fmtStr.matchAll(REG_FMT_VAR);
   let idx = 0;
-  for (let fmtVar of iter) {
+  for (let it = iter.next(); !it.done; it = iter.next()) {
+    const fmtVar = it.value;
     if (idx < fmtVar.index) ans.push(fmtStr.slice(idx, fmtVar.index));
     ans.push(new JSExpression(fmtVar[1], argNames));
     idx = fmtVar.index + fmtVar[0].length;

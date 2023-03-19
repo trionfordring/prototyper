@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@craftjs/core": "workspace:*",
+    "@monaco-editor/react": "^4.4.6",
     "@prototyper/core": "workspace:*",
     "@prototyper/editor": "workspace:*",
     "@prototyper/std-materials": "workspace:*",
