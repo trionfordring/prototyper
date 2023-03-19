@@ -9,6 +9,7 @@ import { Typography } from 'antd';
 import { noop, omit } from 'lodash';
 import React, {
   ComponentProps,
+  ComponentType,
   forwardRef,
   PropsWithChildren,
   RefObject,
@@ -78,11 +79,25 @@ export const Editor = forwardRef<
       catalogue?: Category[];
       container?: React.ComponentType;
       onSave?: (component: SerializedProtoComponent) => void;
+      title?: ComponentType<{ mode: EditorMode }>;
+      center?: ComponentType<{ mode: EditorMode }>;
+      right?: ComponentType<{ mode: EditorMode }>;
     }
   >
 >(
   (
-    { children, draggers, container, app, catalogue, onSave = noop, ...props },
+    {
+      children,
+      draggers,
+      container,
+      app,
+      catalogue,
+      onSave = noop,
+      title,
+      center,
+      right,
+      ...props
+    },
     ref
   ) => {
     const applicationInstanceRef = useRef<ApplicationEditorInstance>();
@@ -177,6 +192,9 @@ export const Editor = forwardRef<
           mode={editorMode}
           setMode={setEditorMode}
           onSave={handleOnSave}
+          title={title}
+          center={center}
+          right={right}
         />
         <EditorBody>
           <ApplicationEditor

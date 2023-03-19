@@ -1,6 +1,6 @@
 import { Button, Space } from 'antd';
 import { noop } from 'lodash';
-import React from 'react';
+import React, { ComponentType } from 'react';
 import { Props as RndProps } from 'react-rnd';
 import styled from 'styled-components';
 
@@ -33,7 +33,7 @@ const Right = styled(Space)`
   justify-self: flex-end;
 `;
 
-function format(content: string | number) {
+function format(content?: string | number) {
   if (typeof content === 'number') {
     return content.toFixed(1);
   }
@@ -49,6 +49,9 @@ const EditorHeader = ({
   mode = 'edit-canvas',
   setMode = noop,
   onSave = noop,
+  title: TitleComp,
+  center: CenterComp,
+  right: ReightComp,
 }: {
   height?: string;
   size: RndProps['size'];
@@ -57,15 +60,18 @@ const EditorHeader = ({
   mode?: EditorMode;
   setMode?: (mode: EditorMode) => void;
   onSave?: () => void;
+  title?: ComponentType<{ mode: EditorMode }>;
+  center?: ComponentType<{ mode: EditorMode }>;
+  right?: ComponentType<{ mode: EditorMode }>;
 }) => {
   return (
     <Header height={height}>
-      <Title>Editor</Title>
-      <Center></Center>
+      <Title>{TitleComp ? <TitleComp mode={mode} /> : 'Editor'}</Title>
+      <Center>{CenterComp ? <CenterComp mode={mode} /> : null}</Center>
       <Right>
         {mode === 'edit-canvas' && (
-          <Button type="dashed">{`画布尺寸: ${format(size.height)} x ${format(
-            size.width
+          <Button type="dashed">{`画布尺寸: ${format(size?.height)} x ${format(
+            size?.width
           )}`}</Button>
         )}
         {mode !== 'edit-script' && (
@@ -88,6 +94,7 @@ const EditorHeader = ({
             保存
           </Button>
         )}
+        {ReightComp ? <ReightComp mode={mode} /> : null}
       </Right>
     </Header>
   );

@@ -49,4 +49,5 @@ async function initEmbeddedPackages() {
   setEmbeddedPackage('@ant-design/icons', 'icons', icons);
 
   console.log('声明内置lib', embeddedPackageArr);
+  embeddedPackagesInited = true;
 }

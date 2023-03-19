@@ -66,6 +66,7 @@ export default function Page() {
                               query: {
                                 namespace: application.mainPackage!.name,
                                 name: item.name,
+                                appId: id,
                               },
                             }}
                           >

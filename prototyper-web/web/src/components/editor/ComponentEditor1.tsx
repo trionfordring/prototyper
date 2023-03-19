@@ -18,6 +18,7 @@ import { loadScript } from '@/utils/scriptLoader';
 import { HOST } from '@/env';
 import { Editor } from '@prototyper/editor';
 import { loader } from '@monaco-editor/react';
+import { EditorHeaderRight } from './EditorHeaderRight';
 
 type EditorStateType = 'loading' | 'running' | 'error';
 
@@ -132,6 +133,7 @@ export function ComponentEditor1({
         }}
         draggers={draggers}
         catalogue={catalogue}
+        right={EditorHeaderRight}
       ></Editor>
     </FullPage>
   );
