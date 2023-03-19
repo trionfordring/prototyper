@@ -98,6 +98,15 @@ export function ComponentEditor1({
   }
   async function loadAppDraggers() {
     // 载入应用级draggers
+    const indexPackage = globalPackagesRegistry.getPackage(indexDesc.namespace);
+    const appDraggers = resources.flatMap((r) => r.draggers || []);
+    console.log('载入应用级draggers:', appDraggers);
+    appDraggers.forEach((d) =>
+      indexPackage.addDragger({
+        ...d,
+        descriptor: d.component,
+      })
+    );
     // 装入所有draggers
     const pkgs = globalPackagesRegistry.getAllPackages();
     const finalDraggers = pkgs.flatMap((pkg) => pkg.draggers);
