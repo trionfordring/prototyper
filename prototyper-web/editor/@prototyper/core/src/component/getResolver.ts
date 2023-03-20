@@ -31,7 +31,10 @@ function getComponents(
   componentGetter: GetComponentFunc = defaultCompGetter
 ) {
   const root = componentGetter(descriptor);
-  if (!root) return {};
+  if (!root) {
+    console.log('[warn]找不到依赖列表中的虚拟组件', descriptor);
+    return {};
+  }
   const ans: Record<string, any> = {};
   const contain = (desc: ComponentDescriptor) =>
     ans[getComponentFullName(desc)];

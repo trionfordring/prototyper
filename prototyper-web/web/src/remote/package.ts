@@ -29,9 +29,11 @@ import { isNil } from 'lodash';
 import { unwarpEntity } from './utils';
 import { useRemote } from './useRemote';
 import { graphql } from '@/utils/graphql';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FragmentDraggerCollection } from './dragger';
 import { Dragger } from '@/types/dragger';
+import { fetcher } from './fetcher';
+import { useAsyncMemo } from '@/hooks/useAsyncMemo';
 
 export const FragmentSimplePackage = fragment`
 fragment simplePackage on Package {
@@ -244,7 +246,7 @@ export type FragmentPackageWithUrlType = Merge<
   }
 >;
 
-const FlatDevDependenciesDocument = graphql<
+export const FlatDevDependenciesDocument = graphql<
   {
     package: ResponseFragmentType<
       {
@@ -304,9 +306,10 @@ export function resolvePackageWithUrl(
 }
 
 export function useFlatDevDependencies(id?: ID) {
-  const { data, ...others } = useRemote(
-    id && [FlatDevDependenciesDocument, { id }]
-  );
+  const data = useAsyncMemo(async () => {
+    if (!id) return undefined;
+    return await fetcher([FlatDevDependenciesDocument, { id }]);
+  }, [id]);
   const flatDevDependencies = useMemo<PackageWithUrl[] | undefined>(() => {
     if (isNil(data)) return undefined;
     return data.package.data.attributes.flatDevDependencies.map((fd) =>
@@ -314,7 +317,6 @@ export function useFlatDevDependencies(id?: ID) {
     );
   }, [data]);
   return {
-    ...others,
     flatDevDependencies,
   };
 }

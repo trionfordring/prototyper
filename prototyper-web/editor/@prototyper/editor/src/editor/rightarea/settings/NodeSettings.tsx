@@ -26,7 +26,7 @@ export const NodeSettings = ({
   useEffect(() => {
     if (onSelected) {
       if (selected && selected.id !== 'ROOT') onSelected(selected);
-      else onSelected(null);
+      else onSelected();
     }
   }, [selected, onSelected]);
   return selected?.settings && selected.id !== 'ROOT' ? (

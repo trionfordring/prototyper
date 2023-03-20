@@ -1,6 +1,7 @@
 import { ComponentEditor } from '@/components/editor';
 import { FullPageCenter } from '@/components/gizmo/FullPageCenter';
 import { useFlatDevDependencies, usePackageByName } from '@/remote/package';
+import { Alert } from 'antd';
 import { isNil } from 'lodash';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -26,25 +27,22 @@ export default function Page() {
       </>
     );
   }
-  if (isNil(componentInfo)) return <></>;
+  if (isNil(componentInfo))
+    return (
+      <>
+        <Head>
+          <title>找不到组件</title>
+        </Head>
+        <FullPageCenter background="light-grey">
+          <Alert type="error" message="找不到对应组件"></Alert>
+        </FullPageCenter>
+      </>
+    );
   return (
     <>
       <Head>
         <title>{`正在编辑[${componentInfo.name}]`}</title>
       </Head>
-      {/* <FullPageCenter background="light-grey">
-        <Card
-          style={{
-            maxHeight: '800px',
-            overflowY: 'auto',
-          }}
-        >
-          <Typography.Title level={3}>包信息</Typography.Title>
-          <JsonView src={pkg || {}}></JsonView>
-          <Typography.Title level={3}>展开依赖</Typography.Title>
-          <JsonView src={flatDevDependencies || []}></JsonView>
-        </Card>
-      </FullPageCenter> */}
       <ComponentEditor
         resources={flatDevDependencies}
         index={{

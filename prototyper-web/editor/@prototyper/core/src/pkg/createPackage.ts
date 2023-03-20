@@ -2,6 +2,7 @@ import { ComponentPackage } from './ComponentPackage';
 
 import { ProtoComponent } from '../component';
 import { createProtoComponent } from '../component/createComponent';
+import { ProtoDragger } from '../dragger';
 
 export function createPackage(
   namespace: string,
@@ -10,7 +11,7 @@ export function createPackage(
   const componentsStore = {
     ...components,
   };
-  const draggers = [];
+  const draggers: ProtoDragger[] = [];
   let meta = {};
   const catalogue = [];
   return {
@@ -39,7 +40,10 @@ export function createPackage(
         },
       };
     },
-    addDragger: (dragger) => draggers.push(dragger),
+    addDragger: (dragger) => {
+      if (draggers.some((d) => d.label === dragger.label)) return;
+      draggers.push(dragger);
+    },
     meta() {
       return meta;
     },

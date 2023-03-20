@@ -25,8 +25,8 @@ const MainFrame = styled.div`
 const Padding = styled.div`
   border: 1px solid #f0f0f0;
   padding: 7px;
-  width: 100%;
   height: 100%;
+  height: calc(100% - 14px);
 `;
 const StyledRnd = styled(Rnd)`
   z-index: 5;

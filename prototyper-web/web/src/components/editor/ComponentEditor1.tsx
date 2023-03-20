@@ -13,12 +13,14 @@ import { useState } from 'react';
 import { FullPageCenter } from '../gizmo/FullPageCenter';
 import { embeddedPackages } from '@/utils/embeddedPackages';
 import React from 'react';
-import { useEffectOnce } from '@/hooks/useEffectOnce';
 import { loadScript } from '@/utils/scriptLoader';
 import { HOST } from '@/env';
 import { Editor } from '@prototyper/editor';
 import { loader } from '@monaco-editor/react';
 import { EditorHeaderRight } from './EditorHeaderRight';
+import { updateComponentData } from '@/remote/component';
+import { ID } from '@/types/api';
+import { useEffectOnce } from '@/hooks/useEffectOnce';
 
 type EditorStateType = 'loading' | 'running' | 'error';
 
@@ -29,6 +31,8 @@ export function ComponentEditor1({
   resources: PackageWithUrl[];
   index: ComponentDescriptor;
 }) {
+  const [id, setId] = useState<ID>();
+  const [version, setVersion] = useState(0);
   const [editorState, setEditorState] = useState<EditorStateType>('loading');
   const [currentComponent, setCurrentComponent] = useState<
     ProtoComponent & WithDescriptor
@@ -45,6 +49,12 @@ export function ComponentEditor1({
       await loadAppComponents();
       await loadAppDraggers();
       initMonaco();
+      // 装入index组件
+      const indexPackage = globalPackagesRegistry.getPackage(
+        indexDesc.namespace
+      );
+      const index = indexPackage.getComponent(indexDesc.name);
+      if (index) setCurrentComponent(() => index);
       setEditorState('running');
     } catch (e) {
       setEditorState('error');
@@ -80,21 +90,20 @@ export function ComponentEditor1({
     const components: (ProtoComponent & WithDescriptor)[] = resources.flatMap(
       (r) =>
         r.components.map((c) => {
+          if (r.name === indexDesc.namespace && c.name === indexDesc.name) {
+            setId(c.id);
+          }
           return {
             ...c.data,
             descriptor: {
               namespace: r.name,
               name: c.name,
             },
-            id: c.id,
           };
         })
     );
     globalPackagesRegistry.addComponents(components);
-    // 装入index组件
-    const indexPackage = globalPackagesRegistry.getPackage(indexDesc.namespace);
-    const index = indexPackage.getComponent(indexDesc.name);
-    if (index) setCurrentComponent(() => index);
+    console.log('载入应用级组件', components);
   }
   async function loadAppDraggers() {
     // 载入应用级draggers
@@ -137,12 +146,17 @@ export function ComponentEditor1({
   return (
     <FullPage>
       <Editor
+        key={version}
         app={{
           index: currentComponent,
         }}
         draggers={draggers}
         catalogue={catalogue}
         right={EditorHeaderRight}
+        onSave={(comp) => {
+          if (!id) throw new Error('你不能更新原生包的内建组件');
+          updateComponentData(id, comp);
+        }}
       ></Editor>
     </FullPage>
   );

@@ -6,9 +6,14 @@ import {
   responseRelationCollection,
 } from './fragments';
 import { ProtoComponent } from '@/types/component';
-import { Nil } from '@/types/api';
+import { ID, Nil } from '@/types/api';
 import { isNil } from 'lodash';
 import { unwarpEntity } from './utils';
+import { graphql } from '@/utils/graphql';
+import { SerializedProtoComponent } from '@prototyper/editor/src/types/SerializedProtoComponent';
+import { fetcher } from './fetcher';
+import { mutate } from 'swr';
+import { FlatDevDependenciesDocument } from './package';
 
 export const FragmentSimpleComponent = fragment`
 fragment simpleComponent on Component {
@@ -85,4 +90,42 @@ export function resolveComponentWithDataCollection(
 ): ComponentWithDataType[] | undefined {
   if (isNil(v)) return v;
   return v.data.map((c) => resolveComponentWithData(unwarpEntity(c)));
+}
+
+const UpdateComponentDataDocument = graphql<
+  {
+    updateComponent: {
+      data: {
+        id: ID;
+      };
+    };
+  },
+  {
+    id: ID;
+    data: SerializedProtoComponent;
+  }
+>()`
+mutation updateComponent($id: ID!, $data: JSON!) {
+  updateComponent(id: $id, data: {
+    data: $data
+  }) {
+    data {
+      id
+    }
+  }
+}
+`;
+
+export async function updateComponentData(
+  id: ID,
+  data: SerializedProtoComponent
+) {
+  await fetcher([
+    UpdateComponentDataDocument,
+    {
+      id,
+      data,
+    },
+  ]);
+  mutate([FlatDevDependenciesDocument, { id }], null);
 }

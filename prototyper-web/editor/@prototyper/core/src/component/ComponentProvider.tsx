@@ -35,7 +35,8 @@ export const ComponentProvider: FC<
 }) => {
   const [meta, setMeta] = useState(component.meta || {});
   const states =
-    (component.useSetupStates && component.useSetupStates(props, meta)) || {};
+    (component.useSetupStates && component.useSetupStates(props || {}, meta)) ||
+    {};
   const inited = useRef(false);
   useEffect(() => {
     if (!inited.current) {
