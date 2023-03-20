@@ -70,7 +70,7 @@ const NodeRenderer1: FC = () => {
         />
       );
     }
-    let nodeScopeError: Error;
+    let nodeScopeError: Error | undefined;
     // 应用hidden属性
     if (
       Tool.try(() => hiddenExpr.run(exprContext)).catch((err) => {
@@ -85,7 +85,8 @@ const NodeRenderer1: FC = () => {
         />
       ) : null;
     }
-
+    if (!componentContext)
+      return <RenderError msg={`找不到组件上下文`} withPrefix />;
     const protoComponent = componentContext.component;
     // 对于根节点，直接返回
     {
@@ -133,7 +134,7 @@ const NodeRenderer1: FC = () => {
     }
     // 当forVal为一个数字，将重复该元素指定次数
     if (typeof forVal === 'number') {
-      const undefList = [];
+      const undefList: any[] = [];
       for (let i = 0; i < forVal; i++) undefList.push(undefined);
       forVal = undefList;
     }
@@ -178,7 +179,7 @@ const NodeRenderer1: FC = () => {
       if (nodeScopeError) {
         return (
           <RenderError
-            msg={`循环key计算失败:${nodeScopeError.message}`}
+            msg={`循环key计算失败:${(nodeScopeError as Error).message}`}
             withPrefix
           />
         );

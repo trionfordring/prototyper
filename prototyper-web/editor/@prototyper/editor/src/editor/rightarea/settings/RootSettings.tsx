@@ -82,7 +82,7 @@ export const RootSettings = ({
   }
   function onFinish(data) {
     onSettingsMetaChange({
-      type: type,
+      type: type as any,
       settingsStruct: data.settingsStruct,
       descriptor: data.descriptor,
     });
@@ -205,7 +205,7 @@ export const RootSettings = ({
       ) : (
         <RenderSettings
           {...settingsInfo}
-          type={type}
+          type={type as any}
           nativeComponent={nativeSettings}
         />
       )}
@@ -265,21 +265,22 @@ function AutoFormItem({ name, remove }) {
   );
 }
 
-function RenderSettings({
-  type,
-  descriptor,
-  nativeComponent: NativeComponent,
-  settingsStruct,
-}: SerializedSettings & {
-  nativeComponent?: ProtoElementType;
-}) {
+function RenderSettings(
+  props:
+    | SerializedSettings
+    | {
+        type: 'native';
+        nativeComponent: ProtoElementType;
+      }
+) {
   const node = (() => {
-    switch (type) {
+    switch (props.type) {
       case 'auto':
-        return <AutoSettingsRender struct={settingsStruct} />;
+        return <AutoSettingsRender struct={props.settingsStruct} />;
       case 'component':
-        return <EmbeddedComponentRenderer descriptor={descriptor} />;
+        return <EmbeddedComponentRenderer descriptor={props.descriptor} />;
       case 'native':
+        const NativeComponent = props.nativeComponent;
         return <NativeComponent />;
       case 'none':
       default:
@@ -289,7 +290,11 @@ function RenderSettings({
   return <SetterRootContextProvider>{node}</SetterRootContextProvider>;
 }
 
-function AutoSettingsRender({ struct = [] }: { struct: AutoSettingsStruct }) {
+export function AutoSettingsRender({
+  struct = [],
+}: {
+  struct: AutoSettingsStruct;
+}) {
   const nodes = struct.map(({ settingType, ...props }, index) => {
     switch (settingType) {
       case 'auto-complete':

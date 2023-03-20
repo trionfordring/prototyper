@@ -40,13 +40,15 @@ export function ComponentPaneItem({ dragger }: { dragger: ProtoDragger }) {
   if (!Content)
     throw new Error(`找不到dragger[type=${dragger.type}]对应类型的渲染器`);
   const descriptor = dragger.descriptor;
-  const ApplicationContext = useApplicationContext();
+  const applicationContext = useApplicationContext();
   const {
     connectors: { create },
   } = useEditor();
-  const protoComponent = ApplicationContext.getComponent(descriptor);
+  const protoComponent = applicationContext.getComponent(descriptor);
+  if (!protoComponent) return <></>;
   let component;
   let props: Record<string, any> = {};
+  let custom: Record<string, any>;
   if (protoComponent.type === 'native') {
     props = dragger.compProps;
     component = protoComponent.component;
@@ -61,14 +63,22 @@ export function ComponentPaneItem({ dragger }: { dragger: ProtoDragger }) {
       props: dragger.compProps,
       descriptor: protoComponent.descriptor,
     };
+    custom = {
+      displayName: dragger.label,
+    };
     component = ComponentRenderer;
   }
   return (
     <ItemBox
       ref={(ref) =>
         create(
-          ref,
-          <Element is={component} canvas={dragger.canvas} {...props} />
+          ref!,
+          <Element
+            {...props}
+            is={component}
+            canvas={dragger.canvas}
+            custom={custom}
+          />
         )
       }
     >

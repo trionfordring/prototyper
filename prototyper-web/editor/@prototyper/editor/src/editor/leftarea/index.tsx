@@ -7,7 +7,7 @@ import { Category, ProtoDragger } from '@prototyper/core';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 
-import { Activitybar } from './Activitybar';
+import { Activitybar, ActivitybarValueType } from './Activitybar';
 
 import { ComponentPane } from '../../components/component-pane';
 import { Layers } from '../../components/layers';
@@ -34,8 +34,9 @@ const EditorLeft = ({
   draggers: ProtoDragger[];
   catalogue?: Category[];
 }) => {
-  const [currentActive, setActive] = useState('ComponentPane');
-  function toggle(val: string) {
+  const [currentActive, setActive] =
+    useState<ActivitybarValueType>('ComponentPane');
+  function toggle(val: ActivitybarValueType) {
     setActive((current) => {
       if (current === val) return '';
       return val;

@@ -25,6 +25,7 @@ export const EmbeddedComponentRenderer: React.FC<
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [descriptor.namespace, descriptor.name]
   );
+  if (!component) return <span>找不到组件{descriptor.name}</span>;
   return (
     <JustComponentRenderer
       props={props}
@@ -52,6 +53,7 @@ export const ComponentRenderer: React.FC<
     return null;
   }
   const component = (getComponent || defaultCompGetter)(descriptor);
+  if (!component) return <span>找不到组件{descriptor.name}</span>;
   return (
     <JustComponentRenderer
       ref={(ref) => connect(drag(ref))}

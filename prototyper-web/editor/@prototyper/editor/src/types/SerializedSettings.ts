@@ -1,12 +1,21 @@
 import { ComponentDescriptor } from '@prototyper/core';
 
-export interface SerializedSettings {
-  type: 'none' | 'auto' | 'component' | 'native';
+export type SerializedSettings =
+  | NoneSerializedSettings
+  | ComponentSerializedSettings
+  | AutoSerializedSettings;
 
-  descriptor?: ComponentDescriptor;
-  settingsStruct?: AutoSettingsStruct;
-}
-
+type NoneSerializedSettings = {
+  type: 'none';
+};
+type ComponentSerializedSettings = {
+  type: 'component';
+  descriptor: ComponentDescriptor;
+};
+type AutoSerializedSettings = {
+  type: 'auto';
+  settingsStruct: AutoSettingsStruct;
+};
 export type AutoSettingsStruct = AutoSettingsData[];
 
 export type SettingType =

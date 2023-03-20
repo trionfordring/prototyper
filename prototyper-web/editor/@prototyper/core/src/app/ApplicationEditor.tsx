@@ -67,10 +67,6 @@ export const ApplicationEditor: FC<
     if (checked.current) return;
     checked.current = true;
     getResolver(app.index.dependencies);
-    console.log(
-      '[editor]全局依赖库快照:',
-      JSON.parse(JSON.stringify(globalPackagesRegistry))
-    );
   }, [app.index.dependencies]);
   return (
     <ApplicationProvider
