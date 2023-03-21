@@ -64,11 +64,11 @@ export function createProtoComponent(
     virtualDom: {
       ...vdom,
       ROOT: {
+        linkedNodes: {},
         ...vdom.ROOT,
         props: {},
         isCanvas: true,
         displayName: 'ROOT',
-        linkedNodes: {},
         type: {
           resolvedName: 'ComponentRenderer',
         },

@@ -26,6 +26,15 @@
       "relation": "manyToOne",
       "target": "api::package.package",
       "inversedBy": "components"
+    },
+    "label": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
     }
   }
 }

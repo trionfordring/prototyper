@@ -1,9 +1,10 @@
+import { useCreateComponentModal } from '@/components/component/CreateComponentForm';
 import { FullPageCenter } from '@/components/gizmo/FullPageCenter';
 import { JsonView } from '@/components/gizmo/JsonView';
 import { HOST } from '@/env';
 import { useApplicationById } from '@/remote/application';
 import { parseID } from '@/utils/parseID';
-import { Alert, Card, List, Typography } from 'antd';
+import { Alert, Button, Card, List, Typography } from 'antd';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -20,6 +21,10 @@ export default function Page() {
   const router = useRouter();
   const id = parseID(router.query.id as string);
   const { application } = useApplicationById(id);
+  const { modalNode, open: openCreateComponentModal } = useCreateComponentModal(
+    application?.mainPackage?.id,
+    id
+  );
   if (!application)
     return (
       <>
@@ -48,6 +53,10 @@ export default function Page() {
               访问应用首页
             </Typography.Link>
           </Typography.Paragraph>
+          <Typography.Paragraph>
+            {modalNode}
+            <Button onClick={openCreateComponentModal}>创建组件</Button>
+          </Typography.Paragraph>
           {application.mainPackage ? (
             <>
               <Typography.Title level={3}>组件列表</Typography.Title>
@@ -70,7 +79,9 @@ export default function Page() {
                               },
                             }}
                           >
-                            <Typography.Link>{item.name}</Typography.Link>
+                            <Typography.Link>
+                              {item.label || item.name}
+                            </Typography.Link>
                           </Link>
                         }
                       />

@@ -44,7 +44,9 @@ export function fragment(
         if (arg instanceof FragmentInfo) {
           dependencies.push(arg);
           pre.push(arg.name);
-        } else throw new Error('输入了错误的fragment');
+        } else {
+          throw new Error(`输入了错误的fragment,类型为: ${typeof arg}`);
+        }
       } else {
         arg && pre.push(String(arg));
       }

@@ -17,7 +17,7 @@ function processGraphQLError(err: GraphQLError) {
   const name = (err.extensions?.error as any)?.name || err.name;
   switch (name) {
     case 'ValidationError':
-      return '用户名或密码错误';
+      return '校验未通过';
     case 'UnauthorizedError':
       return '权限不足';
     default:
@@ -25,28 +25,32 @@ function processGraphQLError(err: GraphQLError) {
   }
 }
 
-export function ProcessClientError({ err }: { err: ClientError }) {
-  const errs = err.response.errors || [err.response.error];
+export function ProcessClientError({ err }: { err: ClientError | Error }) {
   useEffect(() => {
     console.error(err);
   }, [err]);
-  return (
-    <MyAlert
-      type="error"
-      description={
-        <ErrDesc>
-          <List
-            itemLayout="horizontal"
-            size="small"
-            dataSource={errs}
-            renderItem={(item) => (
-              <List.Item>
-                <List.Item.Meta description={processGraphQLError(item)} />
-              </List.Item>
-            )}
-          ></List>
-        </ErrDesc>
-      }
-    ></MyAlert>
-  );
+  if (err instanceof ClientError) {
+    const errs = err.response.errors || [err.response.error];
+    return (
+      <MyAlert
+        type="error"
+        description={
+          <ErrDesc>
+            <List
+              itemLayout="horizontal"
+              size="small"
+              dataSource={errs}
+              renderItem={(item) => (
+                <List.Item>
+                  <List.Item.Meta description={processGraphQLError(item)} />
+                </List.Item>
+              )}
+            ></List>
+          </ErrDesc>
+        }
+      ></MyAlert>
+    );
+  } else {
+    return <MyAlert type="error" description={err.message} showIcon></MyAlert>;
+  }
 }

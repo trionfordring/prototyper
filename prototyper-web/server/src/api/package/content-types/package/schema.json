@@ -27,13 +27,17 @@
       "type": "media",
       "multiple": true,
       "required": false,
-      "allowedTypes": ["files"]
+      "allowedTypes": [
+        "files"
+      ]
     },
     "dts": {
       "type": "media",
       "multiple": true,
       "required": false,
-      "allowedTypes": ["files"]
+      "allowedTypes": [
+        "files"
+      ]
     },
     "public": {
       "type": "boolean",
@@ -62,7 +66,11 @@
     },
     "type": {
       "type": "enumeration",
-      "enum": ["lib", "material", "application"],
+      "enum": [
+        "lib",
+        "material",
+        "application"
+      ],
       "default": "lib",
       "required": true
     },

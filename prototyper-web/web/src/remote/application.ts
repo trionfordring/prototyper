@@ -18,7 +18,7 @@ import {
   resolveFragmentMainPackage,
   resolveFragmentSimplePackageEntity,
 } from './package';
-import { FragmentComponentDescriptor } from './component';
+import { FragmentComponentDescriptor } from './component-gql';
 import { useMemo } from 'react';
 import { isNil } from 'lodash';
 import { SimpleUser } from '@/types/user';
@@ -60,7 +60,7 @@ fragment application on Application {
 }
 `;
 
-const ApplicationByIdDocument = graphql<
+export const ApplicationByIdDocument = graphql<
   {
     application: ResponseFragmentType<
       Omit<Application, 'id' | 'creator' | 'dependencies' | 'mainPackage'> & {
@@ -86,7 +86,7 @@ query applicationById($id:ID!, $dependenciesPageSize:Int!=10, $dependenciesPage:
 }
 `;
 
-const ApplicationsDocument = graphql<
+export const ApplicationsDocument = graphql<
   {
     applications: ResponseCollectionFragmentType<{
       name: string;

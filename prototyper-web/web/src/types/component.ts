@@ -5,4 +5,8 @@ export interface ProtoComponent extends WithId, WithCreatedAndUpdatedAt {
   name: string;
   data: JSONType;
   package: SimplePackageType;
+
+  label?: string;
+  description?: string;
+  type?: string;
 }

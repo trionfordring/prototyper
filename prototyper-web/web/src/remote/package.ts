@@ -23,13 +23,13 @@ import {
   SimpleComponentType,
   resolveComponentWithDataCollection,
   resolveSimpleComponentEntity,
-} from './component';
+} from './component-gql';
 import { ID, Merge, Nil, WithCreatedAndUpdatedAt } from '@/types/api';
 import { isNil } from 'lodash';
 import { unwarpEntity } from './utils';
 import { useRemote } from './useRemote';
 import { graphql } from '@/utils/graphql';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { FragmentDraggerCollection } from './dragger';
 import { Dragger } from '@/types/dragger';
 import { fetcher } from './fetcher';

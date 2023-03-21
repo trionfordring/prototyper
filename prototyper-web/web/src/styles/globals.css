@@ -3,10 +3,15 @@
   margin: 0;
 }
 
-.box-shadow {
+.hover-shadow {
+  transition: box-shadow 0.4s;
+}
+
+.box-shadow, .hover-shadow:hover, .shadow {
   box-shadow: 0 0 0 1px rgb(0 0 0 / 7%), 0 2px 4px rgb(0 0 0 / 5%),
     0 12px 24px rgb(0 0 0 / 5%);
 }
+
 
 .margin {
   margin: 5px;
@@ -14,4 +19,8 @@
 
 .text-align-center {
   text-align: center;
+}
+
+.none-select {
+  user-select: none;
 }
