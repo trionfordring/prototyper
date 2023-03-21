@@ -1,4 +1,4 @@
-import { Alert } from 'antd';
+import { notification } from 'antd';
 import { FullPage } from '../gizmo/FullPage';
 import { PackageWithUrl } from '@/remote/package';
 import {
@@ -10,7 +10,6 @@ import {
   globalPackagesRegistry,
 } from '@prototyper/core';
 import { useState } from 'react';
-import { FullPageCenter } from '../gizmo/FullPageCenter';
 import { embeddedPackages } from '@/utils/embeddedPackages';
 import React from 'react';
 import { loadScript } from '@/utils/scriptLoader';
@@ -21,6 +20,9 @@ import { EditorHeaderRight } from './EditorHeaderRight';
 import { updateComponentData } from '@/remote/component';
 import { ID } from '@/types/api';
 import { useEffectOnce } from '@/hooks/useEffectOnce';
+import { LoadingPage } from '../gizmo/LoadingPage';
+import { ErrorPage } from '../gizmo/ErrorPage';
+import { EditorTitle } from './EditorTitle';
 
 type EditorStateType = 'loading' | 'running' | 'error';
 
@@ -32,7 +34,9 @@ export function ComponentEditor1({
   index: ComponentDescriptor;
 }) {
   const [id, setId] = useState<ID>();
+  const [error, setError] = useState<Error | undefined>();
   const [version, setVersion] = useState(0);
+  const [notice, contextHolder] = notification.useNotification();
   const [editorState, setEditorState] = useState<EditorStateType>('loading');
   const [currentComponent, setCurrentComponent] = useState<
     ProtoComponent & WithDescriptor
@@ -58,6 +62,7 @@ export function ComponentEditor1({
       setEditorState('running');
     } catch (e) {
       setEditorState('error');
+      setError(e);
     }
   }
   async function loadExternalPackages() {
@@ -130,21 +135,17 @@ export function ComponentEditor1({
     console.log('monaco已异步载入');
   }
   if (editorState === 'loading') {
-    return (
-      <FullPageCenter background="light-grey">
-        <Alert type="info" message="正在加载..." />
-      </FullPageCenter>
-    );
+    return <LoadingPage message="正在载入资源包..." />;
+  }
+  if (editorState === 'error') {
+    return <ErrorPage message="载入失败!" description={error?.message} />;
   }
   if (!currentComponent) {
-    return (
-      <FullPageCenter background="light-grey">
-        <Alert type="error" message="加载失败.." />
-      </FullPageCenter>
-    );
+    return <ErrorPage message="找不到所需组件" />;
   }
   return (
     <FullPage>
+      {contextHolder}
       <Editor
         key={version}
         app={{
@@ -152,10 +153,25 @@ export function ComponentEditor1({
         }}
         draggers={draggers}
         catalogue={catalogue}
+        title={EditorTitle}
         right={EditorHeaderRight}
-        onSave={(comp) => {
+        onSave={async (comp) => {
           if (!id) throw new Error('你不能更新原生包的内建组件');
-          updateComponentData(id, comp);
+          try {
+            await updateComponentData(id, comp);
+            const now = new Date();
+            notice.success({
+              placement: 'topRight',
+              message: '保存完成',
+              description: `操作时间:${now.toLocaleTimeString()}`,
+            });
+          } catch (e: any) {
+            notice.error({
+              placement: 'topRight',
+              message: '保存失败',
+              description: `请求服务器失败:${e?.message}`,
+            });
+          }
         }}
       ></Editor>
     </FullPage>

@@ -1,7 +1,7 @@
 import { ComponentEditor } from '@/components/editor';
-import { FullPageCenter } from '@/components/gizmo/FullPageCenter';
+import { ErrorPage } from '@/components/gizmo/ErrorPage';
+import { LoadingPage } from '@/components/gizmo/LoadingPage';
 import { useFlatDevDependencies, usePackageByName } from '@/remote/package';
-import { Alert } from 'antd';
 import { isNil } from 'lodash';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -18,26 +18,9 @@ export default function Page() {
     return pkg.components?.find((c) => c.name === name);
   }, [pkg, name]);
   if (isNil(pkg) || isNil(flatDevDependencies)) {
-    return (
-      <>
-        <Head>
-          <title>正在加载资源包...</title>
-        </Head>
-        <FullPageCenter background="light-grey"></FullPageCenter>
-      </>
-    );
+    return <LoadingPage message="正在加载资源包..." />;
   }
-  if (isNil(componentInfo))
-    return (
-      <>
-        <Head>
-          <title>找不到组件</title>
-        </Head>
-        <FullPageCenter background="light-grey">
-          <Alert type="error" message="找不到对应组件"></Alert>
-        </FullPageCenter>
-      </>
-    );
+  if (isNil(componentInfo)) return <ErrorPage message="找不到对应组件" />;
   return (
     <>
       <Head>
