@@ -22,7 +22,6 @@ export function ApplicationPageHeader() {
             },
           },
           label: '应用总览',
-          isActived: (path) => path.startsWith('/app/'),
         },
         {
           href: {

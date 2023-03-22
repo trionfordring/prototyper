@@ -106,7 +106,12 @@ function NavItem(
 ) {
   const router = useRouter();
   const currentPath = router.pathname;
-  const isActive = props.isActived || ((pathname) => pathname === props.href);
+  const isActive =
+    props.isActived ||
+    ((pathname) =>
+      typeof props.href === 'string'
+        ? pathname === props.href
+        : pathname === props.href.pathname);
   const actived = isActive(currentPath);
 
   return (

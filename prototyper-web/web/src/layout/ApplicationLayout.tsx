@@ -1,15 +1,14 @@
-import { ApplicationHomeHeader } from '@/components/application/ApplicationHomeHeader';
-import { ApplicationPageHeader } from '@/components/application/ApplicationPageHeader';
-import { ApplicationReadme } from '@/components/application/ApplicationReadme';
-import { ApplicationInfoProvider } from '@/components/context/ApplicationInfoProvider';
-import { FullPageCenter } from '@/components/gizmo/FullPageCenter';
 import { useApplicationById } from '@/remote/application';
 import { parseID } from '@/utils/parseID';
-import { Alert } from 'antd';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { FullPageCenter } from '../components/gizmo/FullPageCenter';
+import { Alert } from 'antd';
+import { ApplicationInfoProvider } from '../components/context/ApplicationInfoProvider';
+import { ApplicationPageHeader } from '../components/application/ApplicationPageHeader';
+import { PropsWithChildren } from 'react';
 
-export default function Page() {
+export function ApplicationLayout({ children }: PropsWithChildren) {
   const router = useRouter();
   const id = parseID(router.query.id as string);
   const { application } = useApplicationById(id);
@@ -26,9 +25,13 @@ export default function Page() {
     );
   return (
     <ApplicationInfoProvider application={application}>
+      <Head>
+        <title>{`Prototyper应用- ${
+          application.label || application.name
+        }`}</title>
+      </Head>
       <ApplicationPageHeader />
-      <ApplicationHomeHeader />
-      <ApplicationReadme />
+      {children}
     </ApplicationInfoProvider>
   );
 }

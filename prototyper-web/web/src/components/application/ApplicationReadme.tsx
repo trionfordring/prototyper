@@ -5,7 +5,6 @@ import { Card, Tooltip, Typography } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 
 const Box = styled.div`
-  max-width: 1440px;
   margin: 12px auto;
   .ant-card-body {
     padding-top: 8px;
