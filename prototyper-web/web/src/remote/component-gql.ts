@@ -123,6 +123,31 @@ mutation updateComponent($id: ID!, $data: JSON!) {
 }
 `;
 
+export const UpdateComponentDescriptionDocument = graphql<
+  {
+    updateComponent: ResponseFragmentType<{
+      description?: string;
+    }>;
+  },
+  {
+    id: ID;
+    description?: string;
+  }
+>()`
+mutation updateComponent($id: ID!, $description: String="") {
+  updateComponent(id: $id, data: {
+    description: $description
+  }) {
+    data {
+      id
+      attributes {
+        description
+      }
+    }
+  }
+}
+`;
+
 export const CreateComponentDocument = graphql<
   {
     createComponent: {

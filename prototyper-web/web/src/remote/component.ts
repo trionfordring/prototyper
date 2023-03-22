@@ -8,6 +8,7 @@ import { ApplicationByIdDocument } from './application';
 import {
   CreateComponentDocument,
   UpdateComponentDataDocument,
+  UpdateComponentDescriptionDocument,
 } from './component-gql';
 
 export async function updateComponentData(
@@ -21,6 +22,23 @@ export async function updateComponentData(
       data,
     },
   ]);
+}
+
+export async function updateComponentDescription(
+  id: ID,
+  description: string,
+  appId?: ID
+) {
+  await fetcher([
+    UpdateComponentDescriptionDocument,
+    {
+      id,
+      description,
+    },
+  ]);
+  if (appId) {
+    await mutate([ApplicationByIdDocument, { id: appId }]);
+  }
 }
 
 export async function createComponent(

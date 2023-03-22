@@ -1,4 +1,6 @@
+import { ComponentCard } from '@/components/component/ComponentCard';
 import { useCreateComponentModal } from '@/components/component/CreateComponentForm';
+import { ApplicationInfoProvider } from '@/components/context/ApplicationInfoProvider';
 import { FullPageCenter } from '@/components/gizmo/FullPageCenter';
 import { JsonView } from '@/components/gizmo/JsonView';
 import { HOST } from '@/env';
@@ -57,6 +59,13 @@ export default function Page() {
             {modalNode}
             <Button onClick={openCreateComponentModal}>创建组件</Button>
           </Typography.Paragraph>
+          <ApplicationInfoProvider application={application}>
+            {application.mainPackage?.components.map((component) => {
+              return (
+                <ComponentCard key={component.id} componentInfo={component} />
+              );
+            })}
+          </ApplicationInfoProvider>
           {application.mainPackage ? (
             <>
               <Typography.Title level={3}>组件列表</Typography.Title>
