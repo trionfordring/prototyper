@@ -1,32 +1,18 @@
-import { ComponentCard } from '@/components/component/ComponentCard';
-import { useCreateComponentModal } from '@/components/component/CreateComponentForm';
+import { ApplicationHomeHeader } from '@/components/application/ApplicationHomeHeader';
+import { ApplicationPageHeader } from '@/components/application/ApplicationPageHeader';
+import { ApplicationReadme } from '@/components/application/ApplicationReadme';
 import { ApplicationInfoProvider } from '@/components/context/ApplicationInfoProvider';
 import { FullPageCenter } from '@/components/gizmo/FullPageCenter';
-import { JsonView } from '@/components/gizmo/JsonView';
-import { HOST } from '@/env';
 import { useApplicationById } from '@/remote/application';
 import { parseID } from '@/utils/parseID';
-import { Alert, Button, Card, List, Typography } from 'antd';
+import { Alert } from 'antd';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import styled from 'styled-components';
-
-const TestCard = styled(Card)`
-  max-height: 800px;
-  overflow-y: auto;
-  margin: 15px;
-  min-width: 200px;
-`;
 
 export default function Page() {
   const router = useRouter();
   const id = parseID(router.query.id as string);
   const { application } = useApplicationById(id);
-  const { modalNode, open: openCreateComponentModal } = useCreateComponentModal(
-    application?.mainPackage?.id,
-    id
-  );
   if (!application)
     return (
       <>
@@ -39,69 +25,10 @@ export default function Page() {
       </>
     );
   return (
-    <>
-      <FullPageCenter background="light-grey">
-        <TestCard title="Application信息" className="box-shadow">
-          <JsonView src={application || {}}></JsonView>
-        </TestCard>
-        <TestCard className="box-shadow">
-          <Typography.Paragraph>
-            <Typography.Link
-              href={`${HOST}/api/preview/${encodeURIComponent(
-                application.name
-              )}`}
-              target="_blank"
-            >
-              访问应用首页
-            </Typography.Link>
-          </Typography.Paragraph>
-          <Typography.Paragraph>
-            {modalNode}
-            <Button onClick={openCreateComponentModal}>创建组件</Button>
-          </Typography.Paragraph>
-          <ApplicationInfoProvider application={application}>
-            {application.mainPackage?.components.map((component) => {
-              return (
-                <ComponentCard key={component.id} componentInfo={component} />
-              );
-            })}
-          </ApplicationInfoProvider>
-          {application.mainPackage ? (
-            <>
-              <Typography.Title level={3}>组件列表</Typography.Title>
-              <List
-                dataSource={application.mainPackage.components}
-                renderItem={(item) => (
-                  <>
-                    <List.Item key={item.id}>
-                      <List.Item.Meta
-                        title={
-                          <Link
-                            passHref
-                            legacyBehavior
-                            href={{
-                              pathname: '/edit/[namespace]/[name]',
-                              query: {
-                                namespace: application.mainPackage!.name,
-                                name: item.name,
-                                appId: id,
-                              },
-                            }}
-                          >
-                            <Typography.Link>
-                              {item.label || item.name}
-                            </Typography.Link>
-                          </Link>
-                        }
-                      />
-                    </List.Item>
-                  </>
-                )}
-              />
-            </>
-          ) : null}
-        </TestCard>
-      </FullPageCenter>
-    </>
+    <ApplicationInfoProvider application={application}>
+      <ApplicationPageHeader />
+      <ApplicationHomeHeader />
+      <ApplicationReadme />
+    </ApplicationInfoProvider>
   );
 }

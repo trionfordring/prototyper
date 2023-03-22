@@ -6,6 +6,7 @@ import { useApplications } from '@/remote/application';
 import { useMemo, useState } from 'react';
 import { MeSmallInfo } from '@/components/me/MeSmallInfo';
 import Link from 'next/link';
+import { PageHeader } from '@/layout/PageHeader';
 
 export default function Home() {
   useAuthChecker();
@@ -25,6 +26,26 @@ export default function Home() {
       <Head>
         <title>Prototyper</title>
       </Head>
+      <PageHeader
+        nav={[
+          {
+            href: '/',
+            label: '总览',
+          },
+          {
+            href: '/materials',
+            label: '物料市场',
+          },
+          {
+            href: '/me/apps',
+            label: '我的应用',
+          },
+          {
+            href: '/me',
+            label: '用户信息',
+          },
+        ]}
+      />
       <FullPageCenter background="light-grey">
         <Card
           className="shadow-box"
