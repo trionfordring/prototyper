@@ -7,6 +7,8 @@ import {
   FileOutlined,
   InfoCircleOutlined,
   LoadingOutlined,
+  StarFilled,
+  StarTwoTone,
 } from '@ant-design/icons';
 import { Card, Dropdown, MenuProps, Tooltip, Typography, message } from 'antd';
 import Link from 'next/link';
@@ -14,6 +16,7 @@ import { useApplicationInfo } from '../context/ApplicationInfoProvider';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { updateComponentDescription } from '@/remote/component';
+import { ApplicationPlayLink } from '../application/ApplicationPlayLink';
 
 const StyledCard = styled(Card)`
   width: 300px;
@@ -40,6 +43,10 @@ const StyledCard = styled(Card)`
     font-size: 1.5em;
     padding: 5px;
   }
+  .index-icon > .ant-typography {
+    font-size: 1em;
+    margin-left: 0.5em;
+  }
 `;
 
 export function ComponentCard({
@@ -55,6 +62,7 @@ export function ComponentCard({
   const [isUpdating, setIsUpdating] = useState(false);
   const [description, setDescription] = useState(componentInfo.description);
   const label = componentInfo.label || componentInfo.name;
+  const isIndex = application.index?.name === componentInfo.name;
   useEffect(() => {
     if (invaildDesc) {
       setInvaildDesc(false);
@@ -130,6 +138,18 @@ export function ComponentCard({
           >
             <InfoCircleOutlined className="descriptor-icon" />
           </Tooltip>
+          {isIndex ? (
+            <Tooltip
+              placement="bottom"
+              title={<span>该页面为当前应用的首页</span>}
+            >
+              <span className="index-icon">
+                <ApplicationPlayLink>
+                  <StarFilled />
+                </ApplicationPlayLink>
+              </span>
+            </Tooltip>
+          ) : null}
         </>
       }
       extra={

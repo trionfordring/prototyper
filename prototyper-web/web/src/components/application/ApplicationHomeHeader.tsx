@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { useApplicationInfo } from '../context/ApplicationInfoProvider';
 import { ApplicationPlayLink } from './ApplicationPlayLink';
+import { ArrowRightOutlined } from '@ant-design/icons';
+import Link from 'next/link';
 
 const Box = styled.div`
   background-color: rgb(40, 44, 52);
@@ -55,6 +57,18 @@ const PlayBtn = styled.div`
   }
 `;
 
+const LinkItem = styled(Link)`
+  padding-left: 15px;
+  font-size: 20px;
+  display: inline-block;
+  color: #61dafb;
+  text-decoration: none;
+  transition: color 0.2s ease-out;
+  &:hover {
+    color: white;
+  }
+`;
+
 export function ApplicationHomeHeader() {
   const applicationInfo = useApplicationInfo();
   return (
@@ -66,6 +80,17 @@ export function ApplicationHomeHeader() {
           <PlayBtn>
             <ApplicationPlayLink>访问主页</ApplicationPlayLink>
           </PlayBtn>
+          <LinkItem
+            href={{
+              pathname: '/app/[id]/components',
+              query: {
+                id: applicationInfo.id,
+                search: applicationInfo.index.name,
+              },
+            }}
+          >
+            主页组件 <ArrowRightOutlined />
+          </LinkItem>
         </BtnGroup>
       </Main>
     </Box>
