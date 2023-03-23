@@ -7,6 +7,7 @@ import { noop } from 'lodash';
 import { useState } from 'react';
 import { FormTemplateItem } from './FormTemplateItem';
 import { ProcessClientError } from '../gizmo/ProcessClientError';
+import { useApplicationInfo } from '../context/ApplicationInfoProvider';
 
 export type CreateComponentFormType = Pick<
   ProtoComponent,
@@ -116,6 +117,9 @@ export function CreateComponentModal({
 
 export function useCreateComponentModal(packageId?: ID, appId?: ID) {
   const [isOpen, setIsOpen] = useState(false);
+  const app = useApplicationInfo();
+  if (!appId && app) appId = app.id;
+  if (!packageId && app) packageId = app.mainPackage.id;
   async function onSave(data: CreateComponentFormType) {
     if (!packageId) {
       console.warn('需要packageId');

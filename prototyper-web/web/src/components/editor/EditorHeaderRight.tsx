@@ -10,7 +10,7 @@ export function EditorHeaderRight({ mode }: { mode: EditorMode }) {
   const [closing, setClosing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
-  const appId = router.query.appId as string | undefined;
+  const appId = router.query.id as string | undefined;
   const href = appId ? `/app/${encodeURIComponent(appId)}` : '/';
   const clickHerf = (e: React.MouseEvent) => {
     e.preventDefault();

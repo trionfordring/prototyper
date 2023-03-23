@@ -94,11 +94,11 @@ export function ComponentCard({
           passHref
           key={componentInfo.id}
           href={{
-            pathname: '/edit/[namespace]/[name]',
+            pathname: '/edit/[id]/[name]',
             query: {
               namespace: application.mainPackage!.name,
               name: componentInfo.name,
-              appId: application.id,
+              id: application.id,
             },
           }}
         >

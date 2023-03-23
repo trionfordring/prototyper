@@ -1,7 +1,9 @@
+import { ApplicationInfoProvider } from '@/components/context/ApplicationInfoProvider';
 import { ComponentEditor } from '@/components/editor';
 import { ErrorPage } from '@/components/gizmo/ErrorPage';
 import { LoadingPage } from '@/components/gizmo/LoadingPage';
-import { useFlatDevDependencies, usePackageByName } from '@/remote/package';
+import { useApplicationById } from '@/remote/application';
+import { useFlatDevDependencies } from '@/remote/package';
 import { isNil } from 'lodash';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -10,8 +12,10 @@ import { useMemo } from 'react';
 export default function Page() {
   const router = useRouter();
   const name = router.query.name as string;
-  const namespace = router.query.namespace as string;
-  const { pkg } = usePackageByName(namespace);
+  const appId = router.query.id as string;
+  const { application } = useApplicationById(appId);
+  const pkg = application.mainPackage;
+  const namespace = pkg.name;
   const { flatDevDependencies } = useFlatDevDependencies(pkg?.id);
   const componentInfo = useMemo(() => {
     if (isNil(pkg)) return undefined;
@@ -26,13 +30,15 @@ export default function Page() {
       <Head>
         <title>{`正在编辑[${componentInfo.name}]`}</title>
       </Head>
-      <ComponentEditor
-        resources={flatDevDependencies}
-        index={{
-          name,
-          namespace,
-        }}
-      />
+      <ApplicationInfoProvider application={application}>
+        <ComponentEditor
+          resources={flatDevDependencies}
+          index={{
+            name,
+            namespace,
+          }}
+        />
+      </ApplicationInfoProvider>
     </>
   );
 }
