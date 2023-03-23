@@ -5,7 +5,8 @@ import { PageMain } from '@/layout/PageMain';
 import { FileAddOutlined } from '@ant-design/icons';
 import { Button, Card, Divider, Input } from 'antd';
 import { groupBy, identity, map, toLower, trim } from 'lodash';
-import { useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 const ListBox = styled.div`
@@ -21,8 +22,8 @@ const Header = styled.div`
 `;
 
 function match(searchKey?: string, matchStr?: string) {
-  if (!searchKey) return true;
-  if (!matchStr) return false;
+  if (!searchKey || typeof searchKey !== 'string') return true;
+  if (!matchStr || typeof matchStr !== 'string') return false;
   const keys = searchKey.split(' ').map(trim).map(toLower).filter(identity);
   const toBeMatch = toLower(matchStr);
   return !keys.some((key) => !toBeMatch.includes(key));
@@ -31,7 +32,14 @@ function match(searchKey?: string, matchStr?: string) {
 export default function Page() {
   const application = useApplicationInfo();
   const { modalNode, open } = useCreateComponentModal();
-  const [searchKey, setSearchKey] = useState<string | undefined>();
+  const router = useRouter();
+  const [searchKey, setSearchKey] = useState<string | undefined>(
+    router.query.search as string
+  );
+  const [realTimeSearchKey, setRealTimeSearchKey] = useState<
+    string | undefined
+  >();
+  useEffect(() => setRealTimeSearchKey(searchKey), [searchKey]);
   const groupComponents = useMemo(() => {
     const datasrc = application.mainPackage?.components || [];
     const filtered = searchKey
@@ -55,8 +63,16 @@ export default function Page() {
               size="large"
               enterButton
               placeholder="检索组件"
+              value={realTimeSearchKey}
+              onChange={(e) => setRealTimeSearchKey(e.target.value)}
               onSearch={(k) => {
-                console.log(k);
+                router.replace({
+                  pathname: router.pathname,
+                  query: {
+                    ...router.query,
+                    search: k,
+                  },
+                });
                 setSearchKey(k);
               }}
             />
