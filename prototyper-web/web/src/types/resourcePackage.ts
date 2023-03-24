@@ -25,6 +25,7 @@ export interface ResourcePackage extends WithId, WithCreatedAndUpdatedAt {
   components?: ProtoComponent[];
   application?: SimpleApplication;
   draggers?: Dragger[];
+  catalogue?: JSONType;
 }
 
 export interface ResourceUrl extends WithId, WithCreatedAndUpdatedAt {

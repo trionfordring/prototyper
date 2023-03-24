@@ -1,4 +1,5 @@
 import { ComponentDescriptor, DefaultPropsType } from '../component';
+import { PropDeclear } from '../utils';
 
 /**
  * 封装了一个拖拽器的定义。
@@ -63,6 +64,10 @@ export interface ProtoDragger {
    * 原型对象的默认props
    */
   compProps?: DefaultPropsType;
+  /**
+   * props映射定义
+   */
+  compPropsMapper?: PropDeclear;
   /**
    * 是否将原型对象置为canvas。
    *

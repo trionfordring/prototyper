@@ -30,7 +30,11 @@ import { unwarpEntity } from './utils';
 import { useRemote } from './useRemote';
 import { graphql } from '@/utils/graphql';
 import { useMemo } from 'react';
-import { FragmentDraggerCollection } from './dragger';
+import {
+  FragmentDraggerCollection,
+  FragmentDraggerType,
+  resolveFragmentDragger,
+} from './dragger';
 import { Dragger } from '@/types/dragger';
 import { fetcher } from './fetcher';
 import { useAsyncMemo } from '@/hooks/useAsyncMemo';
@@ -84,6 +88,7 @@ export type MainPackageType = Pick<
   | 'dependencies'
   | 'devDependencies'
   | 'draggers'
+  | 'catalogue'
 > & {
   components: SimpleComponentType[];
 };
@@ -94,7 +99,7 @@ type _overrideMainPackageType = {
   dependencies: ResponseRelationCollectionFragmentType<FragmentSimplePackageType>;
   devDependencies: ResponseRelationCollectionFragmentType<FragmentSimplePackageType>;
   components: ResponseRelationCollectionFragmentType<FragmentSimpleComponentType>;
-  draggers: ResponseRelationCollectionFragmentType<Dragger>;
+  draggers: ResponseRelationCollectionFragmentType<FragmentDraggerType>;
 } & _overrideSimplePackageType;
 
 export type FragmentMainPackageType = Omit<
@@ -135,6 +140,7 @@ fragment mainPackage on Package {
   draggers {
     ...${FragmentDraggerCollection}
   }
+  catalogue
 }
 `;
 
@@ -191,7 +197,7 @@ export function resolveFragmentMainPackage(
     ),
     creator: unwarpEntity(creator.data),
     components: components.data.map((c) => resolveSimpleComponentEntity(c)),
-    draggers: draggers.data.map((d) => unwarpEntity(d)),
+    draggers: draggers.data.map((d) => resolveFragmentDragger(unwarpEntity(d))),
     ...others,
   };
 }
@@ -231,7 +237,14 @@ export function usePackageByName(name?: string | Nil) {
 
 export type PackageWithUrl = Pick<
   ResourcePackage,
-  'name' | 'version' | 'id' | 'umds' | 'dts' | 'draggers' | 'globalSymbols'
+  | 'name'
+  | 'version'
+  | 'id'
+  | 'umds'
+  | 'dts'
+  | 'draggers'
+  | 'globalSymbols'
+  | 'catalogue'
 > & {
   components: ComponentWithDataType[];
 };
@@ -242,7 +255,7 @@ export type FragmentPackageWithUrlType = Merge<
     umds: ResponseRelationCollectionFragmentType<ResourceUrl>;
     dts: ResponseRelationCollectionFragmentType<ResourceUrl>;
     components: ResponseRelationCollectionFragmentType<FragmentComponentWithDataType>;
-    draggers: ResponseRelationCollectionFragmentType<Dragger>;
+    draggers: ResponseRelationCollectionFragmentType<FragmentDraggerType>;
   }
 >;
 
@@ -281,6 +294,7 @@ query flatDependencies($id:ID!){
             draggers {
               ...${FragmentDraggerCollection}
             }
+            catalogue
           }
         }
       }
@@ -301,7 +315,7 @@ export function resolvePackageWithUrl(
     umds: umds.data.map(resolveUploadFileEntity),
     dts: dts.data.map(resolveUploadFileEntity),
     components: resolveComponentWithDataCollection(components),
-    draggers: draggers.data.map((d) => unwarpEntity(d)),
+    draggers: draggers.data.map((d) => resolveFragmentDragger(unwarpEntity(d))),
   };
 }
 

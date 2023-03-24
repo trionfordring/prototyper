@@ -58,6 +58,10 @@ export function ComponentPaneItem({ dragger }: { dragger: ProtoDragger }) {
       );
       return null;
     }
+    custom = {
+      displayName: dragger.label,
+      propsMapper: dragger.compPropsMapper,
+    };
   } else {
     props = {
       props: dragger.compProps,
@@ -65,6 +69,7 @@ export function ComponentPaneItem({ dragger }: { dragger: ProtoDragger }) {
     };
     custom = {
       displayName: dragger.label,
+      propsMapper: dragger.compPropsMapper,
     };
     component = ComponentRenderer;
   }

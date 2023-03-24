@@ -1,4 +1,4 @@
-import { ComponentPackage } from '@prototyper/core';
+import { ComponentPackage, PropDeclear } from '@prototyper/core';
 
 export const withDraggerRegister = (pkg: ComponentPackage) => {
   let category = pkg.namespace;
@@ -12,6 +12,7 @@ export const withDraggerRegister = (pkg: ComponentPackage) => {
     label: string,
     icon: React.ReactNode,
     defaultProps?: any,
+    mapper?: PropDeclear,
     canvas?: boolean
   ) => {
     pkg.addDragger({
@@ -27,6 +28,7 @@ export const withDraggerRegister = (pkg: ComponentPackage) => {
         name,
       },
       compProps: defaultProps,
+      compPropsMapper: mapper,
       canvas,
     });
   };
@@ -34,8 +36,9 @@ export const withDraggerRegister = (pkg: ComponentPackage) => {
     name: string,
     label: string,
     icon: React.ReactNode,
-    defaultProps?: any
-  ) => register(name, label, icon, defaultProps, true);
+    defaultProps?: any,
+    mapper?: PropDeclear
+  ) => register(name, label, icon, defaultProps, mapper, true);
   return {
     register,
     registerCanvas,

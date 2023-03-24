@@ -8,9 +8,17 @@ export const setupDraggers = (pkg: ComponentPackage) => {
 
   // 基本组件
   subcate(CATE_BASIC);
-  register('Typography', '文本', null, {
-    text: 'hello',
-  });
+  register(
+    'Typography',
+    '文本',
+    null,
+    {
+      text: 'hello',
+    },
+    {
+      text: 'fmtExpr',
+    }
+  );
   registerCanvas('Button', '按钮', null);
   registerCanvas('Div', '块级容器', null);
 
