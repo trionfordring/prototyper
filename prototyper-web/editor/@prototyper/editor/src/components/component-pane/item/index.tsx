@@ -12,8 +12,8 @@ import styled from 'styled-components';
 import { getSupportDraggerByType } from './draggers';
 
 const ItemBox = styled.div`
-  width: 5rem;
-  height: 6rem;
+  min-width: 5.2em;
+  min-height: 6.3em;
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -25,9 +25,10 @@ const ItemBox = styled.div`
 
 const ItemContent = styled.div`
   flex-grow: 1;
-  width: 100%;
-  height: 100%;
+  min-width: 5em;
+  min-height: 5em;
   overflow: hidden;
+  position: relative;
 `;
 
 const ItemTitle = styled(Typography.Text)`

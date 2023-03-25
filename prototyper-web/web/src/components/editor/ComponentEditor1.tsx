@@ -23,6 +23,7 @@ import { useEffectOnce } from '@/hooks/useEffectOnce';
 import { LoadingPage } from '../gizmo/LoadingPage';
 import { ErrorPage } from '../gizmo/ErrorPage';
 import { EditorTitle } from './EditorTitle';
+import { DraggerImg } from './DraggerImg';
 
 type EditorStateType = 'loading' | 'running' | 'error';
 
@@ -119,6 +120,20 @@ export function ComponentEditor1({
       indexPackage.addDragger({
         ...d,
         descriptor: d.component,
+        draggerProps: {
+          category: d.category,
+          subcategory: d.subcategory,
+          order: d.order,
+          renderer: DraggerImg,
+          rendererProps: d.img
+            ? {
+                src: d.img.url,
+                height: d.img.height,
+                width: d.img.width,
+                fit: d.imgSize,
+              }
+            : {},
+        },
       })
     );
     // 装入所有draggers

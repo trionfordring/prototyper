@@ -15,11 +15,14 @@ const Container = styled.div`
 
 export function NativeDragger({ dragger }: { dragger: ProtoDragger }) {
   const NativeComponent = dragger.draggerProps?.renderer;
+  const rendererProps = dragger.draggerProps?.rendererProps || {};
   if (!NativeComponent)
     return (
       <Container>
         <FileOutlined />
       </Container>
     );
-  return <NativeComponent></NativeComponent>;
+  return (
+    <NativeComponent {...rendererProps} dragger={dragger}></NativeComponent>
+  );
 }

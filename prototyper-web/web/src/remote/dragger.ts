@@ -16,6 +16,7 @@ fragment dragger on Dragger {
   canvas
   draggerProps
   compProps
+  compPropsMapper
   component {
     namespace
     name
@@ -30,6 +31,7 @@ fragment dragger on Dragger {
   img {
     ...${FragmentUploadFileEntity}
   }
+  imgSize
 }
 `;
 export type FragmentDraggerType = Merge<

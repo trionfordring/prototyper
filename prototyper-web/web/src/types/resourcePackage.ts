@@ -35,4 +35,6 @@ export interface ResourceUrl extends WithId, WithCreatedAndUpdatedAt {
   size: number;
   url: string;
   provider: string;
+  width?: number;
+  height?: number;
 }

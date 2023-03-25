@@ -17,6 +17,8 @@ fragment uploadFile on UploadFile {
   size
   url
   provider
+  width
+  height
 }
 `;
 

@@ -14,8 +14,8 @@ export default function Page() {
   const name = router.query.name as string;
   const appId = router.query.id as string;
   const { application } = useApplicationById(appId);
-  const pkg = application.mainPackage;
-  const namespace = pkg.name;
+  const pkg = application?.mainPackage;
+  const namespace = pkg?.name;
   const { flatDevDependencies } = useFlatDevDependencies(pkg?.id);
   const componentInfo = useMemo(() => {
     if (isNil(pkg)) return undefined;

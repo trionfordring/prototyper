@@ -48,14 +48,26 @@
       "type": "integer"
     },
     "img": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
+      ]
+    },
+    "compPropsMapper": {
+      "type": "json"
+    },
+    "imgSize": {
+      "type": "enumeration",
+      "enum": [
+        "fit",
+        "small"
       ],
-      "type": "media",
-      "multiple": false
+      "default": "fit"
     }
   }
 }
