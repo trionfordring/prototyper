@@ -1,6 +1,6 @@
 import { useApplicationInfo } from '@/components/context/ApplicationInfoProvider';
+import { EditCatalogue } from '@/components/dragger/EditCatalogue';
 import { FullPageCenter } from '@/components/gizmo/FullPageCenter';
-import { JsonView } from '@/components/gizmo/JsonView';
 import { PageMain } from '@/layout/PageMain';
 import { Card } from 'antd';
 
@@ -12,7 +12,7 @@ export default function Page() {
 
       <FullPageCenter>
         <Card>
-          <JsonView src={app.mainPackage}></JsonView>
+          <EditCatalogue initCatalogue={app.mainPackage.catalogue || []} />
         </Card>
       </FullPageCenter>
     </>

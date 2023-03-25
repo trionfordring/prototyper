@@ -30,12 +30,15 @@ function getLabel(catalogue: Category[], cate: string, subcate?: string) {
 type WithOrder = {
   order?: number;
 };
-function compareCate(a: WithOrder, b: WithOrder) {
+export function compareCategory(a: WithOrder, b: WithOrder) {
   const o1 = isNil(a.order) ? 0 : a.order;
   const o2 = isNil(b.order) ? 0 : b.order;
   return o2 - o1;
 }
-function sort(catalogue: Category[], cates: DraggersCatalogue) {
+export function sortByCatalogue(
+  catalogue: Category[],
+  cates: DraggersCatalogue
+) {
   cates.forEach((c) => {
     const record = catalogue.find((cata) => c.name === cata.name);
     c.order = record?.order;
@@ -47,9 +50,9 @@ function sort(catalogue: Category[], cates: DraggersCatalogue) {
     });
   });
   cates.forEach((cate) => {
-    cate.subcategories = cate.subcategories.sort(compareCate);
+    cate.subcategories = cate.subcategories.sort(compareCategory);
   });
-  return cates.sort(compareCate);
+  return cates.sort(compareCategory);
 }
 
 export function ComponentPane({
@@ -84,7 +87,7 @@ export function ComponentPane({
         ),
       })
     );
-    return sort(catalogue, draggersCatalogue);
+    return sortByCatalogue(catalogue, draggersCatalogue);
   }, [catalogue, draggers]);
   return (
     <Pane>
