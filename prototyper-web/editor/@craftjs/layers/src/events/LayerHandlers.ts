@@ -50,11 +50,10 @@ export class LayerHandlers extends DerivedCoreEventHandlers<{
             e.preventDefault();
 
             const { indicator, currentCanvasHovered } = LayerHandlers.events;
-
             if (
               currentCanvasHovered &&
               indicator &&
-              currentCanvasHovered.data.nodes
+              currentCanvasHovered.data.isCanvas
             ) {
               const heading = this.getLayer(
                 currentCanvasHovered.id
@@ -64,27 +63,49 @@ export class LayerHandlers extends DerivedCoreEventHandlers<{
                 e.clientY > heading.top + 10 &&
                 e.clientY < heading.bottom - 10
               ) {
-                const currNode =
-                  currentCanvasHovered.data.nodes[
-                    currentCanvasHovered.data.nodes.length - 1
-                  ];
+                if (
+                  !currentCanvasHovered.data.nodes ||
+                  currentCanvasHovered.data.nodes.length === 0
+                ) {
+                  LayerHandlers.events.indicator = {
+                    ...indicator,
+                    placement: {
+                      currentNode: null,
+                      index: 0,
+                      where: 'before',
+                      parent: currentCanvasHovered,
+                    },
+                    onCanvas: true,
+                  };
 
-                if (!currNode) {
-                  return;
+                  layerStore.actions.setIndicator(
+                    LayerHandlers.events.indicator
+                  );
+                } else {
+                  const currNode =
+                    currentCanvasHovered.data.nodes[
+                      currentCanvasHovered.data.nodes.length - 1
+                    ];
+
+                  if (!currNode) {
+                    return;
+                  }
+
+                  LayerHandlers.events.indicator = {
+                    ...indicator,
+                    placement: {
+                      currentNode: editorStore.query.node(currNode).get(),
+                      index: currentCanvasHovered.data.nodes.length,
+                      where: 'after',
+                      parent: currentCanvasHovered,
+                    },
+                    onCanvas: true,
+                  };
+
+                  layerStore.actions.setIndicator(
+                    LayerHandlers.events.indicator
+                  );
                 }
-
-                LayerHandlers.events.indicator = {
-                  ...indicator,
-                  placement: {
-                    currentNode: editorStore.query.node(currNode).get(),
-                    index: currentCanvasHovered.data.nodes.length,
-                    where: 'after',
-                    parent: currentCanvasHovered,
-                  },
-                  onCanvas: true,
-                };
-
-                layerStore.actions.setIndicator(LayerHandlers.events.indicator);
               }
             }
           }

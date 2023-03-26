@@ -2,6 +2,7 @@ import { PreDefinedElement, useElements } from '@prototyper/core';
 import {
   AutoCompleteSetter,
   BoolSetter,
+  HTMLSetter,
   SetterForm,
   TextSetter,
 } from '@prototyper/editor';
@@ -41,9 +42,6 @@ export const ButtonSettings = () => {
   const link = Form.useWatch('href', form);
   return (
     <SetterForm form={form}>
-      <TextSetter propName="onClick" label="当点击时"></TextSetter>
-
-      <TextSetter propName="className" label="类名" singleLine />
       <BoolSetter propName="block" label="块状样式" />
       <BoolSetter propName="danger" label="危险样式" />
       <BoolSetter propName="disabled" label="禁用按钮" />
@@ -150,6 +148,7 @@ export const ButtonSettings = () => {
         ]}
         placeholder="默认为default"
       />
+      <HTMLSetter />
     </SetterForm>
   );
 };

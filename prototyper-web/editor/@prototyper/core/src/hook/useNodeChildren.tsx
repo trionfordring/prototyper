@@ -10,13 +10,7 @@ export const useNodeChildren = () => {
   const children = useMemo(() => {
     let ans = nodeChildren;
     if (nodes && nodes.length > 0) {
-      ans = (
-        <React.Fragment>
-          {nodes.map((id: NodeId) => (
-            <NodeElement id={id} key={id} />
-          ))}
-        </React.Fragment>
-      );
+      ans = nodes.map((id: NodeId) => <NodeElement id={id} key={id} />);
     }
     return ans;
   }, [nodeChildren, nodes]);

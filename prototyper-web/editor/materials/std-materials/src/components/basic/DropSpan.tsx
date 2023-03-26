@@ -22,10 +22,12 @@ export const DropSpanNode = ({
   label: labelProp,
   dragoverLabel: dragoverLabelProp,
   direct,
+  noConnect = false,
 }: PropsWithChildren<{
   label?: NodeProvider;
   dragoverLabel?: NodeProvider;
   direct?: boolean;
+  noConnect?: boolean;
 }>) => {
   const { dragover } = useNode((state) => ({
     dragover: state.events.dragover,
@@ -47,7 +49,7 @@ export const DropSpanNode = ({
     <>
       {usePlaceholder(
         <DropSpanContainer
-          ref={connectAndDrag}
+          ref={noConnect ? undefined : connectAndDrag}
           style={{
             backgroundColor: dragover ? '#d9f7be' : undefined,
           }}
@@ -65,14 +67,21 @@ export const DropSpan = ({
   label,
   dragoverLabel,
   id,
+  noConnect,
 }: PropsWithChildren<{
   id?: string;
   label?: NodeProvider;
   dragoverLabel?: NodeProvider;
+  noConnect?: boolean;
 }>) => {
   if (!id)
     return (
-      <DropSpanNode label={label} dragoverLabel={dragoverLabel} direct>
+      <DropSpanNode
+        label={label}
+        dragoverLabel={dragoverLabel}
+        noConnect={noConnect}
+        direct
+      >
         {children}
       </DropSpanNode>
     );

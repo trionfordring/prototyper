@@ -70,7 +70,7 @@ const IconBox = styled.div`
   margin: 0 auto;
 `;
 
-const TypeTagInput = ({
+export const TypeTagInput = ({
   allow,
   value,
   onChange,
@@ -115,11 +115,7 @@ const TypeTagInput = ({
     ></Segmented>
   );
   return (
-    <Popover
-      title="选择类型"
-      content={selector}
-      getPopupContainer={(trigger) => trigger}
-    >
+    <Popover title="选择类型" content={selector}>
       <TypeTag type={value} />
     </Popover>
   );

@@ -34,7 +34,7 @@ export const getDOMInfo = (el: HTMLElement) => {
     }
 
     if (
-      parentStyle.display === 'flex' &&
+      String(parentStyle.display).endsWith('flex') &&
       parentStyle['flex-direction'] !== 'column'
     ) {
       return;

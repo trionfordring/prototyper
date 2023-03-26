@@ -16,7 +16,7 @@ import { DropAreaContainer } from '../basic';
 export const GridRow = ({ colNum, ...props }: { colNum: number }) => {
   const { connectAndDrag } = useConnectors();
   const colElements = useMemo(() => {
-    const newColElements = [];
+    const newColElements: any[] = [];
     for (let i = 0; i < colNum; i++) {
       const element = {
         id: String(i),
@@ -32,7 +32,7 @@ export const GridRow = ({ colNum, ...props }: { colNum: number }) => {
   const cols = usePlaceholder(
     <DropAreaContainer>点此编辑栅格</DropAreaContainer>,
     () => {
-      const nodes = [];
+      const nodes: any[] = [];
       for (let i = 0; i < colNum; i++) {
         const id = String(i);
         nodes.push(<PreDefinedElement key={id} id={id} />);

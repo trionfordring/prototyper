@@ -7,7 +7,7 @@ export const usePlaceholder = (
   contentProvider?: NodeProvider,
   renderPlaceholderProvider?: NodeProvider
 ) => {
-  const { editing } = useComponentContext();
+  const { editing } = useComponentContext()!;
   const content = getReactNode(contentProvider);
   if (content !== null && content !== undefined && content !== '')
     return content;

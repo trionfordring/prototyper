@@ -164,7 +164,7 @@ const NodeRenderer1: FC = () => {
           let err;
           // 基于loop上下文，计算realProps
           const realProps = Tool.try(() =>
-            propsExpr.run({
+            propsExpr?.run({
               ...exprContext,
               loop,
             })
@@ -186,7 +186,7 @@ const NodeRenderer1: FC = () => {
       }
       // 将映射完成的props渲染为react节点
       render = (
-        <React.Fragment>
+        <>
           {propsWithLoopList.map(({ realProps, loop, error }) => {
             if (error) {
               return (
@@ -203,12 +203,12 @@ const NodeRenderer1: FC = () => {
               </LoopContext.Provider>
             );
           })}
-        </React.Fragment>
+        </>
       );
     } else {
       // 如果无需循环，则直接渲染单个节点即可
       render = Tool.try(() => {
-        const realProps = propsExpr.run(exprContext);
+        const realProps = propsExpr?.run(exprContext);
         return getRender(type, realProps, children);
       }).catch((e) => {
         return <RenderError msg={`节点属性计算失败:${e.message}`} withPrefix />;

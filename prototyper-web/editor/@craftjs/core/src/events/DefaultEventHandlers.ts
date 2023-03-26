@@ -130,7 +130,11 @@ export class DefaultEventHandlers<O = {}> extends CoreEventHandlers<
           'mouseover',
           (e) => {
             e.craft.stopPropagation();
-            store.actions.setNodeEvent('hovered', id);
+            if (store.query.getEvent('dragged').isEmpty()) {
+              store.actions.setNodeEvent('hovered', id);
+            } else {
+              store.actions.setNodeEvent('dragover', id);
+            }
           }
         );
 
@@ -232,7 +236,8 @@ export class DefaultEventHandlers<O = {}> extends CoreEventHandlers<
               }
               store.actions.setNodeEvent('selected', selectedElementIds);
             }
-
+            actions.setNodeEvent('selected', null);
+            actions.setNodeEvent('hovered', null);
             actions.setNodeEvent('dragged', selectedElementIds);
 
             const selectedDOMs = selectedElementIds.map(
@@ -368,8 +373,8 @@ export class DefaultEventHandlers<O = {}> extends CoreEventHandlers<
     const draggedElementShadow = this.draggedElementShadow;
 
     const indicator = this.positioner.getIndicator();
-
     if (this.dragTarget && indicator && !indicator.error) {
+      console.log('drop', this.dragTarget, indicator);
       onDropNode(this.dragTarget, indicator);
     }
 

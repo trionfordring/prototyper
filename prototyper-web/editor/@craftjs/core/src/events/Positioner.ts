@@ -18,7 +18,8 @@ import { getNodesFromSelector } from '../utils/getNodesFromSelector';
  * Positioner is responsible for computing the drop Indicator during a sequence of drag-n-drop events
  */
 export class Positioner {
-  static BORDER_OFFSET = 10;
+  static BORDER_OFFSET_X = 10;
+  static BORDER_OFFSET_Y = 2;
 
   // Current Node being hovered on
   private currentDropTargetId: NodeId | null;
@@ -116,10 +117,10 @@ export class Positioner {
     const { top, bottom, left, right } = domInfo;
 
     if (
-      top + Positioner.BORDER_OFFSET > y ||
-      bottom - Positioner.BORDER_OFFSET < y ||
-      left + Positioner.BORDER_OFFSET > x ||
-      right - Positioner.BORDER_OFFSET < x
+      top + Positioner.BORDER_OFFSET_Y > y ||
+      bottom - Positioner.BORDER_OFFSET_Y < y ||
+      left + Positioner.BORDER_OFFSET_X > x ||
+      right - Positioner.BORDER_OFFSET_X < x
     ) {
       return true;
     }

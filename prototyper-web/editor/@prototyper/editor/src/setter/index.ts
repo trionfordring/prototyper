@@ -5,3 +5,5 @@ export * from './node';
 export * from './auto-complete';
 export * from './segmented';
 export * from './slider';
+export * from './antd';
+export * from './common';
