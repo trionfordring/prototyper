@@ -8,7 +8,7 @@ import { useConnectors } from '../../utils/useConnectors';
 import { useDebounceMemo } from '../../utils/useDebounceMemo';
 import { usePlaceholder } from '../../utils/usePlaceholder';
 
-const DropSpanContainer = styled.span`
+export const DropSpanContainer = styled.span`
   min-width: 1em;
   min-height: 18px;
 
@@ -22,12 +22,10 @@ export const DropSpanNode = ({
   label: labelProp,
   dragoverLabel: dragoverLabelProp,
   direct,
-  noConnect = false,
 }: PropsWithChildren<{
   label?: NodeProvider;
   dragoverLabel?: NodeProvider;
   direct?: boolean;
-  noConnect?: boolean;
 }>) => {
   const { dragover } = useNode((state) => ({
     dragover: state.events.dragover,
@@ -49,7 +47,7 @@ export const DropSpanNode = ({
     <>
       {usePlaceholder(
         <DropSpanContainer
-          ref={noConnect ? undefined : connectAndDrag}
+          ref={connectAndDrag}
           style={{
             backgroundColor: dragover ? '#d9f7be' : undefined,
           }}
@@ -67,21 +65,14 @@ export const DropSpan = ({
   label,
   dragoverLabel,
   id,
-  noConnect,
 }: PropsWithChildren<{
   id?: string;
   label?: NodeProvider;
   dragoverLabel?: NodeProvider;
-  noConnect?: boolean;
 }>) => {
   if (!id)
     return (
-      <DropSpanNode
-        label={label}
-        dragoverLabel={dragoverLabel}
-        noConnect={noConnect}
-        direct
-      >
+      <DropSpanNode label={label} dragoverLabel={dragoverLabel} direct>
         {children}
       </DropSpanNode>
     );

@@ -9,7 +9,7 @@ export const EditableLayerName = () => {
   const { displayName } = useEditor((state) => ({
     displayName:
       state.nodes[id] && state.nodes[id].data.custom.displayName !== undefined
-        ? state.nodes[id].data.custom.displayName
+        ? state.nodes[id]?.data.custom.displayName
         : state.nodes[id].data.displayName,
   }));
 

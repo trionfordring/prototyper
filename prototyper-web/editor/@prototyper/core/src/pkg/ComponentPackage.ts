@@ -13,7 +13,11 @@ export interface ComponentPackage {
   meta(): any;
   setMeta(meta: Setter): void;
   getComponent(name: string): (ProtoComponent & WithDescriptor) | undefined;
-  createComponent(component: CreateProtoComponentType & { name: string }): void;
+  createComponent(
+    component: CreateProtoComponentType & {
+      name?: string;
+    } & Partial<WithDescriptor>
+  ): void;
   addDragger(dragger: ProtoDragger): void;
   createCategory(
     name: string,

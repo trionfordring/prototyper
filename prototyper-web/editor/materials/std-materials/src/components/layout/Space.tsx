@@ -1,6 +1,7 @@
 import {
   AutoCompleteSetter,
   BoolSetter,
+  HTMLSetter,
   SetterForm,
   SizeSetter,
 } from '@prototyper/editor';
@@ -74,6 +75,7 @@ export const SpaceSettings = () => {
         label="自动换行"
         placeholder="仅在水平排列时有效"
       />
+      <HTMLSetter />
     </SetterForm>
   );
 };

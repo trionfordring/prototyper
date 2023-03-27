@@ -1,4 +1,9 @@
-import { SetterForm, SliderSetter, TextSetter } from '@prototyper/editor';
+import {
+  HTMLSetter,
+  SetterForm,
+  SliderSetter,
+  TextSetter,
+} from '@prototyper/editor';
 import { Col, ColProps } from 'antd';
 import React, { FC } from 'react';
 import { PropsWithChildren } from 'react';
@@ -57,6 +62,7 @@ export const GridColSettings = () => {
         jsOnly
         singleLine
       />
+      <HTMLSetter />
     </SetterForm>
   );
 };

@@ -10,26 +10,26 @@ import { JSExpression } from '../utils';
 export const useNodeCustom = () => {
   const { custom } = useNode((state) => ({ custom: state.data.custom }));
   const [forValExpr, forValExprError] = useMemo(() => {
-    if (!custom.forVal) return [new DirectExpression()];
+    if (!custom?.forVal) return [new DirectExpression()];
     return Tool.try<[Expression<any>, Error]>(() => [
       new JSExpression(custom.forVal, PROTO_EXPR_ARGS),
       null,
     ]).catch((e) => [null, e]);
-  }, [custom.forVal]);
+  }, [custom?.forVal]);
   const [forKeyExpr, forKeyExprError] = useMemo(() => {
-    if (!custom.forKey) return [new DirectExpression()];
+    if (!custom?.forKey) return [new DirectExpression()];
     return Tool.try<[Expression<any>, Error]>(() => [
       new FmtExpression(custom.forKey, PROTO_EXPR_ARGS),
       null,
     ]).catch((e) => [null, e]);
-  }, [custom.forKey]);
+  }, [custom?.forKey]);
   const [hiddenExpr, hiddenExprError] = useMemo(() => {
-    if (!custom.hiddenVal) return [new DirectExpression(false)];
+    if (!custom?.hiddenVal) return [new DirectExpression(false)];
     return Tool.try<[Expression<any>, Error]>(() => [
       new JSExpression(custom.hiddenVal, PROTO_EXPR_ARGS),
       null,
     ]).catch((e) => [null, e]);
-  }, [custom.hiddenVal]);
+  }, [custom?.hiddenVal]);
 
   return {
     forKeyExpr,

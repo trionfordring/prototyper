@@ -1,4 +1,4 @@
-import { BoolSetter, SetterForm } from '@prototyper/editor';
+import { BoolSetter, HTMLSetter, SetterForm } from '@prototyper/editor';
 import { Layout as AntdLayout } from 'antd';
 import React, { PropsWithChildren } from 'react';
 
@@ -19,6 +19,7 @@ export const LayoutSettings = () => {
   return (
     <SetterForm>
       <BoolSetter propName="hasSider" label="hasSider" />
+      <HTMLSetter />
     </SetterForm>
   );
 };

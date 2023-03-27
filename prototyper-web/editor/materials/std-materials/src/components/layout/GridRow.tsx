@@ -1,6 +1,7 @@
 import { PreDefinedElement, useElements } from '@prototyper/core';
 import {
   AutoCompleteSetter,
+  HTMLSetter,
   SetterForm,
   SliderSetter,
 } from '@prototyper/editor';
@@ -88,6 +89,7 @@ export const GridRowSettings = () => {
         ]}
         placeholder="默认为start"
       />
+      <HTMLSetter />
     </SetterForm>
   );
 };

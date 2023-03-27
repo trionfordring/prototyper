@@ -1,52 +1,57 @@
 import { useSetterContext } from '@prototyper/core';
 import {
   AutoCompleteSetter,
-  BoolSetter,
   HTMLSetter,
   SegmentedSetter,
   SetterForm,
   TextSetter,
 } from '@prototyper/editor';
-import { Typography as Ant, Form, Select } from 'antd';
+import { Form, Select } from 'antd';
 import React, { Fragment } from 'react';
 
 import { useConnectors } from '../../utils/useConnectors';
 import { usePlaceholder } from '../../utils/usePlaceholder';
 
-type TypographyType = 'title' | 'text' | 'paragraph' | 'link';
-function getTypographyComponent(type?: TypographyType) {
+type HTMLTextType = 'title' | 'text' | 'paragraph' | 'link';
+function getHTMLTextComponent(type?: HTMLTextType, level?: number) {
   switch (type) {
     case 'paragraph':
-      return Ant.Paragraph;
+      return 'p';
     case 'title':
-      return Ant.Title;
+      return 'h' + level;
     case 'text':
-      return Ant.Text;
+      return 'span';
     case 'link':
-      return Ant.Link;
+      return 'a';
     default:
-      return Ant.Text;
+      return 'span';
   }
 }
-export const Typography = ({
+export const HTMLText = ({
   text: textProps,
   domType,
+  level,
   ...props
 }: {
   text: string;
-  domType?: TypographyType;
+  domType?: HTMLTextType;
+  level?: number;
+  [key: string]: any;
 }) => {
   const { connectAndDrag } = useConnectors();
-  const TypoComponent = getTypographyComponent(domType);
+  const typoComponent = getHTMLTextComponent(domType, level);
   const text = usePlaceholder(() => '点击此处编辑文本', textProps);
-  return (
-    <TypoComponent ref={connectAndDrag} {...props}>
-      {text}
-    </TypoComponent>
+  return React.createElement(
+    typoComponent,
+    {
+      ...props,
+      ref: connectAndDrag,
+    },
+    text
   );
 };
 
-export const TypographySettings = () => {
+export const HTMLTextSettings = () => {
   const { runtimeDomType } = useSetterContext((props) => ({
     runtimeDomType: props.domType,
   }));
@@ -98,37 +103,6 @@ export const TypographySettings = () => {
           />
         </Fragment>
       ) : null}
-      <AutoCompleteSetter
-        propName="type"
-        label="文本类型"
-        options={[
-          {
-            label: <Ant.Text type="secondary">secondary(次要)</Ant.Text>,
-            value: 'secondary',
-          },
-          {
-            label: <Ant.Text type="success">success(成功)</Ant.Text>,
-            value: 'success',
-          },
-          {
-            label: <Ant.Text type="warning">warning(警告)</Ant.Text>,
-            value: 'warning',
-          },
-          {
-            label: <Ant.Text type="danger">danger(危险)</Ant.Text>,
-            value: 'danger',
-          },
-        ]}
-      />
-      <BoolSetter propName="code" label="代码样式" />
-      <BoolSetter propName="delete" label="删除线" />
-      <BoolSetter propName="editable" label="可否编辑" />
-      <BoolSetter propName="ellipsis" label="溢出省略" />
-      <BoolSetter propName="keyboard" label="键盘样式" />
-      <BoolSetter propName="mark" label="标记样式" />
-      <BoolSetter propName="strong" label="加粗" />
-      <BoolSetter propName="italic" label="斜体" />
-      <BoolSetter propName="underline" label="下划线" />
       <HTMLSetter />
     </SetterForm>
   );

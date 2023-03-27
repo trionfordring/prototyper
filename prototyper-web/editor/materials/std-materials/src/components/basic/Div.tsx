@@ -1,4 +1,4 @@
-import { SetterForm, TextSetter } from '@prototyper/editor';
+import { HTMLSetter, SetterForm } from '@prototyper/editor';
 import React, { HTMLAttributes } from 'react';
 import { PropsWithChildren } from 'react';
 
@@ -21,7 +21,7 @@ export const Div = ({
 export const DivSettings = () => {
   return (
     <SetterForm>
-      <TextSetter propName="className" label="类名" singleLine />
+      <HTMLSetter />
     </SetterForm>
   );
 };

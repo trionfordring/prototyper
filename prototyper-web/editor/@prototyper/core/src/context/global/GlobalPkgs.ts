@@ -44,7 +44,7 @@ function loadCode(
   }
 }
 
-function processComponent(
+export function prcessComponentScripts(
   self: PackagesRegistry,
   component: ProtoComponent & WithDescriptor
 ) {
@@ -74,7 +74,7 @@ export class PackagesRegistry {
   }
 
   addComponent(component: ProtoComponent & WithDescriptor) {
-    const comp = processComponent(this, component);
+    const comp = prcessComponentScripts(this, component);
     const { namespace, name } = comp.descriptor;
     let pkg = this.getPackage(namespace);
     if (!pkg) {

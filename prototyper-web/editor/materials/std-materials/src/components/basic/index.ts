@@ -4,6 +4,9 @@ import { Button, ButtonSettings } from './Button';
 import { Div, DivSettings } from './Div';
 import { DropAreaNode } from './DropArea';
 import { DropSpanNode } from './DropSpan';
+import { HTMLText, HTMLTextSettings } from './HTMLText';
+import { SlotBlock, SlotSettings } from './SlotBlock';
+import { SlotSpan } from './SlotSpan';
 import { TypographySettings, Typography } from './Typography';
 
 export { DropArea, DropAreaContainer } from './DropArea';
@@ -22,7 +25,7 @@ export const setupBasicComponents = (pkg: ComponentPackage) => {
     settings: ButtonSettings,
     component: Button,
     name: 'Button',
-    dependencies: [{ name: 'Typography', namespace: pkg.namespace }],
+    dependencies: [{ name: 'HTMLText', namespace: pkg.namespace }],
   });
 
   pkg.createComponent({
@@ -42,5 +45,27 @@ export const setupBasicComponents = (pkg: ComponentPackage) => {
     type: 'native',
     component: DropSpanNode,
     name: 'DropSpan',
+  });
+
+  pkg.createComponent({
+    type: 'native',
+    component: HTMLText,
+    settings: HTMLTextSettings,
+    name: 'HTMLText',
+  });
+
+  pkg.createComponent({
+    type: 'native',
+    component: SlotBlock,
+    settings: SlotSettings,
+    name: 'SlotBlock',
+    dependencies: [{ name: 'DropArea', namespace: pkg.namespace }],
+  });
+  pkg.createComponent({
+    type: 'native',
+    component: SlotSpan,
+    settings: SlotSettings,
+    name: 'SlotSpan',
+    dependencies: [{ name: 'DropSpan', namespace: pkg.namespace }],
   });
 };

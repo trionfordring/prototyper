@@ -83,6 +83,9 @@ export const deserializeNode = (
   resolver: Resolver
 ): Omit<NodeData, 'event'> => {
   const { type: Comp, props: Props, ...nodeData } = data;
+  if (!Comp) {
+    throw new Error(`找不到节点的类型信息:${JSON.stringify(data)}`);
+  }
 
   const isCompAnHtmlElement = Comp !== undefined && typeof Comp === 'string';
   const isCompAUserComponent =

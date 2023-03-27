@@ -13,21 +13,26 @@ export function createPackage(
   };
   const draggers: ProtoDragger[] = [];
   let meta = {};
-  const catalogue = [];
+  const catalogue: any[] = [];
   return {
     namespace,
     components: componentsStore,
     draggers,
     catalogue,
     createComponent: ({ name, ...component }) => {
+      const realName = name || component.descriptor?.name;
+      if (!realName)
+        throw new Error(
+          `[package-${namespace}]在注册组件时出现错误:找不到组件名.`
+        );
       const protoComponent = createProtoComponent({
         ...component,
         descriptor: {
           namespace,
-          name,
+          name: realName,
         },
       });
-      componentsStore[name] = protoComponent;
+      componentsStore[realName] = protoComponent;
     },
     getComponent(name) {
       const ans = componentsStore[name];
@@ -52,7 +57,7 @@ export function createPackage(
       meta = metaFn;
     },
     createCategory(name, label, order) {
-      const subcategories = [];
+      const subcategories: any[] = [];
       catalogue.push({
         name,
         label,

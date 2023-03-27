@@ -10,7 +10,7 @@ import { Button as AntdButton, Form } from 'antd';
 import React from 'react';
 import { FC, PropsWithChildren } from 'react';
 
-import { Typography } from './Typography';
+import { HTMLText } from './HTMLText';
 
 import { useConnectors } from '../../utils/useConnectors';
 import { usePlaceholder } from '../../utils/usePlaceholder';
@@ -22,8 +22,13 @@ export const Button: FC<PropsWithChildren> = ({ children, ...props }) => {
       : [
           {
             id: 'content',
-            is: Typography,
+            is: HTMLText,
             text: '按钮',
+            custom: {
+              propsMapper: {
+                text: 'fmtExpr',
+              },
+            },
           },
         ]
   );

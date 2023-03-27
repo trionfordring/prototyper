@@ -1,4 +1,4 @@
-import { BoolSetter, SetterForm } from '@prototyper/editor';
+import { BoolSetter, HTMLSetter, SetterForm } from '@prototyper/editor';
 import { Layout as AntdLayout } from 'antd';
 import React, { PropsWithChildren } from 'react';
 
@@ -21,6 +21,7 @@ export const SiderSettings = () => {
       <BoolSetter propName="collapsed" label="收起" />
       <BoolSetter propName="collapsible" label="可否收起" />
       <BoolSetter propName="defaultCollapsed" label="默认收起" />
+      <HTMLSetter />
     </SetterForm>
   );
 };

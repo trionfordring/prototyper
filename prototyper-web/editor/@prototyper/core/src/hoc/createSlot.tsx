@@ -1,3 +1,4 @@
+import { useNode } from '@craftjs/core';
 import React from 'react';
 
 import { RecoverComponentContext, useComponentContext } from '../context';
@@ -10,14 +11,16 @@ export const createSlot = (
   SlotMode: React.ComponentType,
   EditSlotMode: React.ComponentType
 ) => {
-  function Slot() {
-    const { editing } = useComponentContext()!;
+  function Slot(props: any) {
+    const { editing, root } = useComponentContext()!;
+    const { id: nodeId } = useNode();
     if (editing) {
-      return <EditSlotMode />;
+      return <EditSlotMode {...props} nodeId={nodeId} />;
     }
+    if (root) return null;
     return (
       <RecoverComponentContext>
-        <SlotMode />
+        <SlotMode {...props} nodeId={nodeId} />
       </RecoverComponentContext>
     );
   }

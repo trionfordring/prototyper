@@ -1,4 +1,4 @@
-import { SetterForm } from '@prototyper/editor';
+import { HTMLSetter, SetterForm } from '@prototyper/editor';
 import { Layout as AntdLayout } from 'antd';
 import React, { PropsWithChildren } from 'react';
 
@@ -16,5 +16,9 @@ export const Content = ({ children, ...props }: PropsWithChildren) => {
 };
 
 export const ContentSettings = () => {
-  return <SetterForm></SetterForm>;
+  return (
+    <SetterForm>
+      <HTMLSetter />
+    </SetterForm>
+  );
 };

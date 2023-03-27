@@ -1,6 +1,7 @@
 import {
   AutoCompleteSetter,
   BoolSetter,
+  HTMLSetter,
   SetterForm,
   TextSetter,
 } from '@prototyper/editor';
@@ -27,8 +28,6 @@ export const Divider = ({ children, ...props }: PropsWithChildren) => {
 export const DividerSettings = () => {
   return (
     <SetterForm>
-      <TextSetter propName="className" label="类名" singleLine />
-
       <BoolSetter propName="dashed" label="虚线" />
       <AutoCompleteSetter
         propName="orientation"
@@ -51,6 +50,7 @@ export const DividerSettings = () => {
         ]}
         placeholder="默认为horizontal"
       />
+      <HTMLSetter />
     </SetterForm>
   );
 };

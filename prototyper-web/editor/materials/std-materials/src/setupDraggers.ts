@@ -8,6 +8,7 @@ export const setupDraggers = (pkg: ComponentPackage) => {
 
   // 基本组件
   subcate(CATE_BASIC);
+  register('HTMLText', '原生文本', null, {}, { text: 'fmtExpr' });
   register(
     'Typography',
     '文本',
@@ -21,6 +22,8 @@ export const setupDraggers = (pkg: ComponentPackage) => {
   );
   registerCanvas('Button', '按钮', null);
   registerCanvas('Div', '块级容器', null);
+  register('SlotBlock', '块级插槽', null);
+  register('SlotSpan', '行级插槽', null);
 
   // 布局组件
   subcate(CATE_LAYOUT);
