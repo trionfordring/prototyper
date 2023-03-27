@@ -10,7 +10,7 @@ export const EditableLayerName = () => {
     displayName:
       state.nodes[id] && state.nodes[id].data.custom.displayName !== undefined
         ? state.nodes[id]?.data.custom.displayName
-        : state.nodes[id].data.displayName,
+        : state.nodes[id]?.data.displayName,
   }));
 
   return <h2>{displayName}</h2>;

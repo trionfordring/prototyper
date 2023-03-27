@@ -7,3 +7,4 @@ export * from './segmented';
 export * from './slider';
 export * from './antd';
 export * from './common';
+export * from './js';

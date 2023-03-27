@@ -9,15 +9,21 @@ import { RootSettings } from './settings/RootSettings';
 
 import { SerializedSettings } from '../../types/SerializedSettings';
 
+const Content = styled.div`
+  width: 450px;
+  pointer-events: auto;
+  z-index: 15;
+`;
+
 const Panel = styled.div`
-  width: 400px;
-  margin: 0 5px;
-  overflow: auto;
+  padding-left: 310px;
+  overflow-y: auto;
+  overflow-x: hidden;
   margin-left: auto;
   height: fit-content;
   position: relative;
-  z-index: 15;
   max-height: calc(100vh - 64px);
+  z-index: 1;
 `;
 
 const EditorRight: FC<{
@@ -33,20 +39,22 @@ const EditorRight: FC<{
   };
   return (
     <Panel>
-      <Collapse defaultActiveKey={['info', 'settings']}>
-        <Collapse.Panel header="组件信息" key="info">
-          <ComponentInfo></ComponentInfo>
-        </Collapse.Panel>
-        <Collapse.Panel header="组件设置" key="component-settings">
-          <RootSettings
-            onSettingsMetaChange={onSettingsMetaChange}
-            onEditComponentSettings={onEditComponentSettings}
-          ></RootSettings>
-        </Collapse.Panel>
-        <Collapse.Panel header={`节点设置${currentNode}`} key="settings">
-          <NodeSettings onSelected={onNodeSelected}></NodeSettings>
-        </Collapse.Panel>
-      </Collapse>
+      <Content>
+        <Collapse defaultActiveKey={['info', 'settings']}>
+          <Collapse.Panel header="组件信息" key="info">
+            <ComponentInfo></ComponentInfo>
+          </Collapse.Panel>
+          <Collapse.Panel header="组件设置" key="component-settings">
+            <RootSettings
+              onSettingsMetaChange={onSettingsMetaChange}
+              onEditComponentSettings={onEditComponentSettings}
+            ></RootSettings>
+          </Collapse.Panel>
+          <Collapse.Panel header={`节点设置${currentNode}`} key="settings">
+            <NodeSettings onSelected={onNodeSelected}></NodeSettings>
+          </Collapse.Panel>
+        </Collapse>
+      </Content>
     </Panel>
   );
 };

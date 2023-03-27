@@ -4,6 +4,7 @@ import {
   createShadow,
   useEditor,
 } from '@prototyper/core';
+import { ConfigProvider } from 'antd';
 import { noop } from 'lodash';
 import React, {
   forwardRef,
@@ -131,6 +132,7 @@ const NodeCanvas = ({
   container: React.ComponentType;
 }>) => {
   const Container = container ? container : FrameContainer;
+  const popoverContainerRef = useRef<HTMLDivElement>();
   const cache = useMemo(() => {
     return createCache();
   }, []);
@@ -138,15 +140,22 @@ const NodeCanvas = ({
   return (
     <StyleProvider container={shadowRoot} cache={cache}>
       <StyleSheetManager target={shadowRoot}>
-        <Container>
-          {children}
-          <IndicatorBox ref={indicatorBox} />
-          <NodeToolBar
-            container={() => indicatorBox.current}
-            relativePosition
-          />
-          <ComponentEditorFrame />
-        </Container>
+        <>
+          <div ref={popoverContainerRef}></div>
+          <ConfigProvider
+            getPopupContainer={() => popoverContainerRef.current!}
+          >
+            <Container>
+              {children}
+              <IndicatorBox ref={indicatorBox} />
+              <NodeToolBar
+                container={() => indicatorBox.current}
+                relativePosition
+              />
+              <ComponentEditorFrame />
+            </Container>
+          </ConfigProvider>
+        </>
       </StyleSheetManager>
     </StyleProvider>
   );

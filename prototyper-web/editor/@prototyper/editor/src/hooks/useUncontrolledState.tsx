@@ -16,5 +16,5 @@ export function useUncontrolledState<T>(
     [onChange, uncontrolledMode]
   );
   const state = uncontrolledMode ? uncontrolledVal : controlledState;
-  return [state, setState];
+  return [state as T, setState];
 }

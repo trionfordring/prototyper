@@ -64,6 +64,7 @@ const EditorMain = styled.div`
   height: calc(100% - 45px);
   position: relative;
   margin: 15px;
+  margin-right: -290px;
 `;
 function getEditorMeta(component: SerializedProtoComponent) {
   if (!component.meta) return undefined;

@@ -22,7 +22,7 @@
   },
   "sideEffects": true,
   "dependencies": {
-    "@ant-design/cssinjs": "^1.5.6",
+    "@ant-design/cssinjs": "1.7.1",
     "@ant-design/icons": "^5.0.1",
     "@craftjs/layers": "workspace:*",
     "@monaco-editor/react": "^4.4.6",

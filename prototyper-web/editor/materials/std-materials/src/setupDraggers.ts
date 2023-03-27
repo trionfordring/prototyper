@@ -1,6 +1,11 @@
 import { ComponentPackage } from '@prototyper/core';
 
-import { CATE_BASIC, CATE_LAYOUT, CATE_LAYOUT_PAGE } from './setupCate';
+import {
+  CATE_BASIC,
+  CATE_LAYOUT,
+  CATE_LAYOUT_PAGE,
+  CATE_NAVIGATOR,
+} from './setupCate';
 import { withDraggerRegister } from './utils/withDraggerRegister';
 
 export const setupDraggers = (pkg: ComponentPackage) => {
@@ -37,4 +42,33 @@ export const setupDraggers = (pkg: ComponentPackage) => {
   registerCanvas('Footer', '页脚', null);
   registerCanvas('Content', '主体', null);
   registerCanvas('Sider', '侧栏', null);
+
+  // 导航组件
+  subcate(CATE_NAVIGATOR);
+  register(
+    'Menu',
+    '导航菜单',
+    null,
+    {
+      items: `// @export(data)
+const data = [
+  { label: 'item', key: 'item' },
+  {
+    label: 'submenu',
+    key: 'submenu',
+    children: [
+      {
+        label: 'subitem',
+        key: 'subitem',
+      },
+    ],
+  },
+  { slot: 'item2', key: 'item2' },
+];`,
+      mode: 'horizontal',
+    },
+    {
+      items: 'jsExpr',
+    }
+  );
 };

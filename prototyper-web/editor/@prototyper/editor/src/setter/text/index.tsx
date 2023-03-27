@@ -5,6 +5,7 @@ import React, { useMemo } from 'react';
 import { FC } from 'react';
 
 import { FormItem } from '../form';
+import { LabelTooltipType } from '../types/SetterProps';
 
 export const TextSetter: FC<
   {
@@ -12,8 +13,9 @@ export const TextSetter: FC<
     label: string;
     singleLine?: boolean;
     jsOnly?: boolean;
+    tooltip?: LabelTooltipType;
   } & TextAreaProps
-> = ({ propName, label, singleLine, jsOnly, ...props }) => {
+> = ({ propName, label, singleLine, jsOnly, tooltip, ...props }) => {
   const placeholder = useMemo(() => {
     const k = propName;
     if (k.startsWith('on') || k.endsWith('val') || k.endsWith('Val')) {
@@ -28,6 +30,7 @@ export const TextSetter: FC<
       propName={propName}
       label={label}
       allow={jsOnly ? [JS_EXPR] : ['', FMT_EXPR, JS_EXPR]}
+      tooltip={tooltip}
     >
       <InputComponent
         placeholder={placeholder}

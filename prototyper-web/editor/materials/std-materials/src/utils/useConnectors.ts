@@ -1,4 +1,5 @@
 import { useNode } from '@prototyper/core';
+import { noop } from 'lodash';
 
 export const useConnectors = (disabled?: boolean) => {
   const {
@@ -6,7 +7,7 @@ export const useConnectors = (disabled?: boolean) => {
   } = useNode();
 
   return {
-    connect: disabled ? undefined : connect,
-    connectAndDrag: disabled ? undefined : (ref) => connect(drag(ref)),
+    connect: disabled ? noop : connect,
+    connectAndDrag: disabled ? noop : (ref) => connect(drag(ref)),
   };
 };

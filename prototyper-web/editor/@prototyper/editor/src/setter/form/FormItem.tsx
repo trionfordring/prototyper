@@ -13,12 +13,14 @@ export const FormItem = ({
   propName,
   label,
   allow: allowProp,
+  wide = false,
   ...props
 }: PropsWithChildren<
   {
     propName: string;
     label: string;
     allow?: (SimplePropDeclear | '')[];
+    wide?: boolean;
   } & FormItemProps
 >) => {
   const { propValue, propType } = useSetterContext((props, mapper) => ({
@@ -39,7 +41,13 @@ export const FormItem = ({
   const labelNode = (
     <React.Fragment>
       {!allow ? null : allow.length === 1 ? (
-        <TypeTag type={allow[0]} />
+        <Form.Item
+          name={['propsMapper', propName]}
+          initialValue={allow[0]}
+          noStyle
+        >
+          <TypeTag type={allow[0]} />
+        </Form.Item>
       ) : (
         <Form.Item
           name={['propsMapper', propName]}
@@ -57,7 +65,9 @@ export const FormItem = ({
       {...props}
       name={propName}
       label={labelNode}
-      initialValue={propValue}
+      initialValue={propValue || props.initialValue}
+      labelCol={wide ? { span: 24 } : undefined}
+      wrapperCol={wide ? { span: 24 } : undefined}
     >
       {children}
     </Form.Item>
