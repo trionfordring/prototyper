@@ -6,7 +6,7 @@ import {
   useApplicationContext,
   useEditor,
 } from '@prototyper/core';
-import React, { ElementType, useEffect } from 'react';
+import React, { ElementType, useEffect, useMemo, useRef } from 'react';
 
 import { AutoSettingsRender } from './RootSettings';
 
@@ -54,17 +54,29 @@ export const NodeSettings = ({
       selected,
     };
   });
+  const oldSelectedRef = useRef(selected);
+  const noRootSelected = useMemo(() => {
+    if (!selected || selected.id === ROOT_NODE) return oldSelectedRef.current;
+    const vt = selected.isVirtual && selected.descriptor;
+    const nt = selected.settings;
+    if (!vt && !nt) return oldSelectedRef.current;
+    oldSelectedRef.current = selected;
+    return selected;
+  }, [selected]);
   useEffect(() => {
     if (onSelected) {
-      if (selected && selected.id !== 'ROOT') onSelected(selected);
+      if (noRootSelected && noRootSelected.id !== 'ROOT')
+        onSelected(noRootSelected);
       else onSelected();
     }
-  }, [selected, onSelected]);
-  if (!selected || selected.id === ROOT_NODE) {
+  }, [noRootSelected, onSelected]);
+  if (!noRootSelected || noRootSelected.id === ROOT_NODE) {
     return <span>点击左侧画板选择一个节点</span>;
   }
-  if (selected.isVirtual && selected.descriptor) {
-    const component = applicationContext.getComponent(selected.descriptor);
+  if (noRootSelected.isVirtual && noRootSelected.descriptor) {
+    const component = applicationContext.getComponent(
+      noRootSelected.descriptor
+    );
     const editorMeta = component?.meta?.[META_EDITOR_KEY] as
       | ComponentEditorMeta
       | undefined;
@@ -74,20 +86,20 @@ export const NodeSettings = ({
         return <span>该组件没有可编辑属性。</span>;
       case 'component':
         return (
-          <SetterCommonContextProvider id={selected.id} virtual>
+          <SetterCommonContextProvider id={noRootSelected.id} virtual>
             <EmbeddedComponentRenderer descriptor={settingsMeta.descriptor} />
           </SetterCommonContextProvider>
         );
       case 'auto':
         return (
-          <SetterCommonContextProvider id={selected.id} virtual>
+          <SetterCommonContextProvider id={noRootSelected.id} virtual>
             <AutoSettingsRender struct={settingsMeta.settingsStruct} />
           </SetterCommonContextProvider>
         );
     }
   }
-  if (selected.settings) {
-    return React.createElement(selected.settings);
+  if (noRootSelected.settings) {
+    return React.createElement(noRootSelected.settings);
   } else {
     return <span>错误：找不到对应设置器。</span>;
   }
