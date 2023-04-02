@@ -170,3 +170,17 @@ mutation createComponent($param:ComponentInput!) {
     }
   }
 }`;
+
+export const DeleteComponentDocument = graphql<
+  {},
+  {
+    id: ID;
+  }
+>()`
+mutation deleteComponent($id:ID!) {
+  deleteComponent(id: $id) {
+    data {
+      id
+    }
+  }
+}`;

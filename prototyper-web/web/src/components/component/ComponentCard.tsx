@@ -8,7 +8,6 @@ import {
   InfoCircleOutlined,
   LoadingOutlined,
   StarFilled,
-  StarTwoTone,
 } from '@ant-design/icons';
 import {
   Card,
@@ -23,7 +22,10 @@ import Link from 'next/link';
 import { useApplicationInfo } from '../context/ApplicationInfoProvider';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { updateComponentDescription } from '@/remote/component';
+import {
+  updateComponentDescription,
+  useDeleteComponent,
+} from '@/remote/component';
 import { ApplicationPlayLink } from '../application/ApplicationPlayLink';
 
 const StyledCard = styled(Card)`
@@ -71,6 +73,7 @@ export function ComponentCard({
   const [description, setDescription] = useState(componentInfo.description);
   const label = componentInfo.label || componentInfo.name;
   const isIndex = application.index?.name === componentInfo.name;
+  const { deleteComponent } = useDeleteComponent();
   useEffect(() => {
     if (invaildDesc) {
       setInvaildDesc(false);
@@ -113,6 +116,18 @@ export function ComponentCard({
         key: 'delete',
         label: '删除组件',
         danger: true,
+        onClick: async () => {
+          try {
+            await deleteComponent(componentInfo.id);
+            message.success('操作成功');
+          } catch (e) {
+            message.error(
+              `删除组件[${
+                componentInfo.label || componentInfo.name
+              }]时出现错误!`
+            );
+          }
+        },
       },
     ],
   };
@@ -150,77 +165,79 @@ export function ComponentCard({
     </Tooltip>
   );
   return (
-    <StyledCard
-      className="hover-shadow"
-      title={
-        <>
-          {titleNode}
-          <Tooltip
-            placement="bottom"
-            title={
-              <span>
-                组件描述符:{application.mainPackage.name}-{componentInfo.name}
-              </span>
-            }
-          >
-            <InfoCircleOutlined className="descriptor-icon" />
-          </Tooltip>
-          {isIndex ? (
+    <>
+      {contextHolder}
+      <StyledCard
+        className="hover-shadow"
+        title={
+          <>
+            {titleNode}
             <Tooltip
               placement="bottom"
-              title={<span>该页面为当前应用的首页</span>}
-            >
-              <span className="index-icon">
-                <ApplicationPlayLink>
-                  <StarFilled />
-                </ApplicationPlayLink>
-              </span>
-            </Tooltip>
-          ) : null}
-        </>
-      }
-      extra={
-        disableEdit ? undefined : (
-          <Dropdown placement="bottom" trigger={['click']} menu={MoreMenu}>
-            <EllipsisOutlined className="more-icon" />
-          </Dropdown>
-        )
-      }
-    >
-      {contextHolder}
-      <Typography.Paragraph
-        ellipsis={{
-          rows: 3,
-          expandable: true,
-          symbol: '显示更多',
-        }}
-        editable={
-          disableEdit
-            ? undefined
-            : {
-                autoSize: true,
-                text: description,
-                onChange: (value) => {
-                  setDescription(value);
-                  setIsUpdating(true);
-                  updateComponentDescription(
-                    componentInfo.id,
-                    value,
-                    application.id
-                  )
-                    .catch(() => {
-                      messageApi.error('组件简介更新失败!');
-                      setInvaildDesc(true);
-                    })
-                    .finally(() => setIsUpdating(false));
-                },
+              title={
+                <span>
+                  组件描述符:{application.mainPackage.name}-{componentInfo.name}
+                </span>
               }
+            >
+              <InfoCircleOutlined className="descriptor-icon" />
+            </Tooltip>
+            {isIndex ? (
+              <Tooltip
+                placement="bottom"
+                title={<span>该页面为当前应用的首页</span>}
+              >
+                <span className="index-icon">
+                  <ApplicationPlayLink>
+                    <StarFilled />
+                  </ApplicationPlayLink>
+                </span>
+              </Tooltip>
+            ) : null}
+          </>
+        }
+        extra={
+          disableEdit ? undefined : (
+            <Dropdown placement="bottom" trigger={['click']} menu={MoreMenu}>
+              <EllipsisOutlined className="more-icon" />
+            </Dropdown>
+          )
         }
       >
-        {description || (
-          <Typography.Text type="secondary">还没有组件介绍</Typography.Text>
-        )}
-      </Typography.Paragraph>
-    </StyledCard>
+        <Typography.Paragraph
+          ellipsis={{
+            rows: 3,
+            expandable: true,
+            symbol: '显示更多',
+          }}
+          editable={
+            disableEdit
+              ? undefined
+              : {
+                  autoSize: true,
+                  text: description,
+                  onChange: (value) => {
+                    setDescription(value);
+                    setIsUpdating(true);
+                    updateComponentDescription(
+                      componentInfo.id,
+                      value,
+                      application.id
+                    )
+                      .catch(() => {
+                        messageApi.error('组件简介更新失败!');
+                        setInvaildDesc(true);
+                      })
+                      .finally(() => setIsUpdating(false));
+                  },
+                }
+          }
+        >
+          {description || (
+            <Typography.Text type="secondary">还没有组件介绍</Typography.Text>
+          )}
+        </Typography.Paragraph>
+      </StyledCard>
+    </>
   );
 }

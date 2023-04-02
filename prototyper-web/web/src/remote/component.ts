@@ -7,9 +7,12 @@ import { CreateComponentFormType } from '@/components/component/CreateComponentF
 import { ApplicationByIdDocument } from './application';
 import {
   CreateComponentDocument,
+  DeleteComponentDocument,
   UpdateComponentDataDocument,
   UpdateComponentDescriptionDocument,
 } from './component-gql';
+import { useApplicationInfo } from '@/components/context/ApplicationInfoProvider';
+import { FlatDevDependenciesDocument } from './package-gql';
 
 export async function updateComponentData(
   id: ID,
@@ -59,5 +62,22 @@ export async function createComponent(
   if (!isNil(appID)) {
     const key: FetchKey = [ApplicationByIdDocument, { id: appID }];
     await mutate(key);
+    mutate([FlatDevDependenciesDocument, { id: appID }]);
   }
+}
+
+export async function deleteComponent(cid: ID) {
+  await fetcher([DeleteComponentDocument, { id: cid }]);
+}
+
+export function useDeleteComponent() {
+  const appInfo = useApplicationInfo();
+  return {
+    async deleteComponent(cid: ID) {
+      await deleteComponent(cid);
+      const key: FetchKey = [ApplicationByIdDocument, { id: appInfo.id }];
+      await mutate(key);
+      mutate([FlatDevDependenciesDocument, { id: appInfo.mainPackage.id }]);
+    },
+  };
 }
