@@ -18,7 +18,7 @@ export type FetchKey<T = {}, A extends FetchVariables = {}> =
 const NULL_KEY_ERR = new Error('无法查询空key');
 const NULL_DOCUMENT_ERR = new Error('无法查询空的document');
 
-let authorization: string | null =
+export let authorization: string | null =
   typeof localStorage === 'object'
     ? LocalStorageTools.getItem('authorization')
     : null;

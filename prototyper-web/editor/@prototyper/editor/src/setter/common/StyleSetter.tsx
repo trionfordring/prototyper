@@ -131,18 +131,7 @@ export function StyleSetter() {
         return (
           <Form.Item
             label={
-              <Typography.Paragraph
-                ellipsis={{
-                  rows: 1,
-                  tooltip: {
-                    color: 'geekblue',
-                    title: e,
-                  },
-                }}
-                style={{
-                  margin: 0,
-                }}
-              >
+              <>
                 <Popconfirm
                   title={`确定要删除样式${e}吗?`}
                   onConfirm={() => removeStyle(e)}
@@ -156,8 +145,21 @@ export function StyleSetter() {
                 >
                   <TypeTagInput allow={['', JS_EXPR, FMT_EXPR]} />
                 </Form.Item>
-                <span>{e}</span>
-              </Typography.Paragraph>
+                <Typography.Paragraph
+                  ellipsis={{
+                    rows: 1,
+                    tooltip: {
+                      color: 'geekblue',
+                      title: e,
+                    },
+                  }}
+                  style={{
+                    margin: 0,
+                  }}
+                >
+                  <span>{e}</span>
+                </Typography.Paragraph>
+              </>
             }
             key={e}
             name={['style', camelCase(e)]}

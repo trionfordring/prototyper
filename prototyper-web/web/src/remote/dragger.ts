@@ -1,50 +1,18 @@
-import { fragment } from '@/utils/fragments';
-import { ResponseFragmentType, responseRelationCollection } from './fragments';
-import {
-  FragmentUploadFileEntity,
-  resolveUploadFileEntity,
-} from './uploadFile';
-import { Merge } from '@/types/api';
+import { resolveUploadFileEntity } from './uploadFile';
 import { Dragger } from '@/types/dragger';
-import { ResourceUrl } from '@/types/resourcePackage';
 import { isNil } from 'lodash';
-
-export const FragmentDragger = fragment`
-fragment dragger on Dragger {
-  label
-  type
-  canvas
-  draggerProps
-  compProps
-  compPropsMapper
-  component {
-    namespace
-    name
-  }
-  publishedAt
-  createdAt
-  updatedAt
-  
-  category
-  subcategory
-  order
-  img {
-    ...${FragmentUploadFileEntity}
-  }
-  imgSize
-}
-`;
-export type FragmentDraggerType = Merge<
-  Dragger,
-  {
-    img: ResponseFragmentType<ResourceUrl>;
-  }
->;
-
-export const FragmentDraggerCollection = responseRelationCollection(
-  'Dragger',
-  FragmentDragger
-);
+import { fetcher } from './fetcher';
+import { mutate } from 'swr';
+import { useApplicationInfo } from '@/components/context/ApplicationInfoProvider';
+import { ApplicationByIdDocument } from './application';
+import {
+  FragmentDraggerType,
+  CreateDraggerDocument,
+  DeleteDraggerDocument,
+} from './dragger-gql';
+import { ID } from '@/types/api';
+import { FlatDevDependenciesDocument } from './package-gql';
+import { useFlatDevDependenciesCached } from './package';
 
 export function resolveFragmentDragger(
   draggerData: FragmentDraggerType
@@ -57,5 +25,62 @@ export function resolveFragmentDragger(
   return {
     ...others,
     img: resolveUploadFileEntity(img.data),
+  };
+}
+
+async function createDragger(data: Dragger, packageId: ID) {
+  await fetcher([
+    CreateDraggerDocument,
+    {
+      data: {
+        ...data,
+        publishedAt: new Date(),
+        type: 'native',
+        canvas: false,
+        package: packageId,
+      },
+    },
+  ]);
+}
+
+export function useCreateDragger() {
+  const appInfo = useApplicationInfo();
+
+  return {
+    async createDragger(data: Dragger) {
+      await createDragger(data, appInfo.mainPackage.id);
+      await mutate([ApplicationByIdDocument, { id: appInfo.id }]);
+      mutate([FlatDevDependenciesDocument, { id: appInfo.mainPackage.id }]);
+    },
+  };
+}
+
+export function useDraggers() {
+  const appInfo = useApplicationInfo();
+  const { flatDevDependencies } = useFlatDevDependenciesCached(
+    appInfo?.mainPackage?.id
+  );
+  return {
+    draggers: flatDevDependencies?.flatMap((d) => d.draggers || []),
+  };
+}
+
+export async function deleteDragger(did: ID) {
+  await fetcher([
+    DeleteDraggerDocument,
+    {
+      id: did,
+    },
+  ]);
+}
+
+export function useDeleteDragger() {
+  const appInfo = useApplicationInfo();
+  return {
+    async deleteDragger(did: ID) {
+      await deleteDragger(did);
+      await mutate([ApplicationByIdDocument, { id: appInfo.id }]);
+      mutate([FlatDevDependenciesDocument, { id: appInfo.mainPackage.id }]);
+    },
   };
 }

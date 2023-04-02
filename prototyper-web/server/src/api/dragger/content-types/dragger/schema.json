@@ -68,6 +68,12 @@
         "small"
       ],
       "default": "fit"
+    },
+    "package": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::package.package",
+      "inversedBy": "draggers"
     }
   }
 }

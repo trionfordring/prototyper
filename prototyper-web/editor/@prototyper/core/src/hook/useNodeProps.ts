@@ -28,7 +28,7 @@ export const useNodeProps = () => {
       ),
       null,
     ]).catch((e) => [null, e]);
-  }, [props, mapperDeclear]);
+  }, [props, isVirtual, mapperDeclear]);
 
   return { propsExpr, error };
 };

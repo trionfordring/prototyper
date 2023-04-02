@@ -33,7 +33,7 @@ export const NodeSettings = ({
     while (currentNodeId && !selected) {
       const node = state.nodes[currentNodeId];
       if (!node) break;
-      const settings = node.related && node.related.settings;
+      const settings = (node.related && node.related.settings) || undefined;
       const isVirtual =
         node.data.type === state.options.resolver['ComponentRenderer'];
       if (!settings && !isVirtual) {

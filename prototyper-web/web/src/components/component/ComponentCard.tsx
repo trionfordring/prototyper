@@ -10,7 +10,15 @@ import {
   StarFilled,
   StarTwoTone,
 } from '@ant-design/icons';
-import { Card, Dropdown, MenuProps, Tooltip, Typography, message } from 'antd';
+import {
+  Card,
+  Dropdown,
+  MenuProps,
+  Space,
+  Tooltip,
+  Typography,
+  message,
+} from 'antd';
 import Link from 'next/link';
 import { useApplicationInfo } from '../context/ApplicationInfoProvider';
 import styled from 'styled-components';
@@ -77,9 +85,28 @@ export function ComponentCard({
         label: '编辑组件元信息',
       },
       {
-        icon: <ExportOutlined />,
         key: 'export',
-        label: '导出到拖拽面板',
+        label: (
+          <Link
+            passHref
+            legacyBehavior
+            href={{
+              pathname: '/app/[id]/draggers',
+              query: {
+                id: application.id,
+                createDraggerModal: true,
+                initialComponentName: componentInfo.name,
+              },
+            }}
+          >
+            <Typography.Link>
+              <Space>
+                <ExportOutlined />
+                导出到拖拽面板
+              </Space>
+            </Typography.Link>
+          </Link>
+        ),
       },
       {
         icon: <DeleteOutlined />,

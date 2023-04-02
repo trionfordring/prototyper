@@ -276,23 +276,28 @@ export function EventSetter() {
       {Array.from(eventList).map((e) => (
         <Form.Item
           label={
-            <Typography.Paragraph
-              ellipsis={{
-                rows: 1,
-                tooltip: {
-                  color: 'geekblue',
-                  title: e,
-                },
-              }}
-            >
+            <>
               <Popconfirm
                 title={`确定要删除事件${e}吗?`}
                 onConfirm={() => removeEvent(e)}
               >
                 <RomoveIcon />
               </Popconfirm>
-              <span>{e}</span>
-            </Typography.Paragraph>
+              <Typography.Paragraph
+                ellipsis={{
+                  rows: 1,
+                  tooltip: {
+                    color: 'geekblue',
+                    title: e,
+                  },
+                }}
+                style={{
+                  margin: 0,
+                }}
+              >
+                <span>{e}</span>
+              </Typography.Paragraph>
+            </>
           }
           key={e}
           name={e}

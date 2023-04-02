@@ -1,10 +1,10 @@
 import { HOST } from '@/env';
 import { ImgSizeType } from '@/types/dragger';
 import { FileOutlined } from '@ant-design/icons';
-import Image, { ImageLoader } from 'next/image';
+import Image from 'next/image';
 import styled from 'styled-components';
 
-const loader: ImageLoader = ({ src }) => {
+const getSrc = (src: string) => {
   let host = HOST;
   if (host.startsWith('//')) host = window.location.protocol + host;
   return host + src;
@@ -45,8 +45,8 @@ export function DraggerImg({
     <ImgContainer>
       <Image
         alt=""
-        loader={loader}
-        src={src}
+        unoptimized
+        src={getSrc(src)}
         width={width}
         height={height}
         className={`img-${fit}`}

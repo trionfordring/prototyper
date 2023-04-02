@@ -1,4 +1,4 @@
-import { MainPackageType, SimplePackageType } from '@/remote/package';
+import { MainPackageType, SimplePackageType } from '@/remote/package-gql';
 import { WithCreatedAndUpdatedAt, WithId } from './api';
 import { SimpleUser } from './user';
 import { ComponentDescriptor } from '@prototyper/core';

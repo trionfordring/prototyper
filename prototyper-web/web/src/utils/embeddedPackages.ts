@@ -20,11 +20,6 @@ function declear(pkgName: string, umdName: string, data: any) {
   if (typeof window !== 'object') throw new Error('找不到window对象，无法挂载');
   const root = window as any;
   root[umdName] = data;
-  const def = root.define;
-  if (typeof def === 'function') {
-    console.log('declear ', pkgName);
-    def(pkgName, [], data);
-  }
 }
 function setEmbeddedPackage(pkgName: string, umdName: string, data: any) {
   declear(pkgName, umdName, data);

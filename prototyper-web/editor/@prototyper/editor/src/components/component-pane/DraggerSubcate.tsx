@@ -35,7 +35,9 @@ export function DraggerSubcate({
         {draggersSubcategory.draggers.map((dragger) => (
           <ComponentPaneItem
             dragger={dragger}
-            key={withDescriptor(dragger.descriptor).toString()}
+            key={`${withDescriptor(dragger.descriptor).toString()}#${
+              dragger.label
+            }`}
           />
         ))}
       </Components>

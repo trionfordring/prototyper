@@ -1,153 +1,33 @@
-import { fragment } from '@/utils/fragments';
-import { FragmentSimpleUserEntity } from './user';
+import { Entity } from './fragments';
+import { resolveUploadFileEntity } from './uploadFile';
 import {
-  Entity,
-  ResponseFragmentType,
-  ResponseRelationCollectionFragmentType,
-  responseFragment,
-  responseRelationCollection,
-} from './fragments';
-import { ResourcePackage, ResourceUrl } from '@/types/resourcePackage';
-import { SimpleUser } from '@/types/user';
-import {
-  FragmentUploadFileCollection,
-  FragmentUploadFileType,
-  resolveUploadFileEntity,
-} from './uploadFile';
-import {
-  ComponentWithDataType,
-  FragmentComponentWithDataCollection,
-  FragmentComponentWithDataType,
-  FragmentSimpleComponentCollection,
-  FragmentSimpleComponentType,
-  SimpleComponentType,
+  UpdateComponentDescriptionDocument,
   resolveComponentWithDataCollection,
   resolveSimpleComponentEntity,
 } from './component-gql';
-import { ID, Merge, Nil, WithCreatedAndUpdatedAt } from '@/types/api';
+import { ID, JSONType, Nil } from '@/types/api';
 import { isNil } from 'lodash';
 import { unwarpEntity } from './utils';
 import { useRemote } from './useRemote';
 import { graphql } from '@/utils/graphql';
 import { useMemo } from 'react';
-import {
-  FragmentDraggerCollection,
-  FragmentDraggerType,
-  resolveFragmentDragger,
-} from './dragger';
-import { Dragger } from '@/types/dragger';
+import { resolveFragmentDragger } from './dragger';
 import { fetcher } from './fetcher';
 import { useAsyncMemo } from '@/hooks/useAsyncMemo';
-
-export const FragmentSimplePackage = fragment`
-fragment simplePackage on Package {
-  name
-  version
-  type
-  public
-  creator {
-    ...${FragmentSimpleUserEntity}
-  }
-}
-`;
-
-export const FragmentSimplePackageCollection = responseRelationCollection(
-  'Package',
-  FragmentSimplePackage
-);
-
-export const FragmentSimplePackageResponse = responseFragment(
-  'Package',
-  FragmentSimplePackage
-);
-
-export type SimplePackageType = Pick<
-  ResourcePackage,
-  'name' | 'version' | 'type' | 'public' | 'id'
-> & {
-  creator: SimpleUser;
-};
-
-type _overrideSimplePackageType = {
-  creator: ResponseFragmentType<SimpleUser>;
-};
-
-export type FragmentSimplePackageType = Merge<
+import {
+  FragmentSimplePackageType,
   SimplePackageType,
-  _overrideSimplePackageType
->;
-
-export type MainPackageType = Pick<
-  ResourcePackage,
-  | keyof FragmentSimplePackageType
-  | keyof WithCreatedAndUpdatedAt
-  | 'excludeDependencies'
-  | 'globalSymbols'
-  | 'umds'
-  | 'dts'
-  | 'dependencies'
-  | 'devDependencies'
-  | 'draggers'
-  | 'catalogue'
-> & {
-  components: SimpleComponentType[];
-};
-
-type _overrideMainPackageType = {
-  umds: ResponseRelationCollectionFragmentType<FragmentUploadFileType>;
-  dts: ResponseRelationCollectionFragmentType<FragmentUploadFileType>;
-  dependencies: ResponseRelationCollectionFragmentType<FragmentSimplePackageType>;
-  devDependencies: ResponseRelationCollectionFragmentType<FragmentSimplePackageType>;
-  components: ResponseRelationCollectionFragmentType<FragmentSimpleComponentType>;
-  draggers: ResponseRelationCollectionFragmentType<FragmentDraggerType>;
-} & _overrideSimplePackageType;
-
-export type FragmentMainPackageType = Omit<
+  FragmentMainPackageType,
   MainPackageType,
-  keyof _overrideMainPackageType
-> &
-  _overrideMainPackageType;
-
-export const FragmentMainPackage = fragment`
-fragment mainPackage on Package {
-  name
-  version
-  type
-  public
-  createdAt
-  updatedAt
-  publishedAt
-  excludeDependencies
-  globalSymbols
-  creator {
-    ...${FragmentSimpleUserEntity}
-  }
-  umds {
-    ...${FragmentUploadFileCollection}
-  }
-  dts {
-    ...${FragmentUploadFileCollection}
-  }
-  dependencies {
-    ...${FragmentSimplePackageCollection}
-  }
-  devDependencies {
-    ...${FragmentSimplePackageCollection}
-  }
-  components {
-    ...${FragmentSimpleComponentCollection}
-  }
-  draggers {
-    ...${FragmentDraggerCollection}
-  }
-  catalogue
-}
-`;
-
-export const FragmentMainPackageEntity = responseFragment(
-  'Package',
-  FragmentMainPackage
-);
+  FragmentMainPackage,
+  FlatDevDependenciesDocument,
+  FragmentPackageWithUrlType,
+  PackageWithUrl,
+  UpdatePackageCatalogueDocument,
+} from './package-gql';
+import { useApplicationInfo } from '@/components/context/ApplicationInfoProvider';
+import { mutate } from 'swr';
+import { ApplicationByIdDocument } from './application';
 
 export function resolveFragmentSimplePackage(
   pkg: FragmentSimplePackageType
@@ -235,73 +115,6 @@ export function usePackageByName(name?: string | Nil) {
   };
 }
 
-export type PackageWithUrl = Pick<
-  ResourcePackage,
-  | 'name'
-  | 'version'
-  | 'id'
-  | 'umds'
-  | 'dts'
-  | 'draggers'
-  | 'globalSymbols'
-  | 'catalogue'
-> & {
-  components: ComponentWithDataType[];
-};
-
-export type FragmentPackageWithUrlType = Merge<
-  PackageWithUrl,
-  {
-    umds: ResponseRelationCollectionFragmentType<ResourceUrl>;
-    dts: ResponseRelationCollectionFragmentType<ResourceUrl>;
-    components: ResponseRelationCollectionFragmentType<FragmentComponentWithDataType>;
-    draggers: ResponseRelationCollectionFragmentType<FragmentDraggerType>;
-  }
->;
-
-export const FlatDevDependenciesDocument = graphql<
-  {
-    package: ResponseFragmentType<
-      {
-        flatDevDependencies: Entity<FragmentPackageWithUrlType>[];
-      },
-      undefined
-    >;
-  },
-  {
-    id: ID;
-  }
->()`
-query flatDependencies($id:ID!){
-  package(id: $id) {
-    data {
-      attributes {
-        flatDevDependencies {
-          id
-          attributes {
-            name
-            version
-            globalSymbols
-            umds {
-              ...${FragmentUploadFileCollection}
-            }
-            dts {
-              ...${FragmentUploadFileCollection}
-            }
-            components {
-              ...${FragmentComponentWithDataCollection}
-            }
-            draggers {
-              ...${FragmentDraggerCollection}
-            }
-            catalogue
-          }
-        }
-      }
-    }
-  }
-}`;
-
 export function resolvePackageWithUrl(
   fragmentData: FragmentPackageWithUrlType
 ): PackageWithUrl;
@@ -319,6 +132,22 @@ export function resolvePackageWithUrl(
   };
 }
 
+export function useFlatDevDependenciesCached(pid?: ID) {
+  const { data, ...others } = useRemote(
+    isNil(pid) ? null : [FlatDevDependenciesDocument, { id: pid }]
+  );
+  const flatDevDependencies = useMemo<PackageWithUrl[] | undefined>(() => {
+    if (isNil(data)) return undefined;
+    return data.package.data.attributes.flatDevDependencies.map((fd) =>
+      resolvePackageWithUrl(unwarpEntity(fd))
+    );
+  }, [data]);
+  return {
+    ...others,
+    flatDevDependencies,
+  };
+}
+
 export function useFlatDevDependencies(id?: ID) {
   const data = useAsyncMemo(async () => {
     if (!id) return undefined;
@@ -332,5 +161,26 @@ export function useFlatDevDependencies(id?: ID) {
   }, [data]);
   return {
     flatDevDependencies,
+  };
+}
+
+export async function updateCatalogue(pid: ID, catalogue?: JSONType) {
+  await fetcher([
+    UpdatePackageCatalogueDocument,
+    {
+      id: pid,
+      catalogue: catalogue,
+    },
+  ]);
+}
+
+export function useUpdateCatalogue() {
+  const app = useApplicationInfo();
+  return {
+    async updateCatalogue(catalogue?: JSONType) {
+      if (!app) throw new Error('找不到app');
+      await updateCatalogue(app.mainPackage.id, catalogue);
+      await mutate([ApplicationByIdDocument, { id: app.id }]);
+    },
   };
 }

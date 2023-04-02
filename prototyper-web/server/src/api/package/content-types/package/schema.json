@@ -86,13 +86,14 @@
       "target": "api::application.application",
       "inversedBy": "mainPackage"
     },
+    "catalogue": {
+      "type": "json"
+    },
     "draggers": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::dragger.dragger"
-    },
-    "catalogue": {
-      "type": "json"
+      "target": "api::dragger.dragger",
+      "mappedBy": "package"
     }
   }
 }

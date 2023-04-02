@@ -11,10 +11,6 @@ import { Application, SimpleApplication } from '@/types/application';
 import { unwarpEntity } from './utils';
 import { FragmentSimpleUserEntity } from './user';
 import {
-  FragmentMainPackageEntity,
-  FragmentMainPackageType,
-  FragmentSimplePackageCollection,
-  FragmentSimplePackageType,
   resolveFragmentMainPackage,
   resolveFragmentSimplePackageEntity,
 } from './package';
@@ -22,6 +18,12 @@ import { FragmentComponentDescriptor } from './component-gql';
 import { useMemo } from 'react';
 import { isNil } from 'lodash';
 import { SimpleUser } from '@/types/user';
+import {
+  FragmentSimplePackageCollection,
+  FragmentMainPackageEntity,
+  FragmentSimplePackageType,
+  FragmentMainPackageType,
+} from './package-gql';
 
 const FragmentSimpleApplication = fragment`
 fragment simpleApplication on Application {

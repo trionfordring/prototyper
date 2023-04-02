@@ -61,7 +61,8 @@ export const RootSettings = ({
   const { settings: nativeSettings, meta: componentMeta = {} } =
     currentComponent;
   const { [META_EDITOR_KEY]: meta = {} } = componentMeta;
-  const { settings: settingsInfo } = meta as ComponentEditorMeta;
+  const { settings } = meta as ComponentEditorMeta;
+  const settingsInfo = settings as SerializedSettings & WithDescriptor;
   const [form] = Form.useForm();
   const [editing, setEditing] = useState(false);
   const [changed, setChanged] = useState(false);
@@ -75,8 +76,8 @@ export const RootSettings = ({
     if (!checked) form.submit();
     else
       form.setFieldsValue({
-        settingsStruct: settingsInfo?.settingsStruct,
-        descriptor: settingsInfo?.descriptor,
+        settingsStruct: (settingsInfo as any)?.settingsStruct,
+        descriptor: (settingsInfo as any)?.descriptor,
       });
     setEditing(checked);
   }

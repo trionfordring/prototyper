@@ -1,10 +1,13 @@
 import type { Category } from '@prototyper/core';
-import { isEmpty, isNil } from 'lodash';
-import { useState } from 'react';
+import { isEmpty, isNil, noop } from 'lodash';
+import { useEffect, useState } from 'react';
 import { EditableTabs } from '../gizmo/EditableTabs';
 import { useCreateCategoryModal } from './CreateCategory';
-import { Modal } from 'antd';
+import { Button, Modal, message } from 'antd';
 import { arrayMove } from '@dnd-kit/sortable';
+import { EditSubcategory } from './EditSubcategory';
+import { useUncontrolledState } from '@/hooks/useUncontrolledState';
+import { SaveOutlined } from '@ant-design/icons';
 
 export function compareCategory(a, b) {
   const o1 = isNil(a.order) ? 0 : a.order;
@@ -28,18 +31,33 @@ function sortCatalogue(catalogue: Category[]): Category[] {
 }
 
 export function EditCatalogue({
-  initCatalogue = [],
+  value,
+  onChange = noop,
+  onSave = noop,
+  initialValue = [],
 }: {
-  initCatalogue?: Category[];
+  value?: Category[];
+  initialValue?: Category[];
+  onChange?: (v: Category[]) => void;
+  onSave?: (v: Category[]) => void | Promise<void>;
 }) {
   const [modal, contextHolder] = Modal.useModal();
-  const [catalogue, setCatalogue] = useState(() =>
-    sortCatalogue(initCatalogue)
+  const [messageApi, messageNode] = message.useMessage();
+  const [isSaving, setIsSaving] = useState(false);
+  const [catalogue, setCatalogue] = useUncontrolledState(
+    value,
+    onChange,
+    initialValue
   );
+  useEffect(() => {
+    if (Array.isArray(value)) {
+      onChange(sortCatalogue(value));
+    }
+  }, [onChange, value]);
   const { modalNode, open } = useCreateCategoryModal(catalogue, (cate) => {
     setCatalogue((catalogue) => {
       const order = cate.order || 0;
-      const toBeInsert = catalogue.findLastIndex(
+      const toBeInsert = (catalogue as any).findLastIndex(
         (c) => (c.order || 0) >= order
       );
       const newArr = Array.from(catalogue);
@@ -52,11 +70,108 @@ export function EditCatalogue({
     <>
       {contextHolder}
       {modalNode}
+      {messageNode}
       <EditableTabs
+        tabBarExtraContent={
+          <Button
+            icon={<SaveOutlined />}
+            onClick={async () => {
+              setIsSaving(true);
+              try {
+                await onSave(catalogue);
+              } catch (e: any) {
+                messageApi.error('保存失败');
+              } finally {
+                setIsSaving(false);
+              }
+            }}
+            loading={isSaving}
+          >
+            保存目录
+          </Button>
+        }
         items={catalogue.map((category) => ({
           key: category.name,
           label: category.label || category.name,
-          children: <div></div>,
+          children: (
+            <EditSubcategory
+              category={category}
+              onSet={(name, subcate) => {
+                setCatalogue((catalogue) => {
+                  const cateIdx = catalogue.findIndex(
+                    (c) => c.name === category.name
+                  );
+                  if (cateIdx < 0) return catalogue;
+                  const cate = catalogue[cateIdx];
+                  const subcates = cate.subcategories || [];
+                  const toBeSetIdx = subcates.findIndex((c) => c.name === name);
+                  if (toBeSetIdx < 0) {
+                    subcates.push(subcate);
+                  } else {
+                    subcates[toBeSetIdx] = subcate;
+                  }
+                  catalogue[cateIdx].subcategories = [...subcates];
+                  return [...catalogue];
+                });
+              }}
+              onDelete={(name) => {
+                setCatalogue((catalogue) => {
+                  const cateIdx = catalogue.findIndex(
+                    (c) => c.name === category.name
+                  );
+                  if (cateIdx < 0) return catalogue;
+                  const cate = catalogue[cateIdx];
+                  const subcate = cate.subcategories || [];
+                  const toBeDeleteIdx = subcate.findIndex(
+                    (c) => c.name === name
+                  );
+                  if (toBeDeleteIdx < 0) return catalogue;
+                  subcate.splice(toBeDeleteIdx, 1);
+                  catalogue[cateIdx].subcategories = [...subcate];
+                  console.log(`移除子类目: ${cate.name}-${name}`, catalogue);
+                  return [...catalogue];
+                });
+              }}
+              onMove={(from, to, dir) => {
+                setCatalogue((catalogue) => {
+                  const cateIndex = catalogue.findIndex(
+                    (c) => c.name === category.name
+                  );
+                  if (cateIndex < 0) return catalogue;
+                  const cate = catalogue[cateIndex];
+                  const subcate = cate.subcategories || [];
+                  const fromIdx = subcate.findIndex((c) => c.name === from);
+                  let toIdx;
+                  if (to) toIdx = subcate.findIndex((c) => c.name === to);
+                  else if (dir === 'up') toIdx = 0;
+                  else {
+                    toIdx = isEmpty(subcate) ? 0 : subcate.length - 1;
+                  }
+                  const newSubcate = arrayMove(subcate, fromIdx, toIdx);
+                  newSubcate.forEach(
+                    (c, index) => (c.order = newSubcate.length - index)
+                  );
+                  cate.subcategories = newSubcate;
+                  catalogue[cateIndex] = cate;
+                  return [...catalogue];
+                });
+              }}
+              onCategoryMetaChange={(cateLike) => {
+                setCatalogue((catalogue) => {
+                  const cateIndex = catalogue.findIndex(
+                    (c) => c.name === category.name
+                  );
+                  if (cateIndex < 0) return catalogue;
+                  const cate = catalogue[cateIndex];
+                  catalogue[cateIndex] = {
+                    ...cate,
+                    ...cateLike,
+                  };
+                  return [...catalogue];
+                });
+              }}
+            />
+          ),
         }))}
         onTabOrderChange={(from, to, dir) => {
           setCatalogue((catalogue) => {

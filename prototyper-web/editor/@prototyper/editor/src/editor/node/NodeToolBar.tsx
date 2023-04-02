@@ -1,4 +1,4 @@
-import { useEditor, ROOT_NODE, Node } from '@prototyper/core';
+import { useEditor, ROOT_NODE } from '@prototyper/core';
 import React from 'react';
 
 import { NodeIndicator } from './NodeIndicator';

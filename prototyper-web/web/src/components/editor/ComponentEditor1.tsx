@@ -1,6 +1,5 @@
 import { notification } from 'antd';
 import { FullPage } from '../gizmo/FullPage';
-import { PackageWithUrl } from '@/remote/package';
 import {
   Category,
   ComponentDescriptor,
@@ -24,6 +23,8 @@ import { LoadingPage } from '../gizmo/LoadingPage';
 import { ErrorPage } from '../gizmo/ErrorPage';
 import { EditorTitle } from './EditorTitle';
 import { DraggerImg } from './DraggerImg';
+import { PackageWithUrl } from '@/remote/package-gql';
+import { identity } from 'lodash';
 
 type EditorStateType = 'loading' | 'running' | 'error';
 
@@ -141,8 +142,11 @@ export function ComponentEditor1({
     const finalDraggers = pkgs.flatMap((pkg) => pkg.draggers);
     setDraggers(finalDraggers);
     // 装入dragger的目录信息
-    const finalCatalogue = pkgs.flatMap((pkg) => pkg.catalogue);
-    setCatalogue(finalCatalogue);
+    const embeddedCatalogue = pkgs.flatMap((pkg) => pkg.catalogue);
+    const appCatalogue = resources
+      .flatMap((r) => r.catalogue || [])
+      .filter(identity);
+    setCatalogue([...embeddedCatalogue, ...appCatalogue]);
   }
 
   async function initMonaco() {
