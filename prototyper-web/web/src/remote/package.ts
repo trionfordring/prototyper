@@ -1,7 +1,6 @@
 import { Entity } from './fragments';
 import { resolveUploadFileEntity } from './uploadFile';
 import {
-  UpdateComponentDescriptionDocument,
   resolveComponentWithDataCollection,
   resolveSimpleComponentEntity,
 } from './component-gql';

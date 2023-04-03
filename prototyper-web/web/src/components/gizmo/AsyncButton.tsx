@@ -1,4 +1,4 @@
-import { Button, ButtonProps, Modal, ModalFuncProps } from 'antd';
+import { Button, ButtonProps, Modal } from 'antd';
 import { noop } from 'lodash';
 import { PropsWithChildren, forwardRef, useState } from 'react';
 

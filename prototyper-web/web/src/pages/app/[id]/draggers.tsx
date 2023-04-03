@@ -4,7 +4,6 @@ import { DraggerList } from '@/components/dragger/DraggerList';
 import { EditCatalogue } from '@/components/dragger/EditCatalogue';
 import { PageMain } from '@/layout/PageMain';
 import { useUpdateCatalogue } from '@/remote/package';
-import type { Category } from '@prototyper/core';
 import { Button, Card, Divider } from 'antd';
 import styled from 'styled-components';
 
@@ -26,31 +25,6 @@ const CatalogueCard = styled.div`
   width: 35vw;
   max-width: 1440px;
 `;
-
-const test: Category[] = [
-  {
-    name: 'test1',
-    label: '测试1',
-    subcategories: [
-      { name: '1-1', label: 'test' },
-      { name: '1-2', label: 'test' },
-      { name: '1-3', label: 'test' },
-    ],
-  },
-  {
-    name: 'test2',
-    label: '测试2',
-    subcategories: [
-      { name: '2-1', label: 'test' },
-      { name: '2-2', label: 'test' },
-    ],
-  },
-  {
-    name: 'test3',
-    label: '测试3',
-    subcategories: [],
-  },
-];
 
 export default function Page() {
   const app = useApplicationInfo();

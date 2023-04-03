@@ -2,7 +2,7 @@ import * as echarts from 'echarts/core';
 import { TooltipComponent } from 'echarts/components';
 import { TreemapChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { ResourceLineType } from './ResourceLine';
 

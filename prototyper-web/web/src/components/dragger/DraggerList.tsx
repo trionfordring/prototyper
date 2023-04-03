@@ -2,7 +2,7 @@ import { HOST } from '@/env';
 import { useDeleteDragger, useDraggers } from '@/remote/dragger';
 import { Dragger } from '@/types/dragger';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
-import { Button, Image, List, Typography } from 'antd';
+import { Image, List, Typography } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useApplicationInfo } from '../context/ApplicationInfoProvider';

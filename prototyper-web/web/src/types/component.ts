@@ -1,4 +1,4 @@
-import { SimplePackageType } from '@/remote/package';
+import { SimplePackageType } from '@/remote/package-gql';
 import { JSONType, WithCreatedAndUpdatedAt, WithId } from './api';
 
 export interface ProtoComponent extends WithId, WithCreatedAndUpdatedAt {

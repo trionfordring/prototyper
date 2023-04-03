@@ -37,6 +37,7 @@ export function ComponentEditor1({
 }) {
   const [id, setId] = useState<ID>();
   const [error, setError] = useState<Error | undefined>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [version, setVersion] = useState(0);
   const [notice, contextHolder] = notification.useNotification();
   const [editorState, setEditorState] = useState<EditorStateType>('loading');

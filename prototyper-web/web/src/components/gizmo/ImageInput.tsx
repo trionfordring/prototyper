@@ -4,7 +4,7 @@ import { authorization } from '@/remote';
 import { ID } from '@/types/api';
 import { ResourceUrl } from '@/types/resourcePackage';
 import { UploadOutlined } from '@ant-design/icons';
-import { Button, Upload, message } from 'antd';
+import { Upload, message } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import type { RcFile } from 'antd/es/upload';
 import { noop } from 'lodash';
@@ -26,6 +26,7 @@ export function ImageInput({
   onChange?: (v: ID) => void;
   defaultValue?: ID;
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [id, setId] = useUncontrolledState(value, onChange, defaultValue);
 
   return (

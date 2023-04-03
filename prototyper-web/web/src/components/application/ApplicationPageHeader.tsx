@@ -51,6 +51,15 @@ export function ApplicationPageHeader() {
           label: '导出库',
         },
         {
+          href: {
+            pathname: '/app/[id]/settings',
+            query: {
+              id: application.id,
+            },
+          },
+          label: '应用设置',
+        },
+        {
           href: '/',
           label: '返回主页',
         },

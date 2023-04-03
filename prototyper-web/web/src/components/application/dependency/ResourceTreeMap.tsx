@@ -1,21 +1,14 @@
 import { useApplicationInfo } from '@/components/context/ApplicationInfoProvider';
 import { useFlatDependenciesNoCache } from '@/remote/package';
 import { isEmpty } from 'lodash';
-import { Suspense, useMemo } from 'react';
+import { useMemo } from 'react';
 import { ResourceLineType } from './ResourceLine';
 import dynamic from 'next/dynamic';
 import type { TreeMapDataType } from '@/components/application/dependency/TreeMapGraph';
 import { Typography } from 'antd';
-import styled from 'styled-components';
-
 const Chart = dynamic(() => import('./TreeMapGraph'), {
   ssr: false,
 });
-
-const ChartPlaceholder = styled.div`
-  height: 400px;
-  width: 100%;
-`;
 
 export function ResourceTreeMap() {
   const appInfo = useApplicationInfo();
@@ -50,7 +43,13 @@ export function ResourceTreeMap() {
       totalSize,
     };
   }, [flatDependencies]);
-  if (!data) return <span>正在载入数据...</span>;
+  if (!data)
+    return (
+      <>
+        <span>正在载入数据...</span>
+        <Chart data={[]} />
+      </>
+    );
   return (
     <>
       <Typography.Paragraph>
@@ -59,9 +58,7 @@ export function ResourceTreeMap() {
         KB。预计载入时间
         {(10 + data.lines.length * 2 + data.totalSize / 5).toFixed(1)}ms
       </Typography.Paragraph>
-      <Suspense fallback={<ChartPlaceholder>正在载入图表</ChartPlaceholder>}>
-        <Chart data={data.chartData} />
-      </Suspense>
+      <Chart data={data.chartData} />
     </>
   );
 }
