@@ -24,6 +24,7 @@ import {
   FragmentPackageWithUrlType,
   PackageWithUrl,
   UpdatePackageCatalogueDocument,
+  FlatDependenciesDocument,
 } from './package-gql';
 import { useApplicationInfo } from '@/components/context/ApplicationInfoProvider';
 import { mutate } from 'swr';
@@ -161,6 +162,22 @@ export function useFlatDevDependencies(id?: ID) {
   }, [data]);
   return {
     flatDevDependencies,
+  };
+}
+
+export function useFlatDependenciesNoCache(id?: ID) {
+  const data = useAsyncMemo(async () => {
+    if (!id) return undefined;
+    return await fetcher([FlatDependenciesDocument, { id }]);
+  }, [id]);
+  const flatDependencies = useMemo<PackageWithUrl[] | undefined>(() => {
+    if (isNil(data)) return undefined;
+    return data.package.data.attributes.flatDependencies.map((fd) =>
+      resolvePackageWithUrl(unwarpEntity(fd))
+    );
+  }, [data]);
+  return {
+    flatDependencies,
   };
 }
 

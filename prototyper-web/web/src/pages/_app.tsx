@@ -1,17 +1,16 @@
 import '@/styles/globals.css';
+import { ConfigProvider } from 'antd';
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import zhCN from 'antd/lib/locale/zh_CN';
 
 export default function App({ Component, pageProps }: AppProps) {
   const Layout = useLayout();
-  if (Layout)
-    return (
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    );
-  return <Component {...pageProps} />;
+  let component = <Component {...pageProps} />;
+  if (Layout) component = <Layout>{component}</Layout>;
+  component = <ConfigProvider locale={zhCN}>{component}</ConfigProvider>;
+  return component;
 }
 
 const ApplicationLayout = dynamic(

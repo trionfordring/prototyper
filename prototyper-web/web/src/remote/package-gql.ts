@@ -145,6 +145,8 @@ export type PackageWithUrl = Pick<
   | 'draggers'
   | 'globalSymbols'
   | 'catalogue'
+  | 'type'
+  | 'public'
 > & {
   components: ComponentWithDataType[];
 };
@@ -172,7 +174,7 @@ export const FlatDevDependenciesDocument = graphql<
     id: ID;
   }
 >()`
-query flatDependencies($id:ID!){
+query flatDevDependencies($id:ID!){
   package(id: $id) {
     data {
       attributes {
@@ -182,6 +184,53 @@ query flatDependencies($id:ID!){
             name
             version
             globalSymbols
+            type
+            public
+            umds {
+              ...${FragmentUploadFileCollection}
+            }
+            dts {
+              ...${FragmentUploadFileCollection}
+            }
+            components {
+              ...${FragmentComponentWithDataCollection}
+            }
+            draggers {
+              ...${FragmentDraggerCollection}
+            }
+            catalogue
+          }
+        }
+      }
+    }
+  }
+}`;
+
+export const FlatDependenciesDocument = graphql<
+  {
+    package: ResponseFragmentType<
+      {
+        flatDependencies: Entity<FragmentPackageWithUrlType>[];
+      },
+      undefined
+    >;
+  },
+  {
+    id: ID;
+  }
+>()`
+query flatDependencies($id:ID!){
+  package(id: $id) {
+    data {
+      attributes {
+        flatDependencies {
+          id
+          attributes {
+            name
+            version
+            globalSymbols
+            type
+            public
             umds {
               ...${FragmentUploadFileCollection}
             }
