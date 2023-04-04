@@ -16,6 +16,7 @@ export function useUncontrolledState<T>(
     (v) => {
       if (uncontrolledMode) {
         setUncontrolledVal(v);
+        onChangeRef.current(v);
         return;
       }
       let data = v;

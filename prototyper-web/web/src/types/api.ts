@@ -11,6 +11,13 @@ export interface PageMeta {
   pageCount: number;
 }
 
+export interface PaginationArg {
+  page?: number;
+  pageSize?: number;
+  start?: number;
+  limit?: number;
+}
+
 export type ID = string;
 
 export interface WithId {

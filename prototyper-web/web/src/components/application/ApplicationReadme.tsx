@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { useApplicationInfo } from '../context/ApplicationInfoProvider';
-import { Markdown } from '../gizmo/Markdown';
 import { Card, Tooltip, Typography } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
+import { ReadmeMarkdown } from './ReadmeMarkdown';
 
 const Box = styled.div`
   margin: 12px auto;
@@ -36,7 +36,7 @@ export function ApplicationReadme({ disableEdit }: { disableEdit?: boolean }) {
             </EditBtn>
           </div>
         )}
-        <Markdown value={applicationInfo.readme} />
+        <ReadmeMarkdown value={applicationInfo.readme} />
       </Card>
     </Box>
   );

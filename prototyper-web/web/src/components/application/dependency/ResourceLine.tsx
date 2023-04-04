@@ -88,7 +88,7 @@ export function ResourceLine({
   );
 }
 
-function ResourceTypeTag({ type }: { type: PackageType }) {
+export function ResourceTypeTag({ type }: { type: PackageType }) {
   const props = useMemo<TagProps>(() => {
     switch (type) {
       case 'lib':

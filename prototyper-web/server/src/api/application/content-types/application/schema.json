@@ -23,11 +23,6 @@
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user"
     },
-    "dependencies": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::package.package"
-    },
     "initProps": {
       "type": "json"
     },

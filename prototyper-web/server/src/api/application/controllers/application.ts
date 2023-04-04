@@ -23,11 +23,14 @@ export default factories.createCoreController(
             name: params.name,
           },
           populate: {
-            dependencies: {
-              select: ['id'],
-            },
-            index: {
-              populate: ['package'],
+            index: {},
+            mainPackage: {
+              select: [],
+              populate: {
+                dependencies: {
+                  selet: ['id'],
+                },
+              },
             },
           } as any,
         });
@@ -35,8 +38,9 @@ export default factories.createCoreController(
           throw createError(404, `找不到名称为[${params.name}]的程序.`);
         }
         const index = app.index;
-        const depIds = app.dependencies.map((d) => d.id);
-        const flatIds = await previewDepSearcher(depIds);
+        const depIds = app?.mainPackage.dependencies?.map((d) => d.id) || [];
+        if (app?.mainPackage) depIds.push(app.mainPackage.id);
+        const flatIds = (await previewDepSearcher(depIds)) || [];
         const depsUnsorted = await pkgRepo.findMany({
           where: {
             id: {

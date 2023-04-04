@@ -1,14 +1,16 @@
 import { Button, ButtonProps, Modal } from 'antd';
 import { noop } from 'lodash';
-import { PropsWithChildren, forwardRef, useState } from 'react';
+import React, { PropsWithChildren, forwardRef, useState } from 'react';
+
+export type ComfirmOprions = {
+  title: React.ReactNode;
+  content?: React.ReactNode;
+};
 
 export const AsyncButton = forwardRef<
   HTMLElement,
   PropsWithChildren<ButtonProps> & {
-    comfirm?: {
-      title: React.ReactNode;
-      content?: React.ReactNode;
-    };
+    comfirm?: ComfirmOprions | (() => ComfirmOprions);
   }
 >((props, ref) => {
   const [modalApi, modalContext] = Modal.useModal();
@@ -22,17 +24,20 @@ export const AsyncButton = forwardRef<
       setLoading(false);
     }
   }
-  function handleOnClick(...args: any[]) {
-    if (props.comfirm) {
+  function handleOnClick(e: React.MouseEvent) {
+    let option = props.comfirm;
+    if (typeof option === 'function') option = option();
+    if (option) {
+      e.preventDefault();
       modalApi.confirm({
-        title: props.comfirm.title,
-        content: props.comfirm.content,
+        title: option.title,
+        content: option.content,
         onOk() {
-          doOnClick(...args);
+          doOnClick(e);
         },
       });
     } else {
-      doOnClick(...args);
+      doOnClick(e);
     }
   }
   return (

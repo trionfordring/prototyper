@@ -2,12 +2,18 @@ import { fragment } from '@/utils/fragments';
 import { FragmentSimpleUserEntity } from './user';
 import {
   Entity,
+  ResponseCollectionFragmentType,
   ResponseFragmentType,
   ResponseRelationCollectionFragmentType,
+  responseCollectionFragment,
   responseFragment,
   responseRelationCollection,
 } from './fragments';
-import { ResourcePackage, ResourceUrl } from '@/types/resourcePackage';
+import {
+  PackageType,
+  ResourcePackage,
+  ResourceUrl,
+} from '@/types/resourcePackage';
 import { SimpleUser } from '@/types/user';
 import {
   FragmentUploadFileCollection,
@@ -21,7 +27,14 @@ import {
   FragmentSimpleComponentType,
   SimpleComponentType,
 } from './component-gql';
-import { ID, JSONType, Merge, WithCreatedAndUpdatedAt } from '@/types/api';
+import {
+  ID,
+  JSONType,
+  Merge,
+  PageMeta,
+  PaginationArg,
+  WithCreatedAndUpdatedAt,
+} from '@/types/api';
 import { graphql } from '@/utils/graphql';
 import { FragmentDraggerType, FragmentDraggerCollection } from './dragger-gql';
 
@@ -37,6 +50,15 @@ fragment simplePackage on Package {
 }
 `;
 
+export const FragmentBasicPackage = fragment`
+fragment basicPackage on Package {
+  name
+  version
+  type
+  public
+}
+`;
+
 export const FragmentSimplePackageCollection = responseRelationCollection(
   'Package',
   FragmentSimplePackage
@@ -46,11 +68,12 @@ export const FragmentSimplePackageResponse = responseFragment(
   'Package',
   FragmentSimplePackage
 );
-
-export type SimplePackageType = Pick<
+export type BasicPackageType = Pick<
   ResourcePackage,
   'name' | 'version' | 'type' | 'public' | 'id'
-> & {
+>;
+
+export type SimplePackageType = BasicPackageType & {
   creator: SimpleUser;
 };
 
@@ -266,3 +289,41 @@ mutation updatePackageCatalogue($id: ID!, $catalogue: JSON) {
   }
 }
 `;
+
+export const BasicPackagePagedDocument = graphql<
+  {
+    packages: ResponseCollectionFragmentType<BasicPackageType>;
+  },
+  {
+    filters: any;
+    pagination?: PaginationArg;
+    sort?: string[];
+  }
+>()`
+query getBasicPackages($filters: PackageFiltersInput, $pagination: PaginationArg, $sort: [String]) {
+  packages(
+    filters: $filters
+    pagination: $pagination
+    sort: $sort
+  ) {
+    ...${responseCollectionFragment('Package', FragmentBasicPackage)}
+  }
+}
+`;
+
+export const UpdatePackageDepsDocument = graphql<
+  {},
+  {
+    id: ID;
+    dependencies: ID[];
+  }
+>()`
+mutation updatePackageDeps($id:ID!, $dependencies: [ID!]!) {
+  updatePackage(id: $id, data: {
+    dependencies: $dependencies
+  }) {
+    data{
+      id
+    }
+  }
+}`;

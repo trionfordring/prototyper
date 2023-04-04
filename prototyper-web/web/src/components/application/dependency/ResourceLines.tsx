@@ -4,20 +4,26 @@ import { isEmpty } from 'lodash';
 import { useMemo } from 'react';
 import { ResourceLineType, ResourceLine } from './ResourceLine';
 
-export function ResourceLines() {
+export function ResourceLines({
+  linesExclude = [],
+}: {
+  linesExclude?: string[];
+}) {
   const appInfo = useApplicationInfo();
   const { flatDependencies } = useFlatDependenciesNoCache(
     appInfo?.mainPackage.id
   );
   const data = useMemo(() => {
     if (isEmpty(flatDependencies)) return null;
-    const lines: ResourceLineType[] = flatDependencies.flatMap((dep) => {
-      if (isEmpty(dep.umds)) return [dep];
-      return dep.umds.map((umd) => ({
-        ...dep,
-        url: umd,
-      }));
-    });
+    const lines: ResourceLineType[] = flatDependencies
+      .flatMap((dep) => {
+        if (isEmpty(dep.umds)) return [dep];
+        return dep.umds.map((umd) => ({
+          ...dep,
+          url: umd,
+        }));
+      })
+      .filter((l) => !linesExclude.includes(l.name));
     const maxSize = lines.reduce((v, line) => {
       return Math.max(v, line?.url?.size || 0);
     }, 0);
@@ -25,7 +31,7 @@ export function ResourceLines() {
       lines,
       maxSize,
     };
-  }, [flatDependencies]);
+  }, [flatDependencies, linesExclude]);
   if (!data) return <span>正在载入数据...</span>;
   return (
     <>

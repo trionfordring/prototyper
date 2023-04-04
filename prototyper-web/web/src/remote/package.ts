@@ -4,8 +4,8 @@ import {
   resolveComponentWithDataCollection,
   resolveSimpleComponentEntity,
 } from './component-gql';
-import { ID, JSONType, Nil } from '@/types/api';
-import { isNil } from 'lodash';
+import { ID, JSONType, Nil, PageMeta, PaginationArg } from '@/types/api';
+import { isEmpty, isNil } from 'lodash';
 import { unwarpEntity } from './utils';
 import { useRemote } from './useRemote';
 import { graphql } from '@/utils/graphql';
@@ -24,6 +24,9 @@ import {
   PackageWithUrl,
   UpdatePackageCatalogueDocument,
   FlatDependenciesDocument,
+  BasicPackagePagedDocument,
+  BasicPackageType,
+  UpdatePackageDepsDocument,
 } from './package-gql';
 import { useApplicationInfo } from '@/components/context/ApplicationInfoProvider';
 import { mutate } from 'swr';
@@ -197,6 +200,92 @@ export function useUpdateCatalogue() {
       if (!app) throw new Error('找不到app');
       await updateCatalogue(app.mainPackage.id, catalogue);
       await mutate([ApplicationByIdDocument, { id: app.id }]);
+    },
+  };
+}
+
+export function useBasicPackages(
+  searchKey: string,
+  pagination?: PaginationArg,
+  sort?: string[]
+) {
+  const filters = useMemo(() => {
+    if (isEmpty(searchKey)) return {};
+    const keys = searchKey
+      .trim()
+      .split(' ')
+      .filter((k) => !isEmpty(k));
+    if (keys.length === 1) {
+      return {
+        name: {
+          containsi: keys[0],
+        },
+      };
+    }
+    const ands = keys.map((k) => ({
+      name: {
+        containsi: k,
+      },
+    }));
+    return {
+      and: ands,
+    };
+  }, [searchKey]);
+  const { data, ...others } = useRemote([
+    BasicPackagePagedDocument,
+    {
+      filters,
+      pagination,
+      sort,
+    },
+  ]);
+  const solvedData = useMemo<
+    | {
+        pageMeta: PageMeta;
+        packages: BasicPackageType[];
+      }
+    | undefined
+  >(() => {
+    if (!data) return undefined;
+    const { meta, data: d } = data.packages;
+    const packages: BasicPackageType[] = d.map((v) => unwarpEntity(v));
+    return { pageMeta: meta.pagination, packages };
+  }, [data]);
+  return {
+    ...others,
+    ...solvedData,
+  };
+}
+
+export async function loadBasicPackagesByIds(ids: ID[]) {
+  const data = await fetcher([
+    BasicPackagePagedDocument,
+    {
+      filters: {
+        id: {
+          in: ids,
+        },
+      },
+    },
+  ]);
+  if (isEmpty(data)) return [];
+  const packages: BasicPackageType[] = data.packages.data.map((v) =>
+    unwarpEntity(v)
+  );
+  return packages;
+}
+
+export async function updatePackageDeps(id: ID, deps: ID[]) {
+  await fetcher([UpdatePackageDepsDocument, { id, dependencies: deps }]);
+}
+
+export function useUpdatePackageDeps() {
+  const app = useApplicationInfo();
+  return {
+    async updatePackageDeps(deps: ID[]) {
+      await updatePackageDeps(app.mainPackage.id, deps);
+      await mutate([ApplicationByIdDocument, { id: app.id }]);
+      await mutate([FlatDependenciesDocument, { id: app.mainPackage.id }]);
     },
   };
 }

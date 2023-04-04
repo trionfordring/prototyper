@@ -10,20 +10,19 @@ import { ID, PageMeta } from '@/types/api';
 import { Application, SimpleApplication } from '@/types/application';
 import { unwarpEntity } from './utils';
 import { FragmentSimpleUserEntity } from './user';
-import {
-  resolveFragmentMainPackage,
-  resolveFragmentSimplePackageEntity,
-} from './package';
+import { resolveFragmentMainPackage } from './package';
 import { FragmentComponentDescriptor } from './component-gql';
 import { useMemo } from 'react';
 import { isNil } from 'lodash';
 import { SimpleUser } from '@/types/user';
 import {
-  FragmentSimplePackageCollection,
   FragmentMainPackageEntity,
-  FragmentSimplePackageType,
   FragmentMainPackageType,
 } from './package-gql';
+import type { ComponentDescriptor } from '@prototyper/core';
+import { fetcher } from './fetcher';
+import { useApplicationInfo } from '@/components/context/ApplicationInfoProvider';
+import { mutate } from 'swr';
 
 const FragmentSimpleApplication = fragment`
 fragment simpleApplication on Application {
@@ -47,12 +46,6 @@ fragment application on Application {
   creator {
     ...${FragmentSimpleUserEntity}
   }
-  dependencies(pagination: {
-    pageSize: $dependenciesPageSize
-    page: $dependenciesPage
-  }) {
-    ...${FragmentSimplePackageCollection}
-  }
   index {
     ...${FragmentComponentDescriptor}
   }
@@ -67,7 +60,6 @@ export const ApplicationByIdDocument = graphql<
     application: ResponseFragmentType<
       Omit<Application, 'id' | 'creator' | 'dependencies' | 'mainPackage'> & {
         creator: ResponseFragmentType<SimpleUser>;
-        dependencies: ResponseCollectionFragmentType<FragmentSimplePackageType>;
         mainPackage: ResponseFragmentType<FragmentMainPackageType>;
       }
     >;
@@ -76,7 +68,7 @@ export const ApplicationByIdDocument = graphql<
     id: ID;
   }
 >()`
-query applicationById($id:ID!, $dependenciesPageSize:Int!=10, $dependenciesPage:Int!=1) {
+query applicationById($id:ID!) {
   application(id: $id) {
     data {
       id
@@ -142,21 +134,16 @@ export function useApplicationById(id?: ID) {
           id,
           attributes: {
             creator: { data: creatorInfo },
-            dependencies: { data: dependencyEntities },
             mainPackage: { data: mainPkgEntity },
             ...applicationInfo
           },
         },
       },
     } = data;
-    const dependencies = dependencyEntities.map(
-      resolveFragmentSimplePackageEntity
-    );
     const mainPackage = resolveFragmentMainPackage(unwarpEntity(mainPkgEntity));
     return {
       ...applicationInfo,
       id,
-      dependencies,
       creator: unwarpEntity(creatorInfo),
       mainPackage,
     };
@@ -165,4 +152,50 @@ export function useApplicationById(id?: ID) {
     ...other,
     application,
   };
+}
+
+export type UpdateApplicationInfoProps = {
+  label?: string;
+  description?: string;
+  readme?: string;
+  index: ComponentDescriptor;
+};
+
+const UpdateApplicationDocument = graphql<
+  {},
+  {
+    id: ID;
+  } & UpdateApplicationInfoProps
+>()`
+mutation updateApplication(
+  $id: ID!
+  $label: String
+  $description: String
+  $readme: String
+  $index: ComponentComponentDescriptorInput!
+) {
+	updateApplication(id: $id, data: {
+    label: $label
+    description: $description
+    readme: $readme
+    index: $index
+  }) {
+    data {
+      id
+    }
+  }
+}`;
+
+export async function updateApplicationInfo(
+  aid: ID,
+  params: UpdateApplicationInfoProps
+) {
+  await fetcher([
+    UpdateApplicationDocument,
+    {
+      ...params,
+      id: aid,
+    },
+  ]);
+  await mutate([ApplicationByIdDocument, { id: aid }]);
 }
