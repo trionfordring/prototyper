@@ -30,7 +30,7 @@ export function useAuthChecker(optionsProp?: AuthCheckerOptionsType) {
         router.replace({
           pathname: '/login',
           query: {
-            source: router.pathname,
+            source: router.asPath,
           },
         });
       }

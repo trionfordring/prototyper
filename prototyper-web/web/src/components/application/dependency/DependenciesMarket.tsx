@@ -1,11 +1,9 @@
 import { useUncontrolledState } from '@/hooks/useUncontrolledState';
 import { useBasicPackages } from '@/remote/package';
-import { BasicPackageType } from '@/remote/package-gql';
 import { ID } from '@/types/api';
 import { LoadingOutlined } from '@ant-design/icons';
-import { Card, Input, Pagination, Spin } from 'antd';
-import { useEffect, useState } from 'react';
-import { DependenciesInput } from './DependenciesInput';
+import { Card, Input, Pagination, Space, Spin } from 'antd';
+import { useState } from 'react';
 import { DependenciesCheckbox } from './DependenciesCheckbox';
 import styled from 'styled-components';
 
@@ -65,6 +63,7 @@ export function DependenciesMarket({
   return (
     <div>
       <Input.Search
+        placeholder="通过名称检索"
         onSearch={(v) => {
           if (v === searchKey) return;
           setSearchKey(v);

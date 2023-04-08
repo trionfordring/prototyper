@@ -31,7 +31,6 @@ import {
   ID,
   JSONType,
   Merge,
-  PageMeta,
   PaginationArg,
   WithCreatedAndUpdatedAt,
 } from '@/types/api';

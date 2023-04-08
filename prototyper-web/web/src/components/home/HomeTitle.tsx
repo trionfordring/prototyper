@@ -38,15 +38,9 @@ const Title = styled.h1`
   letter-spacing: -0.1rem;
   gap: 18px;
   margin-bottom: 24px;
-  .newline {
-    width: 100%;
-  }
-  .pointer-img {
-    max-width: 44px;
-  }
-  .box-img {
-    max-width: 136px;
-  }
+`;
+const NewLine = styled.div`
+  width: 100%;
 `;
 const TitleImg = styled.img`
   object-fit: contain;
@@ -57,6 +51,13 @@ const TitleImg = styled.img`
   min-width: 20px;
   overflow: hidden;
   margin-left: 12px;
+`;
+const PointerImg = styled(TitleImg)`
+  max-width: 44px;
+`;
+
+const BoxImg = styled(TitleImg)`
+  max-width: 136px;
 `;
 const Content = styled.div`
   display: flex;
@@ -72,7 +73,7 @@ const Content = styled.div`
   margin-right: auto;
   color: rgba(0, 0, 0, 1);
   margin-top: 10px;
-  p {
+  > div {
     display: inline-flex;
   }
   .prefix {
@@ -138,36 +139,32 @@ export function HomeTitle() {
             <span className="lighter">Prototyper 低代码平台</span>
           </div>
           <div>
-            <TitleImg className="pointer-img" src="/home/pointer.png" />
+            <PointerImg width={44} src="/home/pointer.png" />
           </div>
           <span>用拖拽的方式</span>
           <div>
-            <TitleImg
-              className="box-img"
-              src="/home/box.svg"
-              sizes="(max-width: 638px) 16vw, (max-width: 998px) 14vw, 10vw"
-            />
+            <BoxImg width={136} src="/home/box.svg" />
           </div>
-          <div className="newline">
+          <NewLine>
             <span>快速构建你的</span>
             <span className="build-type" ref={typedEl}></span>
-          </div>
+          </NewLine>
         </Title>
         <Content>
-          <p>使用拖拽组件和模型驱动的逻辑来创建网页。</p>
+          <div>使用拖拽组件和模型驱动的逻辑来创建网页。</div>
           <br />
-          <p>
+          <div>
             <div className="prefix">Q:</div>
             <div>和其他低代码平台有什么区别呢?</div>
-          </p>
-          <p>
+          </div>
+          <div>
             <div className="prefix">A:</div>
             <div>
               更加自由，更加灵活！
               <br />
               复用组件，递归组件，循环组件，完全地控制DOM。
             </div>
-          </p>
+          </div>
         </Content>
         <Actions>
           <Space size="large">

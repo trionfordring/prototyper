@@ -9,7 +9,7 @@ import { useRemote } from './useRemote';
 import { ID, PageMeta } from '@/types/api';
 import { Application, SimpleApplication } from '@/types/application';
 import { unwarpEntity } from './utils';
-import { FragmentSimpleUserEntity } from './user';
+import { FragmentSimpleUserEntity, useMe } from './user';
 import { resolveFragmentMainPackage } from './package';
 import { FragmentComponentDescriptor } from './component-gql';
 import { useMemo } from 'react';
@@ -90,6 +90,7 @@ export const ApplicationsDocument = graphql<
   },
   {
     page?: number;
+    pageSize?: number;
   }
 >()`query applications($page: Int=1, $pageSize: Int=10) {
   applications(pagination: {
@@ -101,8 +102,62 @@ export const ApplicationsDocument = graphql<
 }
 `;
 
-export function useApplications(page: number) {
-  const { data, ...others } = useRemote([ApplicationsDocument, { page }]);
+export const UserApplicationsDocument = graphql<
+  {
+    applications: ResponseCollectionFragmentType<{
+      name: string;
+      label?: string;
+      description?: string;
+    }>;
+  },
+  {
+    page?: number;
+    pageSize?: number;
+    uid: ID;
+  }
+>()`query userApplications($page: Int=1, $pageSize: Int=10, $uid: ID!) {
+  applications(pagination: {
+    page: $page
+    pageSize: $pageSize
+  }, filters: {
+    creator: {
+      id: $uid
+    }
+  }) {
+    ...${responseCollectionFragment('Application', FragmentSimpleApplication)}
+  }
+}
+`;
+
+export function useApplications(page: number = 1, pageSize: number = 10) {
+  const { data, ...others } = useRemote([
+    ApplicationsDocument,
+    { page, pageSize },
+  ]);
+  const ret: typeof others & {
+    pagination?: PageMeta;
+    applications?: SimpleApplication[];
+  } = {
+    ...others,
+  };
+  if (data) {
+    const {
+      applications: {
+        meta: { pagination },
+        data: applicationEntities,
+      },
+    } = data;
+    ret.pagination = pagination;
+    ret.applications = applicationEntities.map((e) => unwarpEntity(e));
+  }
+  return ret;
+}
+
+export function useMyApplications(page: number = 1, pageSize: number = 10) {
+  const { me } = useMe();
+  const { data, ...others } = useRemote(
+    me ? [UserApplicationsDocument, { page, pageSize, uid: me.id }] : null
+  );
   const ret: typeof others & {
     pagination?: PageMeta;
     applications?: SimpleApplication[];
