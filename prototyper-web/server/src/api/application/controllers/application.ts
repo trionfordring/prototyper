@@ -90,7 +90,11 @@ export default factories.createCoreController(
       requireMaps.forEach(({symbol,name})=>globalPackagesRegistry.registerUmd(symbol,name));
       const components = ${extComponents};
       globalPackagesRegistry.addComponents(components);
-      PrototyperPreviewer.render(document.getElementById('root'), { namespace: '${index.namespace}', name: '${index.name}'});
+      ${
+        index && index.name && index.namespace
+          ? `PrototyperPreviewer.render(document.getElementById('root'), { namespace: '${index.namespace}', name: '${index.name}'});`
+          : ''
+      }
     </script>
   </body>
 </html>`;

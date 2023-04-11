@@ -1,4 +1,5 @@
 import { Button, Space } from 'antd';
+import Link from 'next/link';
 import { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import Typed from 'typed.js';
@@ -90,6 +91,7 @@ const Actions = styled.div`
   .btn {
     min-width: 10em;
     height: 50px;
+    line-height: 38px;
   }
   .market {
     background-color: black;
@@ -168,12 +170,16 @@ export function HomeTitle() {
         </Content>
         <Actions>
           <Space size="large">
-            <Button className="btn market" size="large">
-              查看应用市场
-            </Button>
-            <Button className="btn create" size="large">
-              创建应用
-            </Button>
+            <Link passHref legacyBehavior href="/applications">
+              <Button className="btn market" size="large">
+                查看应用市场
+              </Button>
+            </Link>
+            <Link passHref legacyBehavior href="/me/apps/create">
+              <Button className="btn create" size="large">
+                创建应用
+              </Button>
+            </Link>
           </Space>
         </Actions>
       </Left>

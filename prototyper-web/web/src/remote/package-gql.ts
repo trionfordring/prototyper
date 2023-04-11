@@ -9,11 +9,7 @@ import {
   responseFragment,
   responseRelationCollection,
 } from './fragments';
-import {
-  PackageType,
-  ResourcePackage,
-  ResourceUrl,
-} from '@/types/resourcePackage';
+import { ResourcePackage, ResourceUrl } from '@/types/resourcePackage';
 import { SimpleUser } from '@/types/user';
 import {
   FragmentUploadFileCollection,

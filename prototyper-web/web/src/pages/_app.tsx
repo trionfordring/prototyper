@@ -18,6 +18,6 @@ const ApplicationLayout = dynamic(
 );
 function useLayout() {
   const router = useRouter();
-  if (router.pathname.startsWith('/app')) return ApplicationLayout;
+  if (router.pathname.startsWith('/app/')) return ApplicationLayout;
   return null;
 }

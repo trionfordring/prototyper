@@ -21,6 +21,9 @@ export function IndexLayout({ children }: PropsWithChildren) {
           {
             href: '/me/apps',
             label: '我的应用',
+            isActived(pathname) {
+              return pathname.startsWith('/me/apps');
+            },
           },
           {
             href: '/me',

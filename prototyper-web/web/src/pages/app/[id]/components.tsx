@@ -4,7 +4,7 @@ import { useApplicationInfo } from '@/components/context/ApplicationInfoProvider
 import { PageMain } from '@/layout/PageMain';
 import { FileAddOutlined } from '@ant-design/icons';
 import { Button, Card, Divider, Input } from 'antd';
-import { groupBy, identity, map, toLower, trim } from 'lodash';
+import { groupBy, identity, map, omit, toLower, trim } from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -40,6 +40,18 @@ export default function Page() {
     string | undefined
   >();
   useEffect(() => setRealTimeSearchKey(searchKey), [searchKey]);
+  useEffect(() => {
+    if (router.query.creating) {
+      open();
+      router.replace({
+        pathname: router.pathname,
+        query: {
+          ...omit(router.query, 'creating'),
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const groupComponents = useMemo(() => {
     const datasrc = application.mainPackage?.components || [];
     const filtered = searchKey

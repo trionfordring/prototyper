@@ -29,7 +29,14 @@ export function ApplicationInfoSettings() {
       <Form.Item label="唯一名称">
         <Input disabled value={appInfo.name} />
       </Form.Item>
-      <Form.Item label="首页组件" name="index" initialValue={appInfo.index}>
+      <Form.Item
+        label="首页组件"
+        name="index"
+        initialValue={{
+          namespace: appInfo.mainPackage.name,
+          name: appInfo.index?.name,
+        }}
+      >
         <ComponentInput disabledNamespace />
       </Form.Item>
       <Form.Item label="显示名称" name="label" initialValue={appInfo.label}>

@@ -39,7 +39,7 @@
       "type": "component",
       "repeatable": false,
       "component": "component.descriptor",
-      "required": true
+      "required": false
     },
     "mainPackage": {
       "type": "relation",

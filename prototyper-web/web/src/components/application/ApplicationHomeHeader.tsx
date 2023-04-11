@@ -3,6 +3,7 @@ import { useApplicationInfo } from '../context/ApplicationInfoProvider';
 import { ApplicationPlayLink } from './ApplicationPlayLink';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import Link from 'next/link';
+import { Typography } from 'antd';
 
 const Box = styled.div`
   background-color: rgb(40, 44, 52);
@@ -77,20 +78,53 @@ export function ApplicationHomeHeader() {
         <Title>{applicationInfo.label || applicationInfo.name}</Title>
         <Description>{applicationInfo.description}</Description>
         <BtnGroup>
-          <PlayBtn>
-            <ApplicationPlayLink>访问主页</ApplicationPlayLink>
-          </PlayBtn>
-          <LinkItem
-            href={{
-              pathname: '/app/[id]/components',
-              query: {
-                id: applicationInfo.id,
-                search: applicationInfo.index.name,
-              },
-            }}
-          >
-            主页组件 <ArrowRightOutlined />
-          </LinkItem>
+          {applicationInfo.index ? (
+            <>
+              <PlayBtn>
+                <ApplicationPlayLink>访问主页</ApplicationPlayLink>
+              </PlayBtn>
+              <LinkItem
+                href={{
+                  pathname: '/app/[id]/components',
+                  query: {
+                    id: applicationInfo.id,
+                    search: applicationInfo.index.name,
+                  },
+                }}
+              >
+                主页组件 <ArrowRightOutlined />
+              </LinkItem>
+            </>
+          ) : (
+            <>
+              <PlayBtn>
+                <Link
+                  passHref
+                  legacyBehavior
+                  href={{
+                    pathname: '/app/[id]/components',
+                    query: {
+                      id: applicationInfo.id,
+                      creating: true,
+                    },
+                  }}
+                >
+                  <Typography.Link>创建组件</Typography.Link>
+                </Link>
+              </PlayBtn>
+              <LinkItem
+                href={{
+                  pathname: '/app/[id]/settings',
+                  hash: 'info',
+                  query: {
+                    id: applicationInfo.id,
+                  },
+                }}
+              >
+                设置主页
+              </LinkItem>
+            </>
+          )}
         </BtnGroup>
       </Main>
     </Box>

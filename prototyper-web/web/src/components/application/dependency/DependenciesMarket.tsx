@@ -38,7 +38,7 @@ export function DependenciesMarket({
     defalutValue
   );
   const [searchKey, setSearchKey] = useState('');
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
   const { isLoading, packages, pageMeta } = useBasicPackages(searchKey, {
     pageSize,
@@ -67,7 +67,7 @@ export function DependenciesMarket({
         onSearch={(v) => {
           if (v === searchKey) return;
           setSearchKey(v);
-          setPage(0);
+          setPage(1);
         }}
       />
       <Spin

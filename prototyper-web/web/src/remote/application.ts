@@ -6,14 +6,14 @@ import {
   responseCollectionFragment,
 } from './fragments';
 import { useRemote } from './useRemote';
-import { ID, PageMeta } from '@/types/api';
-import { Application, SimpleApplication } from '@/types/application';
+import { ID, Merge, PaginationArg } from '@/types/api';
+import { Application } from '@/types/application';
 import { unwarpEntity } from './utils';
 import { FragmentSimpleUserEntity, useMe } from './user';
 import { resolveFragmentMainPackage } from './package';
 import { FragmentComponentDescriptor } from './component-gql';
 import { useMemo } from 'react';
-import { isNil } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 import { SimpleUser } from '@/types/user';
 import {
   FragmentMainPackageEntity,
@@ -21,14 +21,27 @@ import {
 } from './package-gql';
 import type { ComponentDescriptor } from '@prototyper/core';
 import { fetcher } from './fetcher';
-import { useApplicationInfo } from '@/components/context/ApplicationInfoProvider';
 import { mutate } from 'swr';
+import { PackageType } from '@/types/resourcePackage';
+import { useAuthChecker } from '@/hooks/useAuthChecker';
 
 const FragmentSimpleApplication = fragment`
 fragment simpleApplication on Application {
   name
   label
   description
+}
+`;
+
+const FragmentUserApplication = fragment`
+fragment userApplication on Application {
+  name
+  label
+  description
+  readme
+  creator {
+    ...${FragmentSimpleUserEntity}
+  }
 }
 `;
 
@@ -82,33 +95,47 @@ query applicationById($id:ID!) {
 
 export const ApplicationsDocument = graphql<
   {
-    applications: ResponseCollectionFragmentType<{
-      name: string;
-      label?: string;
-      description?: string;
-    }>;
+    applications: ResponseCollectionFragmentType<
+      Merge<
+        Pick<
+          Application,
+          'id' | 'creator' | 'name' | 'label' | 'description' | 'readme'
+        >,
+        {
+          creator: ResponseFragmentType<SimpleUser>;
+        }
+      >
+    >;
   },
   {
-    page?: number;
-    pageSize?: number;
+    filters: any;
+    pagination?: PaginationArg;
+    sort?: string[];
   }
->()`query applications($page: Int=1, $pageSize: Int=10) {
-  applications(pagination: {
-    page: $page
-    pageSize: $pageSize
-  }) {
-    ...${responseCollectionFragment('Application', FragmentSimpleApplication)}
+>()`query applications($filters: ApplicationFiltersInput, $pagination: PaginationArg, $sort: [String]) {
+  applications(
+    filters: $filters
+    pagination: $pagination
+    sort: $sort
+  ) {
+    ...${responseCollectionFragment('Application', FragmentUserApplication)}
   }
 }
 `;
 
 export const UserApplicationsDocument = graphql<
   {
-    applications: ResponseCollectionFragmentType<{
-      name: string;
-      label?: string;
-      description?: string;
-    }>;
+    applications: ResponseCollectionFragmentType<
+      Merge<
+        Pick<
+          Application,
+          'id' | 'creator' | 'name' | 'label' | 'description' | 'readme'
+        >,
+        {
+          creator: ResponseFragmentType<SimpleUser>;
+        }
+      >
+    >;
   },
   {
     page?: number;
@@ -121,36 +148,96 @@ export const UserApplicationsDocument = graphql<
     pageSize: $pageSize
   }, filters: {
     creator: {
-      id: $uid
+      id: {
+        eq: $uid
+      }
     }
   }) {
-    ...${responseCollectionFragment('Application', FragmentSimpleApplication)}
+    ...${responseCollectionFragment('Application', FragmentUserApplication)}
   }
 }
 `;
 
-export function useApplications(page: number = 1, pageSize: number = 10) {
+export function useApplications(
+  searchKey: string,
+  pagination?: PaginationArg,
+  sort?: string[]
+) {
+  const filters = useMemo(() => {
+    if (isEmpty(searchKey)) return {};
+    const keys = searchKey
+      .trim()
+      .split(' ')
+      .filter((k) => !isEmpty(k));
+    if (keys.length === 1) {
+      return {
+        or: [
+          {
+            name: {
+              containsi: keys[0],
+            },
+          },
+          {
+            label: {
+              containsi: keys[0],
+            },
+          },
+        ],
+      };
+    }
+    const ands = keys.map((k) => ({
+      or: [
+        {
+          name: {
+            containsi: k,
+          },
+        },
+        {
+          label: {
+            containsi: k,
+          },
+        },
+      ],
+    }));
+    return {
+      and: ands,
+    };
+  }, [searchKey]);
   const { data, ...others } = useRemote([
     ApplicationsDocument,
-    { page, pageSize },
+    { filters, pagination, sort },
   ]);
-  const ret: typeof others & {
-    pagination?: PageMeta;
-    applications?: SimpleApplication[];
-  } = {
-    ...others,
-  };
-  if (data) {
+  const applicationsAndPage = useMemo(() => {
+    if (isNil(data)) return null;
     const {
       applications: {
+        data: values,
         meta: { pagination },
-        data: applicationEntities,
       },
     } = data;
-    ret.pagination = pagination;
-    ret.applications = applicationEntities.map((e) => unwarpEntity(e));
-  }
-  return ret;
+    const applications = values.map((app) => {
+      const {
+        id,
+        attributes: {
+          creator: { data: creatorInfo },
+          ...applicationInfo
+        },
+      } = app;
+      return {
+        ...applicationInfo,
+        id,
+        creator: unwarpEntity(creatorInfo),
+      };
+    });
+    return {
+      applications,
+      pagination,
+    };
+  }, [data]);
+  return {
+    ...others,
+    ...applicationsAndPage,
+  };
 }
 
 export function useMyApplications(page: number = 1, pageSize: number = 10) {
@@ -158,23 +245,37 @@ export function useMyApplications(page: number = 1, pageSize: number = 10) {
   const { data, ...others } = useRemote(
     me ? [UserApplicationsDocument, { page, pageSize, uid: me.id }] : null
   );
-  const ret: typeof others & {
-    pagination?: PageMeta;
-    applications?: SimpleApplication[];
-  } = {
-    ...others,
-  };
-  if (data) {
+  const applicationsAndPage = useMemo(() => {
+    if (isNil(data)) return null;
     const {
       applications: {
+        data: values,
         meta: { pagination },
-        data: applicationEntities,
       },
     } = data;
-    ret.pagination = pagination;
-    ret.applications = applicationEntities.map((e) => unwarpEntity(e));
-  }
-  return ret;
+    const applications = values.map((app) => {
+      const {
+        id,
+        attributes: {
+          creator: { data: creatorInfo },
+          ...applicationInfo
+        },
+      } = app;
+      return {
+        ...applicationInfo,
+        id,
+        creator: unwarpEntity(creatorInfo),
+      };
+    });
+    return {
+      applications,
+      pagination,
+    };
+  }, [data]);
+  return {
+    ...others,
+    ...applicationsAndPage,
+  };
 }
 
 export function useApplicationById(id?: ID) {
@@ -253,4 +354,149 @@ export async function updateApplicationInfo(
     },
   ]);
   await mutate([ApplicationByIdDocument, { id: aid }]);
+}
+
+// 2PC创建
+const DraftApplicationDocument = graphql<
+  {
+    createPackage: ResponseFragmentType<{}>;
+    createApplication: ResponseFragmentType<{}>;
+  },
+  {
+    appInput: {
+      name: string;
+      label?: string;
+      description?: string;
+      readme?: string;
+      creator: ID;
+    };
+    pkgInput: {
+      name: string;
+      version: string;
+      type: PackageType;
+      public: boolean;
+      dependencies?: ID[];
+      creator: ID;
+    };
+  }
+>()`
+mutation draftApplication($appInput: ApplicationInput!, $pkgInput: PackageInput!) {
+  createPackage(data: $pkgInput) {
+    data {
+      id
+    }
+  }
+  createApplication(data: $appInput) {
+    data {
+      id
+    }
+  }
+}`;
+const LinkApplicationDocument = graphql<
+  {
+    updateApplication: ResponseFragmentType<{}>;
+    updatePackage: ResponseFragmentType<{}>;
+  },
+  {
+    appId: ID;
+    pkgId: ID;
+  }
+>()`
+mutation linkApplication($appId: ID!, $pkgId:ID!) {
+  updateApplication(id: $appId, data: {
+    mainPackage: $pkgId
+  }) {
+    data {
+      id
+    }
+  }
+  updatePackage(id: $pkgId, data: {
+    application: $appId
+  }) {
+    data {
+      id
+    }
+  }
+}
+`;
+const PublishApplicationDocument = graphql<
+  {
+    updateApplication: ResponseFragmentType<{}>;
+    updatePackage: ResponseFragmentType<{}>;
+  },
+  {
+    appId: ID;
+    pkgId: ID;
+    time: Date;
+  }
+>()`
+mutation publishApplication($appId: ID!, $pkgId:ID!, $time: DateTime!) {
+  updateApplication(id: $appId, data: {
+    publishedAt: $time
+  }) {
+    data {
+      id
+    }
+  }
+  updatePackage(id: $pkgId, data: {
+    publishedAt: $time
+  }) {
+    data {
+      id
+    }
+  }
+}
+`;
+
+export type CreateAppForm = {
+  name: string;
+  label?: string;
+  description?: string;
+  readme?: string;
+  dependencies?: ID[];
+};
+
+export function useCreateApplication() {
+  useAuthChecker();
+  const { me } = useMe();
+  async function createApplication(createAppForm: CreateAppForm) {
+    if (!me) throw new Error('找不到用户信息。');
+    // 先创建app草稿
+    const {
+      createApplication: {
+        data: { id: appId },
+      },
+      createPackage: {
+        data: { id: pkgId },
+      },
+    } = await fetcher([
+      DraftApplicationDocument,
+      {
+        appInput: {
+          name: createAppForm.name,
+          label: createAppForm.label,
+          description: createAppForm.description,
+          readme: createAppForm.readme,
+          creator: me.id,
+        },
+        pkgInput: {
+          name: createAppForm.name,
+          type: 'application',
+          public: true,
+          version: '0.0.0',
+          creator: me.id,
+          dependencies: createAppForm.dependencies,
+        },
+      },
+    ]);
+    // 链接草稿
+    await fetcher([LinkApplicationDocument, { appId, pkgId }]);
+    // 发布草稿
+    await fetcher([
+      PublishApplicationDocument,
+      { appId, pkgId, time: new Date() },
+    ]);
+    return appId;
+  }
+  return { createApplication };
 }
