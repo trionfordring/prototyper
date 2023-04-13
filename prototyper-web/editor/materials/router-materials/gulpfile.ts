@@ -10,7 +10,7 @@ export default series(
   clean(),
   parallel(
     buildLib(),
-    buildUmd('PrototyperStdMaterials', [
+    buildUmd('PrototyperRouterMaterials', [
       'react',
       'react-dom',
       'react-is',

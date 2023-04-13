@@ -4,7 +4,9 @@ import styled from 'styled-components';
 import { DraggerSubcate } from './DraggerSubcate';
 import { DraggersCategory } from './types';
 
-const Container = styled.div``;
+const Container = styled.div`
+  padding-bottom: 100px;
+`;
 
 export function DraggerCatePage({
   draggersCategory,

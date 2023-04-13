@@ -55,6 +55,11 @@ export function useCreateDragger() {
   };
 }
 
+export function useCurrentDraggers() {
+  const appInfo = useApplicationInfo();
+  return appInfo.mainPackage.draggers;
+}
+
 export function useDraggers() {
   const appInfo = useApplicationInfo();
   const { flatDevDependencies } = useFlatDevDependenciesCached(

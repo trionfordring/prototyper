@@ -18,6 +18,7 @@ export const UMD_GLOBALS: Record<string, string> = {
   'styled-components': 'styled',
   'monaco-editor/esm/vs/editor/editor.api': 'MonocoEditor',
   'react-dom/client': 'ReactDOM',
+  'react-router-dom': 'ReactRouterDOM',
 };
 
 export const buildUmd = (

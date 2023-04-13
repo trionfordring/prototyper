@@ -1,5 +1,9 @@
 import { HOST } from '@/env';
-import { useDeleteDragger, useDraggers } from '@/remote/dragger';
+import {
+  useCurrentDraggers,
+  useDeleteDragger,
+  useDraggers,
+} from '@/remote/dragger';
 import { Dragger } from '@/types/dragger';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Image, List, Typography } from 'antd';
@@ -29,7 +33,7 @@ function renderCate(dragger: Dragger) {
 export function DraggerList() {
   const app = useApplicationInfo();
   const { deleteDragger } = useDeleteDragger();
-  const { draggers } = useDraggers();
+  const draggers = useCurrentDraggers();
 
   return (
     <ListBox>

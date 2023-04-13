@@ -193,7 +193,7 @@ export class DefaultEventHandlers<O = {}> extends CoreEventHandlers<
               if (!(x >= left && x <= right - 1 && y >= top && y <= bottom)) {
                 store.actions.setIndicator(null);
                 store.actions.setNodeEvent('dragover', null);
-                this.positioner.clearIndicator();
+                this.positioner?.clearIndicator();
               }
             });
           } else {

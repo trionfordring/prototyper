@@ -8,5 +8,13 @@ export default {
         auth: false,
       },
     },
+    {
+      method: 'GET',
+      path: '/preview/:name/(.*)',
+      handler: 'api::application.application.preview',
+      config: {
+        auth: false,
+      },
+    },
   ],
 };

@@ -92,7 +92,7 @@ export default factories.createCoreController(
       globalPackagesRegistry.addComponents(components);
       ${
         index && index.name && index.namespace
-          ? `PrototyperPreviewer.render(document.getElementById('root'), { namespace: '${index.namespace}', name: '${index.name}'});`
+          ? `PrototyperPreviewer.render(document.getElementById('root'), { namespace: '${index.namespace}', name: '${index.name}'}, '/api/preview/${params.name}');`
           : ''
       }
     </script>

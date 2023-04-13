@@ -5,9 +5,9 @@ import ReactDom from 'react-dom/client';
 import { Render } from './render';
 
 class PrototyperPreviewer {
-  render(dom: HTMLElement, descriptor: ComponentDescriptor) {
+  render(dom: HTMLElement, descriptor: ComponentDescriptor, baseurl?: string) {
     const root = ReactDom.createRoot(dom);
-    root.render(React.createElement(Render, { descriptor }));
+    root.render(React.createElement(Render, { descriptor, baseurl }));
     return root;
   }
 }

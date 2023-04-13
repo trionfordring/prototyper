@@ -83,6 +83,11 @@ export const Editor = forwardRef<
       title?: ComponentType<{ mode: EditorMode }>;
       center?: ComponentType<{ mode: EditorMode }>;
       right?: ComponentType<{ mode: EditorMode }>;
+      componentInput?: ComponentType<{
+        value?: ComponentDescriptor;
+        onChange?: (v?: ComponentDescriptor) => void;
+        defaultValue?: ComponentDescriptor;
+      }>;
     }
   >
 >(
@@ -97,6 +102,7 @@ export const Editor = forwardRef<
       title,
       center,
       right,
+      componentInput,
       ...props
     },
     ref
@@ -233,7 +239,7 @@ export const Editor = forwardRef<
                   onSettingsMetaChange={(settings) => {
                     console.log('设置组件的设置器:', settings);
                     setSettings(settings);
-                    applicationInstanceRef.current.setRootMeta((meta) => {
+                    applicationInstanceRef.current?.setRootMeta((meta) => {
                       return {
                         ...meta,
                         [META_EDITOR_KEY]: {

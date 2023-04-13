@@ -33,6 +33,7 @@ export default function Page() {
       <ApplicationInfoProvider application={application}>
         <ComponentEditor
           resources={flatDevDependencies}
+          baseurl={encodeURI(`/edit/${appId}/${name}`)}
           index={{
             name,
             namespace,

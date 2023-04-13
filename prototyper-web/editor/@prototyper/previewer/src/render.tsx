@@ -7,8 +7,12 @@ import React from 'react';
 
 function Render1({
   descriptor,
+  baseurl,
   children,
-}: React.PropsWithChildren<{ descriptor?: ComponentDescriptor }>) {
+}: React.PropsWithChildren<{
+  descriptor?: ComponentDescriptor;
+  baseurl?: string;
+}>) {
   if (!descriptor) return <>'未指定组件'</>;
   const pkg = globalPackagesRegistry.getPackage(descriptor.namespace);
   const component = pkg.getComponent(descriptor.name);
@@ -22,6 +26,7 @@ function Render1({
     <ApplicationRenderer
       app={{
         index: component,
+        baseurl,
       }}
     >
       {children}

@@ -8,6 +8,9 @@ import * as StyledComponent from 'styled-components';
 import * as _ from 'lodash';
 import * as antd from 'antd';
 import * as icons from '@ant-design/icons';
+import * as ReactRouterDom from 'react-router-dom';
+import * as ReactRouter from 'react-router';
+import * as RemixRouter from '@remix-run/router';
 
 let embeddedPackagesInited = false;
 const embeddedPackageArr: string[] = [];
@@ -42,6 +45,9 @@ async function initEmbeddedPackages() {
   setEmbeddedPackage('lodash', '_', _);
   setEmbeddedPackage('antd', 'antd', antd);
   setEmbeddedPackage('@ant-design/icons', 'icons', icons);
+  setEmbeddedPackage('react-router-dom', 'ReactRouterDOM', ReactRouterDom);
+  setEmbeddedPackage('react-router', 'ReactRouter', ReactRouter);
+  setEmbeddedPackage('@remix-run/router', 'RemixRouter', RemixRouter);
 
   console.log('声明内置lib', embeddedPackageArr);
   embeddedPackagesInited = true;

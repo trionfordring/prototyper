@@ -9,6 +9,7 @@ import {
 import { PropDeclear, Setter } from '../../utils';
 
 export interface ApplicationContextType<S = DefaultPropsType> {
+  baseurl?: string;
   appStates: S;
 
   currentComponent: ProtoComponent & Partial<WithDescriptor>;

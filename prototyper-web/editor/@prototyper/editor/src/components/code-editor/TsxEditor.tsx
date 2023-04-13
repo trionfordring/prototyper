@@ -1,4 +1,5 @@
 import MonacoEditor, { useMonaco } from '@monaco-editor/react';
+import { notification } from 'antd';
 import { noop } from 'lodash';
 import type { editor } from 'monaco-editor';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -11,6 +12,7 @@ import { JSXParser } from '../../utils/parser/JSXParser';
 
 function RawTsxEditor(props: EditorPropsType) {
   const [ready, setReady] = useState(false);
+  const [notificationApi, notificationContext] = notification.useNotification();
   const monaco = useMonaco()!;
   const editor = useRef<editor.IStandaloneCodeEditor>();
   const editorInstance = useRef<EditorInstance>();
@@ -53,33 +55,42 @@ function RawTsxEditor(props: EditorPropsType) {
           text: text || null,
         },
       ],
-      undefined
+      undefined as any
     );
   }, []);
   const save = useCallback(async (): Promise<SerializedModule | null> => {
-    const instance = editor.current;
-    if (!instance) return null;
-    const rawCode = instance.getValue({
-      preserveBOM: false,
-      lineEnding: '\n',
-    });
-    lastsave.current = rawCode || '';
-    if (!rawCode) {
-      onSave(null, editorInstance.current);
+    try {
+      const instance = editor.current;
+      if (!instance) return null;
+      const rawCode = instance.getValue({
+        preserveBOM: false,
+        lineEnding: '\n',
+      });
+      lastsave.current = rawCode || '';
+      if (!rawCode) {
+        onSave(null, editorInstance.current);
+        return null;
+      }
+      const parser = new JSXParser();
+      const compiledCode = await parser.parse(rawCode, 'tsx');
+      const module: SerializedModule = {
+        compiledSrc: compiledCode,
+        src: rawCode,
+
+        parser: JSXParser.NAME,
+        langType: 'tsx',
+      };
+      onSave(module, editorInstance.current);
+      return module;
+    } catch (e) {
+      console.error('代码编译失败', e);
+      notificationApi.error({
+        message: '代码编译失败!',
+        description: e.message,
+      });
       return null;
     }
-    const parser = new JSXParser();
-    const compiledCode = await parser.parse(rawCode, 'tsx');
-    const module: SerializedModule = {
-      compiledSrc: compiledCode,
-      src: rawCode,
-
-      parser: JSXParser.NAME,
-      langType: 'tsx',
-    };
-    onSave(module, editorInstance.current);
-    return module;
-  }, [onSave]);
+  }, [notificationApi, onSave]);
   const [options, setOptions] =
     useState<editor.IStandaloneEditorConstructionOptions>({});
   useEffect(() => {
@@ -121,24 +132,27 @@ function RawTsxEditor(props: EditorPropsType) {
   function setupEditor(editor: editor.IStandaloneCodeEditor) {}
   if (!ready) return <>编辑器尚未就绪</>;
   return (
-    <MonacoEditor
-      language="typescript"
-      options={options}
-      onChange={onChange}
-      onMount={(instance) => {
-        editor.current = instance;
-        setupEditor(instance);
-        editorInstance.current = {
-          save,
-          getRawCode: getValue,
-          setRawCode: setValue,
-          reset() {
-            setValue(lastsave.current);
-          },
-        };
-        editorDidMount(editorInstance.current);
-      }}
-    ></MonacoEditor>
+    <>
+      {notificationContext}
+      <MonacoEditor
+        language="typescript"
+        options={options}
+        onChange={onChange}
+        onMount={(instance) => {
+          editor.current = instance;
+          setupEditor(instance);
+          editorInstance.current = {
+            save,
+            getRawCode: getValue,
+            setRawCode: setValue,
+            reset() {
+              setValue(lastsave.current);
+            },
+          };
+          editorDidMount(editorInstance.current);
+        }}
+      ></MonacoEditor>
+    </>
   );
 }
 

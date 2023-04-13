@@ -34,38 +34,40 @@ export const SetterForm: FC<
   };
   return (
     <React.Fragment>
-      <Form
-        labelAlign="left"
-        labelWrap
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        initialValues={initialValues}
-        onFinish={onFinish}
-        onValuesChange={() => setChanged(true)}
-        size="small"
-        {...props}
-      >
-        {isRoot ? null : (
-          <FormHeader title="Props配置">
-            {selectedNode?.isDeletable ? (
-              <RemoveButton
-                type="default"
-                danger
-                size="small"
-                onClick={deleteNode}
-              >
-                删除节点
-              </RemoveButton>
-            ) : null}
-          </FormHeader>
-        )}
-        {children}
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type={changed ? 'primary' : 'dashed'} htmlType="submit">
-            {changed ? '提交修改' : '确定'}
-          </Button>
-        </Form.Item>
-      </Form>
+      {children ? (
+        <Form
+          labelAlign="left"
+          labelWrap
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          initialValues={initialValues}
+          onFinish={onFinish}
+          onValuesChange={() => setChanged(true)}
+          size="small"
+          {...props}
+        >
+          {isRoot ? null : (
+            <FormHeader title="Props配置">
+              {selectedNode?.isDeletable ? (
+                <RemoveButton
+                  type="default"
+                  danger
+                  size="small"
+                  onClick={deleteNode}
+                >
+                  删除节点
+                </RemoveButton>
+              ) : null}
+            </FormHeader>
+          )}
+          {children}
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Button type={changed ? 'primary' : 'dashed'} htmlType="submit">
+              {changed ? '提交修改' : '确定'}
+            </Button>
+          </Form.Item>
+        </Form>
+      ) : null}
       {isRoot ? null : <NodeSetter></NodeSetter>}
     </React.Fragment>
   );

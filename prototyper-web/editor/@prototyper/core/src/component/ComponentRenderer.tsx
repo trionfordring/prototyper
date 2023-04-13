@@ -28,6 +28,7 @@ export const EmbeddedComponentRenderer: React.FC<
   if (!component) return <span>找不到组件{descriptor.name}</span>;
   return (
     <JustComponentRenderer
+      key={`${descriptor.namespace}-${descriptor.name}`}
       props={props}
       component={component}
       onRender={onRender}
@@ -56,6 +57,7 @@ export const ComponentRenderer: React.FC<
   if (!component) return <span>找不到组件{descriptor.name}</span>;
   return (
     <JustComponentRenderer
+      key={`${descriptor.namespace}-${descriptor.name}`}
       ref={(ref) => connect(drag(ref))}
       props={props}
       component={component}
@@ -98,6 +100,7 @@ export const RootComponentRenderer: React.FC<PropsWithChildren> = ({
   } = useApplicationContext();
   return (
     <JustComponentRenderer
+      key={`${component.descriptor?.namespace}-${component.descriptor?.name}`}
       props={props}
       component={component}
       onRender={onRender}

@@ -60,6 +60,7 @@ export const ApplicationProvider: FC<
       key={version}
       value={{
         ...options,
+        baseurl: app.baseurl,
         appStates: states,
         currentComponent: currentComponentWithMeta,
         setCurrentComponent: setComponent,

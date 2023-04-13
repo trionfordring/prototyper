@@ -7,8 +7,13 @@ export const core = () => run('pnpm run -F @prototyper/core build');
 
 export const editor = () => run('pnpm run -F @prototyper/editor build');
 
-export const materials = parallel(() =>
-  run('pnpm run -F @prototyper/std-materials build')
+export const materials = parallel(
+  () => run('pnpm run -F @prototyper/std-materials build'),
+  () => run('pnpm run -F @prototyper/router-materials build')
+);
+export const materialsDev = parallel(
+  () => run('pnpm run -F @prototyper/std-materials dev'),
+  () => run('pnpm run -F @prototyper/router-materials dev')
 );
 
 export const previewer = () => run('pnpm run -F @prototyper/previewer build');
@@ -45,6 +50,6 @@ export const devTask = withTaskName(
     () => run('pnpm run -F @prototyper/core dev'),
     () => run('pnpm run -F @prototyper/editor dev'),
 
-    () => run('pnpm run -F @prototyper/std-materials dev')
+    materialsDev
   )
 );

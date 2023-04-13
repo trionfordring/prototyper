@@ -11,7 +11,7 @@ import { ProtoComponent, WithDescriptor } from './ProtoComponent';
 
 import { SaveComponentContext } from '../context';
 import { ComponentContext } from '../context/component/ComponentContext';
-import { Setter } from '../utils';
+import { Setter, Tool } from '../utils';
 
 export interface ComponentInstanceType {
   setMeta(meta: Setter): void;
@@ -34,9 +34,16 @@ export const ComponentProvider: FC<
   onComponentMounted = noop,
 }) => {
   const [meta, setMeta] = useState(component.meta || {});
-  const states =
-    (component.useSetupStates && component.useSetupStates(props || {}, meta)) ||
-    {};
+  const states = Tool.try(
+    () =>
+      (component.useSetupStates &&
+        component.useSetupStates(props || {}, meta)) ||
+      {}
+  ).catch((err) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks, react-hooks/exhaustive-deps
+    useEffect(() => console.error('组件状态异常: ', err), []);
+    return {};
+  });
   const inited = useRef(false);
   useEffect(() => {
     if (!inited.current) {

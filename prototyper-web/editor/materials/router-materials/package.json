@@ -1,5 +1,5 @@
 {
-  "name": "@prototyper/std-materials",
+  "name": "@prototyper/router-materials",
   "version": "0.1.0",
   "author": "fordring <i@fordring.icu>",
   "license": "MIT",
@@ -26,11 +26,10 @@
     "antd": "^5.1.2",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
-    "react-contenteditable": "^3.3.6",
     "react-dom": "^18.2.0",
     "react-is": "^18.2.0",
-    "styled-components": "5.3.6",
-    "react-router-dom": "^6.10.0"
+    "react-router-dom": "^6.10.0",
+    "styled-components": "5.3.6"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.190",
@@ -40,8 +39,5 @@
   },
   "peerDependencies": {
     "react": ">=16.11.0"
-  },
-  "optionalDependencies": {
-    "react-router-dom": "^6.10.0"
   }
 }

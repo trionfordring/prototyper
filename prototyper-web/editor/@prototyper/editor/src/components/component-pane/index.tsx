@@ -1,4 +1,4 @@
-import { ProtoDragger, Category } from '@prototyper/core';
+import { ProtoDragger, Category, Subcategories } from '@prototyper/core';
 import { groupBy, isNil, map } from 'lodash';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
@@ -55,6 +55,42 @@ export function sortByCatalogue(
   return cates.sort(compareCategory);
 }
 
+function mergeSubCategories(subcategories?: Subcategories[]) {
+  if (!subcategories) return [];
+  return map(
+    groupBy(subcategories, (s) => s.name),
+    (v) =>
+      v.reduce(
+        (a, b) => ({
+          name: a.name,
+          label: b.label || a.label,
+          order: Math.max(a.order || 0, b.order || 0),
+        }),
+        v[0]
+      )
+  );
+}
+
+function mergeCatalogue(catalogue?: Category[]): Category[] {
+  if (!catalogue) return [];
+  return map(
+    groupBy(catalogue, (c) => c.name),
+    (cs) =>
+      cs.reduce((a, b) => {
+        if (!a) return b;
+        return {
+          name: a.name,
+          label: b.label || a.label,
+          order: Math.max(a.order || 0, b.order || 0),
+          subcategories: mergeSubCategories([
+            ...a.subcategories,
+            ...b.subcategories,
+          ]),
+        };
+      }, cs[0])
+  );
+}
+
 export function ComponentPane({
   draggers,
   catalogue = [],
@@ -63,6 +99,7 @@ export function ComponentPane({
   catalogue?: Category[];
 }) {
   const sortedDraggers = useMemo(() => {
+    const mergedCatalogue = mergeCatalogue(catalogue);
     // 将所有draggers按照cate分类
     const groupbyCate = groupBy(
       draggers,
@@ -72,7 +109,7 @@ export function ComponentPane({
       groupbyCate,
       (draggersInCate, cate) => ({
         name: cate,
-        label: getLabel(catalogue, cate),
+        label: getLabel(mergedCatalogue, cate),
         subcategories: map(
           // 将每个cate里的draggers按照subcate分类
           groupBy(
@@ -81,13 +118,13 @@ export function ComponentPane({
           ),
           (draggersInSubcate, subcate) => ({
             name: subcate,
-            label: getLabel(catalogue, cate, subcate),
+            label: getLabel(mergedCatalogue, cate, subcate),
             draggers: draggersInSubcate,
           })
         ),
       })
     );
-    return sortByCatalogue(catalogue, draggersCatalogue);
+    return sortByCatalogue(mergedCatalogue, draggersCatalogue);
   }, [catalogue, draggers]);
   return (
     <Pane>

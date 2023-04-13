@@ -1,19 +1,65 @@
-import { useSetterContext } from '@prototyper/core';
+import { useComponentContext, useSetterContext } from '@prototyper/core';
 import {
   AutoCompleteSetter,
   BoolSetter,
   HTMLSetter,
+  JSSetter,
   SegmentedSetter,
   SetterForm,
   TextSetter,
 } from '@prototyper/editor';
 import { Typography as Ant, Form, Select } from 'antd';
-import React, { Fragment } from 'react';
+import type { LinkProps } from 'antd/es/typography/Link';
+import { noop } from 'lodash';
+import React, { Fragment, PropsWithChildren } from 'react';
+import * as ReactRouterDom from 'react-router-dom';
+import type { LinkProps as RLinkProps } from 'react-router-dom';
 
 import { useConnectors } from '../../utils/useConnectors';
 import { usePlaceholder } from '../../utils/usePlaceholder';
 
-type TypographyType = 'title' | 'text' | 'paragraph' | 'link';
+/* eslint-disable react-hooks/rules-of-hooks */
+const useNavigate = ReactRouterDom?.useNavigate;
+const useHref = ReactRouterDom?.useHref;
+function RouterLink({
+  onClick = noop,
+  children,
+  to: toProp,
+  state,
+  relative,
+  preventScrollReset,
+  replace,
+  ...props
+}: PropsWithChildren<LinkProps & Partial<RLinkProps>>) {
+  const { editing } = useComponentContext()!;
+  if (!useNavigate || !useHref)
+    return (
+      <Ant.Link {...props} onClick={onClick}>
+        {editing ? <>{children}(无效的路由链接)</> : children}
+      </Ant.Link>
+    );
+  const to = toProp || '';
+  const navigate = useNavigate();
+  const href = useHref(to) || props.href;
+  function handleClick(e: React.MouseEvent) {
+    e.preventDefault();
+    navigate(to, {
+      state,
+      relative,
+      preventScrollReset,
+      replace,
+    });
+    onClick(e as any);
+  }
+  return (
+    <Ant.Link {...props} href={href} onClick={handleClick}>
+      {children}
+    </Ant.Link>
+  );
+}
+/* eslint-enble react-hooks/rules-of-hooks */
+
+type TypographyType = 'title' | 'text' | 'paragraph' | 'link' | 'router-link';
 function getTypographyComponent(type?: TypographyType) {
   switch (type) {
     case 'paragraph':
@@ -24,6 +70,8 @@ function getTypographyComponent(type?: TypographyType) {
       return Ant.Text;
     case 'link':
       return Ant.Link;
+    case 'router-link':
+      return RouterLink;
     default:
       return Ant.Text;
   }
@@ -45,6 +93,13 @@ export const Typography = ({
     </TypoComponent>
   );
 };
+const DEFAULT_TO = `// @export(data)
+const data = {
+  pathname: "",
+  search: "",
+  hash: ""
+}
+`;
 
 export const TypographySettings = () => {
   const { runtimeDomType } = useSetterContext((props) => ({
@@ -52,6 +107,13 @@ export const TypographySettings = () => {
   }));
   const [form] = Form.useForm();
   const domType = Form.useWatch('domType', form);
+  const options = [
+    { value: 'text', label: '文本' },
+    { value: 'title', label: '标题' },
+    { value: 'paragraph', label: '段落' },
+    { value: 'link', label: '链接' },
+  ];
+  if (ReactRouterDom) options.push({ value: 'router-link', label: '路由链接' });
   return (
     <SetterForm form={form}>
       <Form.Item
@@ -59,14 +121,7 @@ export const TypographySettings = () => {
         label="标记类型"
         initialValue={runtimeDomType || 'text'}
       >
-        <Select
-          options={[
-            { value: 'text', label: '文本' },
-            { value: 'title', label: '标题' },
-            { value: 'paragraph', label: '段落' },
-            { value: 'link', label: '链接' },
-          ]}
-        ></Select>
+        <Select options={options}></Select>
       </Form.Item>
       {domType === 'title' ? (
         <SegmentedSetter
@@ -96,6 +151,14 @@ export const TypographySettings = () => {
               { value: '_new', label: '_new (始终在同一个新窗口中打开)' },
             ]}
           />
+        </Fragment>
+      ) : null}
+      {domType === 'router-link' ? (
+        <Fragment>
+          <JSSetter propName="to" label="路由目标" defaultValue={DEFAULT_TO} />
+          <JSSetter label="数据" propName="state" />
+          <BoolSetter label="replace" propName="replace" />
+          <BoolSetter label="阻止上滚" propName="preventScrollReset" />
         </Fragment>
       ) : null}
       <AutoCompleteSetter

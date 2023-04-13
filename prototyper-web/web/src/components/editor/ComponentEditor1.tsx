@@ -25,15 +25,18 @@ import { EditorTitle } from './EditorTitle';
 import { DraggerImg } from './DraggerImg';
 import { PackageWithUrl } from '@/remote/package-gql';
 import { identity } from 'lodash';
+import { StaticRouter } from 'react-router-dom/server';
 
 type EditorStateType = 'loading' | 'running' | 'error';
 
 export function ComponentEditor1({
   resources,
   index: indexDesc,
+  baseurl,
 }: {
   resources: PackageWithUrl[];
   index: ComponentDescriptor;
+  baseurl?: string;
 }) {
   const [id, setId] = useState<ID>();
   const [error, setError] = useState<Error | undefined>();
@@ -76,14 +79,15 @@ export function ComponentEditor1({
     );
     // umd的方式载入非内嵌的软件包
     console.log('正在载入组件包所依赖的组件包:', externalResources);
-    const tasks = externalResources.flatMap((r) => {
+    for (let i = 0; i < externalResources.length; i++) {
+      const r = externalResources[i];
       const srcs = r.umds?.map((umd) => umd.url) || [];
-      return srcs.map(async (src) => {
+      for (let j = 0; j < srcs.length; j++) {
+        const src = srcs[j];
         await loadScript(`${HOST}${src}`);
         console.log(`脚本载入完成:`, r.name, src);
-      });
-    });
-    await Promise.all(tasks);
+      }
+    }
     // 声明非内嵌的软件包的符号引用
     externalResources.forEach((r) =>
       r.globalSymbols?.forEach(({ symbol, name }) => {
@@ -163,37 +167,48 @@ export function ComponentEditor1({
   if (!currentComponent) {
     return <ErrorPage message="找不到所需组件" />;
   }
+  const editorNode = (
+    <Editor
+      key={version}
+      app={{
+        index: currentComponent,
+        baseurl,
+      }}
+      draggers={draggers}
+      catalogue={catalogue}
+      title={EditorTitle}
+      right={EditorHeaderRight}
+      onSave={async (comp) => {
+        if (!id) throw new Error('你不能更新原生包的内建组件');
+        try {
+          await updateComponentData(id, comp);
+          const now = new Date();
+          notice.success({
+            placement: 'topRight',
+            message: '保存完成',
+            description: `操作时间:${now.toLocaleTimeString()}`,
+          });
+        } catch (e: any) {
+          notice.error({
+            placement: 'topRight',
+            message: '保存失败',
+            description: `请求服务器失败:${e?.message}`,
+          });
+        }
+      }}
+    ></Editor>
+  );
+  const hasRootRouter = currentComponent.dependencies?.some(
+    (d) => d.namespace === 'router' && d.name === 'RouterProvider'
+  );
   return (
     <FullPage>
       {contextHolder}
-      <Editor
-        key={version}
-        app={{
-          index: currentComponent,
-        }}
-        draggers={draggers}
-        catalogue={catalogue}
-        title={EditorTitle}
-        right={EditorHeaderRight}
-        onSave={async (comp) => {
-          if (!id) throw new Error('你不能更新原生包的内建组件');
-          try {
-            await updateComponentData(id, comp);
-            const now = new Date();
-            notice.success({
-              placement: 'topRight',
-              message: '保存完成',
-              description: `操作时间:${now.toLocaleTimeString()}`,
-            });
-          } catch (e: any) {
-            notice.error({
-              placement: 'topRight',
-              message: '保存失败',
-              description: `请求服务器失败:${e?.message}`,
-            });
-          }
-        }}
-      ></Editor>
+      {hasRootRouter ? (
+        editorNode
+      ) : (
+        <StaticRouter location={'/'}>{editorNode}</StaticRouter>
+      )}
     </FullPage>
   );
 }
