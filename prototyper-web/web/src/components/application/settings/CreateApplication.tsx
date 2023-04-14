@@ -4,8 +4,14 @@ import { useCreateApplication } from '@/remote/application';
 import { Form, Input } from 'antd';
 import { useState } from 'react';
 import { DependenciesInput } from '../dependency/DependenciesInput';
+import { ID } from '@/types/api';
+import { noop } from 'lodash';
 
-export function CreateApplicationForm() {
+export function CreateApplicationForm({
+  onCreateSuccess = noop,
+}: {
+  onCreateSuccess?: (appId: ID) => void;
+}) {
   const { createApplication } = useCreateApplication();
   const [loading, setLoading] = useState(false);
   const [changed, setChanged] = useState(false);
@@ -14,8 +20,9 @@ export function CreateApplicationForm() {
     setLoading(true);
     try {
       console.log('创建应用', data);
-      await createApplication(data);
+      const appId = await createApplication(data);
       setChanged(false);
+      onCreateSuccess(appId);
     } finally {
       setLoading(false);
     }
