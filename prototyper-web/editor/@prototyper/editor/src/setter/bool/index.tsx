@@ -9,8 +9,8 @@ export const BoolSetter: FC<
   {
     propName: string;
     label: string;
-  } & (InputProps | SwitchProps)
-> = ({ propName, label, ...props }) => {
+  } & (InputProps & SwitchProps)
+> = ({ propName, label, defaultChecked, ...props }) => {
   const formPropType = Form.useWatch(
     ['propsMapper', propName],
     Form.useFormInstance()
@@ -21,6 +21,7 @@ export const BoolSetter: FC<
       label={label}
       allow={['', JS_EXPR]}
       valuePropName="checked"
+      initialValue={defaultChecked}
     >
       {formPropType === JS_EXPR ? (
         <Input placeholder="输入Bool类型的JS表达式" {...(props as any)}></Input>

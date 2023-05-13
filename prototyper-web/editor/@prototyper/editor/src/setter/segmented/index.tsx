@@ -10,13 +10,18 @@ export const SegmentedSetter: FC<
     propName: string;
     label: string;
   } & (InputProps | SegmentedProps)
-> = ({ propName, label, ...props }) => {
+> = ({ propName, label, defaultValue, ...props }) => {
   const formPropType = Form.useWatch(
     ['propsMapper', propName],
     Form.useFormInstance()
   );
   return (
-    <FormItem propName={propName} label={label} allow={['', FMT_EXPR, JS_EXPR]}>
+    <FormItem
+      propName={propName}
+      label={label}
+      allow={['', FMT_EXPR, JS_EXPR]}
+      initialValue={defaultValue}
+    >
       {formPropType === JS_EXPR ? (
         <Input placeholder="输入JS表达式" {...(props as any)}></Input>
       ) : (

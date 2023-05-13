@@ -37,6 +37,7 @@ export function CreateDraggerModal({
   const application = useApplicationInfo();
   const { createDragger } = useCreateDragger();
   const [form] = Form.useForm();
+  const imgSize = Form.useWatch('imgSize', form);
   function handleOk() {
     form.submit();
   }
@@ -122,9 +123,6 @@ export function CreateDraggerModal({
         >
           <JSONEditor height={200} />
         </Form.Item>
-        <Form.Item label="封面" name="img">
-          <ImageInput />
-        </Form.Item>
         <Form.Item label="封面尺寸" name="imgSize">
           <Select
             options={[
@@ -132,6 +130,9 @@ export function CreateDraggerModal({
               { value: 'small', label: '小图标' },
             ]}
           />
+        </Form.Item>
+        <Form.Item label="封面" name="img">
+          <ImageInput noCrop={imgSize === 'fit'} />
         </Form.Item>
         <Form.Item label="分类" name="category">
           <Input />

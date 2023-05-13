@@ -33,14 +33,14 @@ export const Space = ({
   const vertical = props.direction === 'vertical';
   if (vertical) {
     return (
-      <SpaceDiv ref={connectAndDrag}>
+      <SpaceDiv {...props} ref={connectAndDrag}>
         <DropArea>{children}</DropArea>
       </SpaceDiv>
     );
   }
   return (
-    <SpaceSpan ref={connectAndDrag}>
-      <DropSpan label="拖拽到这里" dragoverLabel="在这里松开!" noConnect>
+    <SpaceSpan {...props} ref={connectAndDrag}>
+      <DropSpan label="拖拽到这里" dragoverLabel="在这里松开!">
         {children}
       </DropSpan>
     </SpaceSpan>

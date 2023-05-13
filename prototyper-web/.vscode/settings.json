@@ -4,5 +4,13 @@
 
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  }
+  },
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "database": "${workspaceFolder:prototyper-web}/server/.tmp/data.db",
+      "name": "db"
+    }
+  ]
 }

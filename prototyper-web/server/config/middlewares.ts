@@ -8,6 +8,7 @@ export default [
         directives: {
           'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
           'style-src': ["'self'", 'http:', 'https:', "'unsafe-inline'"],
+          'img-src': ["'self'", '*', 'data:', 'blob:'],
         },
       },
     },

@@ -11,14 +11,20 @@ export * from './EventSetter';
 export * from './ClassNameSetter';
 export * from './StyleSetter';
 
-export function HTMLSetter() {
+export function HTMLSetter({
+  filterEvents,
+  noEvents,
+}: {
+  filterEvents?: (eventName: string) => boolean;
+  noEvents?: boolean;
+}) {
   return (
     <>
       <FormHeader title="通用" />
       <HTMLPropsSetter />
       <ClassNameSetter />
       <StyleSetter />
-      <EventSetter />
+      {noEvents ? null : <EventSetter filterEvents={filterEvents} />}
     </>
   );
 }

@@ -2,6 +2,9 @@ import { ComponentPackage } from '@prototyper/core';
 
 import {
   CATE_BASIC,
+  CATE_DISPLAY,
+  CATE_FEEDBACK,
+  CATE_FORM,
   CATE_LAYOUT,
   CATE_LAYOUT_PAGE,
   CATE_NAVIGATOR,
@@ -71,4 +74,17 @@ const data = [
       items: 'jsExpr',
     }
   );
+
+  // 数据录入
+  subcate(CATE_FORM);
+  // registerCanvas('Form', '表单', null);
+  // registerCanvas('FormItem', '表单字段', null);
+  register('Input', '输入框', null);
+  register('NumberInput', '数字输入框', null);
+
+  subcate(CATE_FEEDBACK);
+  registerCanvas('Modal', '对话框', null);
+
+  subcate(CATE_DISPLAY);
+  register('Image', '图片', null);
 };

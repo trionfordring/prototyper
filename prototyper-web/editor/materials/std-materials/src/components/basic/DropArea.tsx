@@ -67,17 +67,20 @@ export const DropArea = ({
   label,
   dragoverLabel,
   id,
+  asChildren,
 }: PropsWithChildren<{
   id?: string;
   label?: NodeProvider;
   dragoverLabel?: NodeProvider;
+  asChildren?: boolean;
 }>) => {
-  if (!id)
+  if (!id || asChildren)
     return (
       <DropAreaNode label={label} dragoverLabel={dragoverLabel} direct>
         {children}
       </DropAreaNode>
     );
+  console.log('检查到ID：', id);
   return (
     <Element
       is={DropAreaNode}

@@ -1,5 +1,5 @@
 import { useQueryState } from '@/hooks/useQueryState';
-import { useMyApplications } from '@/remote/application';
+import { deleteApplication, useMyApplications } from '@/remote/application';
 import { getQueryString } from '@/utils/getQueryString';
 import {
   DeleteOutlined,
@@ -43,7 +43,7 @@ export function MyApplicationList() {
     10,
     (p) => Number(getQueryString(p)) || 10
   );
-  const { applications, pagination, isLoading } = useMyApplications(
+  const { applications, pagination, isLoading, mutate } = useMyApplications(
     page,
     pageSize
   );
@@ -65,7 +65,11 @@ export function MyApplicationList() {
       >
         <Content>
           {applications?.map((app) => (
-            <MyApplicationItem key={app.id} application={app} />
+            <MyApplicationItem
+              key={app.id}
+              application={app}
+              onMutate={() => mutate()}
+            />
           ))}
         </Content>
       </Spin>
@@ -102,8 +106,10 @@ const Item = styled(Card)`
 type InferArray<T> = T extends Array<infer E> ? E : never;
 function MyApplicationItem({
   application,
+  onMutate,
 }: {
   application: InferArray<ReturnType<typeof useMyApplications>['applications']>;
+  onMutate: () => Promise<unknown>;
 }) {
   const moreMenu: MenuProps = {
     items: [
@@ -157,7 +163,10 @@ function MyApplicationItem({
         key: 'delete',
         label: '删除应用',
         danger: true,
-        onClick: async () => {},
+        onClick: async () => {
+          await deleteApplication(application.id);
+          await onMutate();
+        },
       },
     ],
   };

@@ -21,36 +21,42 @@ export function ImageInput({
   value,
   onChange = noop,
   defaultValue,
+  noCrop,
 }: {
   value?: ID;
   onChange?: (v: ID) => void;
   defaultValue?: ID;
+  noCrop?: boolean;
 }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [id, setId] = useUncontrolledState(value, onChange, defaultValue);
 
+  const uploadNode = (
+    <Upload
+      name="files"
+      action={`${HOST}/api/upload`}
+      method="POST"
+      headers={{
+        Authorization: authorization,
+      }}
+      listType="picture-card"
+      maxCount={1}
+      accept="image/*"
+      beforeUpload={beforeUpload}
+      onChange={({ file }) => {
+        if (file.status === 'done' && Array.isArray(file.response)) {
+          const fileInfo: ResourceUrl = file.response[0];
+          setId(fileInfo.id);
+        }
+      }}
+    >
+      <UploadOutlined /> 上传图片
+    </Upload>
+  );
+  if (noCrop) return uploadNode;
   return (
-    <ImgCrop beforeCrop={beforeUpload}>
-      <Upload
-        name="files"
-        action={`${HOST}/api/upload`}
-        method="POST"
-        headers={{
-          Authorization: authorization,
-        }}
-        listType="picture-card"
-        maxCount={1}
-        accept="image/*"
-        beforeUpload={beforeUpload}
-        onChange={({ file }) => {
-          if (file.status === 'done' && Array.isArray(file.response)) {
-            const fileInfo: ResourceUrl = file.response[0];
-            setId(fileInfo.id);
-          }
-        }}
-      >
-        <UploadOutlined /> 上传图片
-      </Upload>
+    <ImgCrop beforeCrop={beforeUpload} minZoom={0.5} maxZoom={3}>
+      {uploadNode}
     </ImgCrop>
   );
 }

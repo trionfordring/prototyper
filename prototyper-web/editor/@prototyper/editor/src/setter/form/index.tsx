@@ -74,3 +74,4 @@ export const SetterForm: FC<
 };
 
 export { FormItem } from './FormItem';
+export { FormHeader } from './FormHeader';

@@ -39,10 +39,6 @@ export function DraggerList() {
     <ListBox>
       <Image.PreviewGroup>
         <List
-          grid={{
-            gutter: 12,
-            column: 2,
-          }}
           itemLayout="vertical"
           dataSource={draggers}
           renderItem={(dragger, index) => (
@@ -55,17 +51,17 @@ export function DraggerList() {
                 padding: 0,
               }}
               extra={
-                dragger.img ? (
-                  <Image
-                    src={`${HOST}${dragger.img.url}`}
-                    alt={`${dragger.label}的封面`}
-                    width={220}
-                    fallback={FALL_BACK_URL}
-                    style={{
-                      objectFit: 'scale-down',
-                    }}
-                  />
-                ) : null
+                <Image
+                  src={dragger.img ? `${HOST}${dragger.img.url}` : undefined}
+                  alt={`${dragger.label}的封面`}
+                  placeholder
+                  width={220}
+                  height={220}
+                  fallback={FALL_BACK_URL}
+                  style={{
+                    objectFit: 'scale-down',
+                  }}
+                />
               }
               actions={[
                 <Link

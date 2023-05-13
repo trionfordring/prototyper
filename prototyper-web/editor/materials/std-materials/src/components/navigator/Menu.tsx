@@ -10,6 +10,7 @@ import {
 import { Menu as AntMenu, MenuProps } from 'antd';
 import React from 'react';
 
+import { renderNode } from '../../utils/renderNode';
 import { useConnectors } from '../../utils/useConnectors';
 import { DropSpanNode } from '../basic/DropSpan';
 
@@ -17,23 +18,32 @@ export function Menu(props: MenuProps) {
   const { connectAndDrag } = useConnectors();
   console.log(props.items);
   const items = (props.items || []).map((item: any) => {
-    if (!item.slot) return item;
-    const slot = item.slot;
-    const label = `选项[${slot}]`;
-    return {
-      ...item,
-      label: (
-        <Element
-          canvas
-          id={slot}
-          is={DropSpanNode}
-          label={label}
-          custom={{
-            displayName: label,
-          }}
-        />
-      ),
-    };
+    if (item.slot) {
+      const slot = item.slot;
+      const label = `选项[${slot}]`;
+      return {
+        ...item,
+        label: (
+          <Element
+            canvas
+            id={slot}
+            is={DropSpanNode}
+            label={label}
+            custom={{
+              displayName: label,
+            }}
+          />
+        ),
+      };
+    }
+    if (item.descriptor) {
+      const descriptor = item.descriptor;
+      return {
+        ...item,
+        label: renderNode(item.key, descriptor),
+      };
+    }
+    return item;
   });
   return (
     <AntMenu

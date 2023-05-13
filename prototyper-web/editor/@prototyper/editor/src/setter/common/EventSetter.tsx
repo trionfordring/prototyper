@@ -15,12 +15,17 @@ import {
   Typography,
   message,
 } from 'antd';
-import { forEach, isEmpty } from 'lodash';
-import { useEffect, useRef, useState } from 'react';
+import { forEach, identity, isArray, isEmpty, isNil } from 'lodash';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import React from 'react';
 import styled from 'styled-components';
 
 import { FormHeader } from '../form/FormHeader';
+
+export type EventType = {
+  label: string;
+  children: string[];
+};
 
 // 由ChatGPT生成
 const EVENT_LIST = [
@@ -189,6 +194,20 @@ const renderItem = (title: string) => ({
   ),
 });
 
+const renderCustomItem = (title: string) => ({
+  value: title,
+  label: (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'start',
+      }}
+    >
+      {title}
+    </div>
+  ),
+});
+
 const EVENT_OPTIONS = EVENT_LIST.map((group) => {
   return {
     label: renderTitle(group.label),
@@ -200,7 +219,13 @@ const RomoveIcon = styled(MinusCircleOutlined)`
   color: #ff6567;
 `;
 
-export function EventSetter() {
+export function EventSetter({
+  extEvents,
+  filterEvents = identity,
+}: {
+  extEvents?: EventType[] | EventType;
+  filterEvents?: (eventName: string) => boolean;
+}) {
   const [messageApi, messageContext] = message.useMessage();
   const { props } = useSetterContext();
   const [eventList, setEventList] = useState<Set<string>>(new Set<string>());
@@ -208,12 +233,12 @@ export function EventSetter() {
     setEventList((list) => {
       const ans = list;
       forEach(props, (v, k) => {
-        if (!k.startsWith('on')) return;
+        if (!k.startsWith('on') || !filterEvents(k)) return;
         ans.add(k);
       });
       return new Set(ans);
     });
-  }, [props]);
+  }, [filterEvents, props]);
   const [searchKey, setSearchKey] = useState('');
   const searchKeyRef = useRef(searchKey);
   searchKeyRef.current = searchKey;
@@ -227,16 +252,31 @@ export function EventSetter() {
     delete data[event];
     form.setFieldsValue(data);
   }
+  const allOptions = useMemo(() => {
+    let extItems: EventType[] = [];
+    if (isArray(extEvents)) {
+      extItems = extEvents;
+    } else if (!isNil(extEvents)) {
+      extItems.push(extEvents);
+    }
+    const extOptions = extItems.map((e) => ({
+      label: renderTitle(e.label),
+      options: e.children?.map(renderCustomItem),
+    }));
+    return [...extOptions, ...EVENT_OPTIONS];
+  }, [extEvents]);
   const options = useDebounceMemo(
     () => {
-      return EVENT_OPTIONS.map((group) => {
-        return {
-          label: group.label,
-          options: group.options.filter((opt) =>
-            opt.value.toLowerCase().includes(searchKey?.toLowerCase())
-          ),
-        };
-      }).filter((group) => !isEmpty(group.options));
+      return allOptions
+        .map((group) => {
+          return {
+            label: group.label,
+            options: group.options.filter((opt) =>
+              opt.value.toLowerCase().includes(searchKey?.toLowerCase())
+            ),
+          };
+        })
+        .filter((group) => !isEmpty(group.options));
     },
     [searchKey],
     100
@@ -246,6 +286,7 @@ export function EventSetter() {
       messageApi.error('事件应该以"on"开头!');
       return;
     }
+    if (!filterEvents(searchKeyRef.current)) return;
     setEventList((list) => {
       list.add(searchKeyRef.current);
       return new Set(list);

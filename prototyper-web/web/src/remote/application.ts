@@ -500,3 +500,21 @@ export function useCreateApplication() {
   }
   return { createApplication };
 }
+
+const DeleteApplicationDocument = graphql<
+  {},
+  {
+    appId: ID;
+  }
+>()`
+mutation deleteApplication($appId: ID!) {
+  deleteApplication(id: $appId) {
+    data {
+      id
+    }
+  }
+}`;
+
+export async function deleteApplication(appId: ID) {
+  await fetcher([DeleteApplicationDocument, { appId }]);
+}
